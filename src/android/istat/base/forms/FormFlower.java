@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 public class FormFlower {
 	Form form;
+	boolean fillEditableOnly = false;
 
 	FormFlower(Form form) {
 		this.form = form;
@@ -47,34 +48,27 @@ public class FormFlower {
 	}
 
 	private void traitViewAsSimpleView(View v) {
+		if (fillEditableOnly && !v.isEnabled()) {
+			return;
+		}
 		if (v.getTag() != null && !TextUtils.isEmpty(v.getTag() + "")) {
 			flowView(v);
 		}
 	}
 
 	private void flowView(View v) {
-		try {
-			if (v instanceof TextView) {
-				flowTextView(v);
-			} else if (v instanceof CheckBox) {
-				flowCheckBox(v);
-			} else if (v instanceof Spinner) {
-				flowSpinner(v);
-			} else if (v instanceof RadioButton) {
-				flowRadioButton(v);
-			} else if (v instanceof RadioGroup) {
-				flowRadioGroup(v);
-			} else {
-				if (formExtractor != null) {
-					formExtractor.onFlow(v);
+		if (fieldModels != null && fieldModels.size() > 0) {
+			for (FieldModel model : fieldModels) {
+				String fieldValue = form.optString(v.getTag() + "");
+				boolean result = model.onModelling(v.getTag() + "", fieldValue,
+						v);
+				if (result) {
+					return;
 				}
-				throw new RuntimeException(
-						"unsuported view for form autoBind::" + v.getClass());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
+		throw new RuntimeException("unsuported view for form autoBind::"
+				+ v.getClass());
 	}
 
 	private void flowTextView(View v) {
@@ -87,33 +81,26 @@ public class FormFlower {
 
 	private void flowCheckBox(View v) {
 		TextView t = (TextView) v;
-		form.put(v.getTag() + "", t.getText().toString());
+		String value = form.optString(v.getTag() + "");
+		t.setText(value);
 	}
 
 	private void flowSpinner(View v) {
 		TextView t = (TextView) v;
-		form.put(v.getTag() + "", t.getText().toString());
+		String value = form.optString(v.getTag() + "");
+		t.setText(value);
 	}
 
 	private void flowRadioButton(View v) {
 		TextView t = (TextView) v;
-		form.put(v.getTag() + "", t.getText().toString());
+		String value = form.optString(v.getTag() + "");
+		t.setText(value);
 	}
 
 	private void flowRadioGroup(View v) {
 		TextView t = (TextView) v;
-		form.put(v.getTag() + "", t.getText().toString());
-	}
-
-	ViewFlower formExtractor;
-
-	public void setViewFlower(ViewFlower flower) {
-		this.formExtractor = flower;
-	}
-
-	public interface ViewFlower {
-		public void onFlow(View v);
-
+		String value = form.optString(v.getTag() + "");
+		t.setText(value);
 	}
 
 	public static FormFlower flowIntoView(Form form, View view) {
@@ -134,18 +121,60 @@ public class FormFlower {
 
 	public static FormFlower flowIntoView(Form form, View view,
 			FieldModel... fieldModels) {
-		FormFlower binder = new FormFlower(form);
-		binder.fieldModels = Arrays.asList(fieldModels);
-		binder.flowIntoView(view);
-		return binder;
+		return flowIntoView(form, view, false, fieldModels);
 	}
 
 	public static FormFlower flowIntoView(Form form, View view,
 			boolean editableOnly, FieldModel... fieldModels) {
+		return flowIntoView(form, view, editableOnly,
+				fieldModels != null ? Arrays.asList(fieldModels) : null);
+	}
+
+	public static FormFlower flowIntoView(Form form, View view,
+			List<FieldModel> fieldModels) {
+		return flowIntoView(form, view, false, fieldModels);
+	}
+
+	public static FormFlower flowIntoView(Form form, View view,
+			boolean editableOnly, List<FieldModel> fieldModels) {
 
 		FormFlower binder = new FormFlower(form);
-		binder.fieldModels = Arrays.asList(fieldModels);
+		binder.fieldModels = fieldModels;
 		binder.flowIntoView(view);
 		return binder;
+	}
+
+	void addFieldModels(List<FieldModel> models) {
+		FieldModel defaultModel = new FieldModel() {
+
+			@Override
+			public boolean onModelling(String fieldName, String fieldValue,
+					View v) {
+				try {
+					if (v instanceof TextView) {
+						flowTextView(v);
+						return true;
+					} else if (v instanceof CheckBox) {
+						flowCheckBox(v);
+						return true;
+					} else if (v instanceof Spinner) {
+						flowSpinner(v);
+						return true;
+					} else if (v instanceof RadioButton) {
+						flowRadioButton(v);
+						return true;
+					} else if (v instanceof RadioGroup) {
+						flowRadioGroup(v);
+						return true;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				return false;
+			}
+		};
+		fieldModels = models != null ? models : new ArrayList<FieldModel>();
+		fieldModels.add(defaultModel);
 	}
 }

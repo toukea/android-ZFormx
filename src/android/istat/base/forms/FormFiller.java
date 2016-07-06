@@ -1,6 +1,10 @@
 package android.istat.base.forms;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import android.istat.base.forms.interfaces.FieldModel;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,28 +99,21 @@ public class FormFiller {
 		}
 	}
 
+	List<FieldModel> fieldModels = new ArrayList<FieldModel>();
+
 	private void fillFormFieldWithView(View v, String fieldName) {
-		try {
-			if (v instanceof TextView) {
-				onFillFromTextView(v, fieldName);
-			} else if (v instanceof CheckBox) {
-				onFillFromCheckBox(v, fieldName);
-			} else if (v instanceof Spinner) {
-				onFillFromSpinner(v, fieldName);
-			} else if (v instanceof RadioButton) {
-				onFillFromRadioButton(v, fieldName);
-			} else if (v instanceof RadioGroup) {
-				onFillFromRadioGroup(v, fieldName);
-			} else {
-				if (formViewAutoBinder != null) {
-					formViewAutoBinder.onAutoBindNoSupported(v, fieldName);
+		if (fieldModels != null && fieldModels.size() > 0) {
+			for (FieldModel model : fieldModels) {
+				String fieldValue = form.optString(v.getTag() + "");
+				boolean result = model.onModelling(v.getTag() + "", fieldValue,
+						v);
+				if (result) {
+					return;
 				}
-				throw new RuntimeException(
-						"unsuported view for form autoBind::" + v.getClass());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		throw new RuntimeException("unsuported view for form autoBind::"
+				+ v.getClass());
 
 	}
 
@@ -145,49 +142,64 @@ public class FormFiller {
 		form.put(fieldName, t.getText().toString());
 	}
 
-	private FormViewAutoBinder formViewAutoBinder;
-
-	// public void setFormViewAutoBinder(FormViewAutoBinder FormViewAutoBinder)
-	// {
-	// this.formViewAutoBinder = FormViewAutoBinder;
-	// }
-
-//	public static FormFiller fillFromBaseView(Form form, View view) {
-//		FormFiller filler = new FormFiller(form);
-//		filler.fillFormUsingTargetedView(view);
-//		return filler;
-//	}
-
-//	public static FormFiller fillFromView(Form form, View view, int[] ids) {
-//		FormFiller filler = new FormFiller(form);
-//		filler.fillFormUsingViewIdMatching(view, ids);
-//		return filler;
-//	}
-
-	public static FormFiller fillFromView(Form form, View view,
-			FormViewAutoBinder formViewAutoBinder) {
-		return fillFromView(form, view, false, formViewAutoBinder);
-	}
-
 	public static FormFiller fillFromView(Form form, View view) {
 		return fillFromView(form, view, false);
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
 			boolean editableOnly) {
-		return fillFromView(form, view, editableOnly, null);
+		return fillFromView(form, view, editableOnly, new FieldModel[0]);
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
-			boolean editableOnly, FormViewAutoBinder formViewAutoBinder) {
+			boolean editableOnly, FieldModel... models) {
+		return fillFromView(form, view, editableOnly, models);
+	}
+
+	public static FormFiller fillFromView(Form form, View view,
+			FieldModel... models) {
+		return fillFromView(form, view, false,
+				models != null ? Arrays.asList(models) : null);
+	}
+
+	public static FormFiller fillFromView(Form form, View view,
+			boolean editableOnly, List<FieldModel> models) {
 		FormFiller filler = new FormFiller(form);
-		filler.formViewAutoBinder = formViewAutoBinder;
+		filler.addFieldModels(models);
 		filler.fillFormUsingAutoMatchedTargetedView(view, editableOnly);
 		return filler;
 	}
 
-	public interface FormViewAutoBinder {
-		public void onAutoBindNoSupported(View v, String fieldName);
-
+	void addFieldModels(List<FieldModel> models) {
+		fieldModels = models != null ? models : new ArrayList<FieldModel>();
+		fieldModels.add(defaultModel);
 	}
+
+	FieldModel defaultModel = new FieldModel() {
+
+		@Override
+		public boolean onModelling(String fieldName, String fieldValue, View v) {
+			try {
+				if (v instanceof TextView) {
+					onFillFromTextView(v, fieldName);
+					return true;
+				} else if (v instanceof CheckBox) {
+					onFillFromCheckBox(v, fieldName);
+					return true;
+				} else if (v instanceof Spinner) {
+					onFillFromSpinner(v, fieldName);
+					return true;
+				} else if (v instanceof RadioButton) {
+					onFillFromRadioButton(v, fieldName);
+					return true;
+				} else if (v instanceof RadioGroup) {
+					onFillFromRadioGroup(v, fieldName);
+					return true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return false;
+		}
+	};
 }
