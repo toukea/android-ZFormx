@@ -1,5 +1,10 @@
 package android.istat.base.forms;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import android.istat.base.forms.interfaces.FieldModel;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,6 +125,26 @@ public class FormFlower {
 	public static FormFlower flowIntoView(Form form, View view,
 			boolean editableOnly) {
 		FormFlower binder = new FormFlower(form);
+		binder.flowIntoView(view);
+		return binder;
+	}
+
+	// -----------------------
+	List<FieldModel> fieldModels = new ArrayList<FieldModel>();
+
+	public static FormFlower flowIntoView(Form form, View view,
+			FieldModel... fieldModels) {
+		FormFlower binder = new FormFlower(form);
+		binder.fieldModels = Arrays.asList(fieldModels);
+		binder.flowIntoView(view);
+		return binder;
+	}
+
+	public static FormFlower flowIntoView(Form form, View view,
+			boolean editableOnly, FieldModel... fieldModels) {
+
+		FormFlower binder = new FormFlower(form);
+		binder.fieldModels = Arrays.asList(fieldModels);
 		binder.flowIntoView(view);
 		return binder;
 	}

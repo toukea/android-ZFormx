@@ -13,7 +13,7 @@ public interface MultiFormHandler {
 
 	public List<Form> getForms();
 
-	public FormCheckSummary checkUp();
+	public FormCheckSummary checkUp(boolean breakIfError);
 
 	public FormState checkUp(int index);
 
