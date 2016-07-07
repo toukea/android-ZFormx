@@ -123,23 +123,18 @@ public class FormFiller {
 	}
 
 	private void onFillFromCheckBox(View v, String fieldName) {
-		TextView t = (TextView) v;
-		form.put(fieldName, t.getText().toString());
+		CheckBox t = (CheckBox) v;
+		form.put(fieldName, t.isChecked() + "");
 	}
 
 	private void onFillFromSpinner(View v, String fieldName) {
-		TextView t = (TextView) v;
-		form.put(fieldName, t.getText().toString());
+		Spinner t = (Spinner) v;
+		form.put(fieldName, t.getSelectedItemPosition());
 	}
 
 	private void onFillFromRadioButton(View v, String fieldName) {
-		TextView t = (TextView) v;
-		form.put(fieldName, t.getText().toString());
-	}
-
-	private void onFillFromRadioGroup(View v, String fieldName) {
-		TextView t = (TextView) v;
-		form.put(fieldName, t.getText().toString());
+		RadioButton t = (RadioButton) v;
+		form.put(fieldName, t.isChecked() + "");
 	}
 
 	public static FormFiller fillFromView(Form form, View view) {
@@ -191,9 +186,6 @@ public class FormFiller {
 					return true;
 				} else if (v instanceof RadioButton) {
 					onFillFromRadioButton(v, fieldName);
-					return true;
-				} else if (v instanceof RadioGroup) {
-					onFillFromRadioGroup(v, fieldName);
 					return true;
 				}
 			} catch (Exception e) {

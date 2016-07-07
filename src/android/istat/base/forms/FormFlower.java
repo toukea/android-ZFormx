@@ -80,15 +80,15 @@ public class FormFlower {
 	}
 
 	private void flowCheckBox(View v) {
-		TextView t = (TextView) v;
+		CheckBox t = (CheckBox) v;
 		String value = form.optString(v.getTag() + "");
-		t.setText(value);
+		t.setChecked(FormTools.parseBoolean(value));
 	}
 
 	private void flowSpinner(View v) {
-		TextView t = (TextView) v;
+		Spinner t = (Spinner) v;
 		String value = form.optString(v.getTag() + "");
-		t.setText(value);
+		t.setSelection(FormTools.parseInt(value));
 	}
 
 	private void flowRadioButton(View v) {
@@ -98,9 +98,9 @@ public class FormFlower {
 	}
 
 	private void flowRadioGroup(View v) {
-		TextView t = (TextView) v;
+		RadioButton t = (RadioButton) v;
 		String value = form.optString(v.getTag() + "");
-		t.setText(value);
+		t.setChecked(FormTools.parseBoolean(value));
 	}
 
 	public static FormFlower flowIntoView(Form form, View view) {
