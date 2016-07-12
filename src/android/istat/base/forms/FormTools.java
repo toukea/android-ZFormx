@@ -180,6 +180,11 @@ public class FormTools {
 
 	public final static Form concatenate(List<Form> forms) {
 		Form form = new Form();
+		return concatenate(form, forms);
+	}
+
+	public final static Form concatenate(Form form, List<Form> forms) {
+
 		for (Form f : forms) {
 			form.putAll(f);
 		}

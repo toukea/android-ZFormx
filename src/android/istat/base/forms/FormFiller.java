@@ -103,9 +103,7 @@ public class FormFiller {
 	private void fillFormFieldWithView(View v, String fieldName) {
 		if (fieldModels != null && fieldModels.size() > 0) {
 			for (FieldModel model : fieldModels) {
-				String fieldValue = form.optString(v.getTag() + "");
-				boolean result = model.onModelling(v.getTag() + "", fieldValue,
-						v);
+				boolean result = model.onModelling(form, v.getTag() + "", v);
 				if (result) {
 					return;
 				}
@@ -172,7 +170,7 @@ public class FormFiller {
 	FieldModel defaultModel = new FieldModel() {
 
 		@Override
-		public boolean onModelling(String fieldName, String fieldValue, View v) {
+		public boolean onModelling(Form form, String fieldName, View v) {
 			try {
 				if (v instanceof TextView) {
 					onFillFromTextView(v, fieldName);

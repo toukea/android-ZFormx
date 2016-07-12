@@ -7,7 +7,7 @@ import android.istat.base.forms.FormCheckSummary;
 import android.istat.base.forms.FormState;
 
 public interface MultiFormHandler {
-	public void fillFromHttp(String url);
+	public void pullFrom(String url);
 
 	public void submit(String url);
 

@@ -59,9 +59,7 @@ public class FormFlower {
 	private void flowView(View v) {
 		if (fieldModels != null && fieldModels.size() > 0) {
 			for (FieldModel model : fieldModels) {
-				String fieldValue = form.optString(v.getTag() + "");
-				boolean result = model.onModelling(v.getTag() + "", fieldValue,
-						v);
+				boolean result = model.onModelling(form, v.getTag() + "", v);
 				if (result) {
 					return;
 				}
@@ -148,8 +146,7 @@ public class FormFlower {
 		FieldModel defaultModel = new FieldModel() {
 
 			@Override
-			public boolean onModelling(String fieldName, String fieldValue,
-					View v) {
+			public boolean onModelling(Form fieldName, String fieldname, View v) {
 				try {
 					if (v instanceof TextView) {
 						flowTextView(v);
