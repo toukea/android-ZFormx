@@ -3,6 +3,7 @@ package android.istat.base.forms;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -184,11 +185,21 @@ public class FormTools {
 	}
 
 	public final static Form concatenate(Form form, List<Form> forms) {
-
 		for (Form f : forms) {
-			form.putAll(f);
+			concatenate(form, f);
 		}
 		return form;
 	}
 
+	public final static Form concatenate(Form form, Form otherForm) {
+		form.putAll(otherForm);
+		// Iterator<String> iterator = otherForm.keySet().iterator();
+		// while (iterator.hasNext()) {
+		// String name = iterator.next();
+		// if(form.containsKey(name)){
+		// name=form.
+		// }
+		// }
+		return form;
+	}
 }

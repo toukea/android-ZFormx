@@ -7,7 +7,7 @@ import android.istat.base.forms.FormState;
 public interface FormHandler {
 	public void pullFrom(String url);
 
-	public void submit(String url);
+	public void pushForm(String url);
 
 	public Form getForm();
 
