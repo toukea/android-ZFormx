@@ -1,8 +1,10 @@
 package android.istat.base.forms;
 
+import android.view.View;
+
 public class FormError {
 	String name;
-	// View cause;
+	View cause;
 	String value;
 	String condition;
 
@@ -18,9 +20,9 @@ public class FormError {
 		return value;
 	}
 
-	// public View getCause() {
-	// return cause;
-	// }
+	public View getCause() {
+		return cause;
+	}
 
 	public String getCondition() {
 		return condition;
