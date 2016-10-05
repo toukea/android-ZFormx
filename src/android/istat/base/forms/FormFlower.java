@@ -103,6 +103,7 @@ public class FormFlower {
 
 	public static FormFlower flowIntoView(Form form, View view) {
 		FormFlower binder = new FormFlower(form);
+		binder.addFieldModels(null);
 		binder.flowIntoView(view);
 		return binder;
 	}
@@ -110,6 +111,7 @@ public class FormFlower {
 	public static FormFlower flowIntoView(Form form, View view,
 			boolean editableOnly) {
 		FormFlower binder = new FormFlower(form);
+		binder.addFieldModels(null);
 		binder.flowIntoView(view);
 		return binder;
 	}
@@ -137,7 +139,7 @@ public class FormFlower {
 			boolean editableOnly, List<FieldModel> fieldModels) {
 
 		FormFlower binder = new FormFlower(form);
-		binder.fieldModels = fieldModels;
+		binder.addFieldModels(fieldModels);
 		binder.flowIntoView(view);
 		return binder;
 	}

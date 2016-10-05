@@ -145,13 +145,14 @@ public class FormFiller {
 
 	public static FormFiller fillFromView(Form form, View view,
 			boolean editableOnly, FieldModel... models) {
-		return fillFromView(form, view, editableOnly, models);
+		return fillFromView(form, view, editableOnly, models != null
+				&& models.length > 0 ? Arrays.asList(models) : null);
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
 			FieldModel... models) {
-		return fillFromView(form, view, false,
-				models != null ? Arrays.asList(models) : null);
+		return fillFromView(form, view, false, models != null
+				&& models.length > 0 ? Arrays.asList(models) : null);
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
@@ -163,32 +164,32 @@ public class FormFiller {
 	}
 
 	void addFieldModels(List<FieldModel> models) {
+		FieldModel defaultModel = new FieldModel() {
+
+			@Override
+			public boolean onModelling(Form form, String fieldName, View v) {
+				try {
+					if (v instanceof TextView) {
+						onFillFromTextView(v, fieldName);
+						return true;
+					} else if (v instanceof CheckBox) {
+						onFillFromCheckBox(v, fieldName);
+						return true;
+					} else if (v instanceof Spinner) {
+						onFillFromSpinner(v, fieldName);
+						return true;
+					} else if (v instanceof RadioButton) {
+						onFillFromRadioButton(v, fieldName);
+						return true;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return false;
+			}
+		};
 		fieldModels = models != null ? models : new ArrayList<FieldModel>();
 		fieldModels.add(defaultModel);
 	}
 
-	FieldModel defaultModel = new FieldModel() {
-
-		@Override
-		public boolean onModelling(Form form, String fieldName, View v) {
-			try {
-				if (v instanceof TextView) {
-					onFillFromTextView(v, fieldName);
-					return true;
-				} else if (v instanceof CheckBox) {
-					onFillFromCheckBox(v, fieldName);
-					return true;
-				} else if (v instanceof Spinner) {
-					onFillFromSpinner(v, fieldName);
-					return true;
-				} else if (v instanceof RadioButton) {
-					onFillFromRadioButton(v, fieldName);
-					return true;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return false;
-		}
-	};
 }

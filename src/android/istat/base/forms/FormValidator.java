@@ -12,13 +12,16 @@ public class FormValidator {
 	HashMap<String, String> condition = new HashMap<String, String>();
 
 	public final static FormState checkup(Form form, View formView,
-			HashMap<String, String> condition) {
+			HashMap<String, String> conditions) {
 		FormValidator validator = new FormValidator();
-		validator.setCondition(condition);
+		validator.setCondition(conditions);
 		return validator.checkForm(form, formView);
 	}
 
 	public void setCondition(HashMap<String, String> condition) {
+		if (condition == null) {
+			return;
+		}
 		this.condition = condition;
 	}
 

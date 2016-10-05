@@ -16,6 +16,10 @@ public class FormError {
 	public FormError() {
 	}
 
+	public boolean hasCause() {
+		return cause != null;
+	}
+
 	public String getValue() {
 		return value;
 	}

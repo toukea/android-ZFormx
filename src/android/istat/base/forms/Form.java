@@ -2,12 +2,7 @@ package android.istat.base.forms;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.text.TextUtils;
 
 public class Form extends HashMap<String, Object> {
 
@@ -89,5 +84,11 @@ public class Form extends HashMap<String, Object> {
 
 		}
 		return form;
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return toJson().toString();
 	}
 }
