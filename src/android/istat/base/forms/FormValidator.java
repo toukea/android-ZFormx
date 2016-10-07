@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import android.text.TextUtils;
 import android.view.View;
 
-public class FormValidator {
+public final class FormValidator {
     FormState formState;
     HashMap<String, Validator> validationController = new HashMap<String, Validator>();
 
@@ -60,7 +60,7 @@ public class FormValidator {
                 if (!Pattern.matches(regexChecker, value)) {
                     FormError error = new FormError(key, value, regexChecker);
                     error.viewCause = formView.findViewWithTag(key);
-                    error.setMessage(validator.getMessage());
+                    error.addFailedValidators(validator);
                     state.addError(error);
                 }
             }

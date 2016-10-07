@@ -2,24 +2,31 @@ package android.istat.base.forms;
 
 import android.view.View;
 
-public class FormError {
+import java.util.ArrayList;
+import java.util.List;
+
+public final class FormError {
     View viewCause;
     String fieldName;
     String fieldValue;
-    String fieldCondition;
-    String message;
+    final List<FormValidator.Validator> failedValidators = new ArrayList<FormValidator.Validator>();
 
     FormError(String name, String value, String condition, String message) {
         this.fieldName = name;
-        this.fieldCondition = condition;
         this.fieldValue = value;
-        this.message = message;
+        this.failedValidators.add(new FormValidator.Validator(condition, message));
+    }
+
+    FormError(String name, String value, List<FormValidator.Validator> failedValidators) {
+        this.fieldName = name;
+        this.fieldValue = value;
+        this.failedValidators.addAll(failedValidators);
     }
 
     FormError(String name, String value, String condition) {
         this.fieldName = name;
-        this.fieldCondition = condition;
         this.fieldValue = value;
+        this.failedValidators.add(new FormValidator.Validator(condition, ""));
     }
 
     FormError() {
@@ -37,19 +44,15 @@ public class FormError {
         return viewCause;
     }
 
-    public String getFieldCondition() {
-        return fieldCondition;
+    public List<FormValidator.Validator> getFailedValidators() {
+        return failedValidators;
     }
 
     public String getFieldName() {
         return fieldName;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
+    void addFailedValidators(FormValidator.Validator validator) {
+        failedValidators.add(validator);
     }
 }

@@ -6,7 +6,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FormState {
+public final class FormState {
     List<FormError> errors = new ArrayList<FormError>();
 
     public List<FormError> getErrors() {
