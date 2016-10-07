@@ -13,16 +13,16 @@ public final class FormValidator {
     FormState formState;
     HashMap<String, List<Validator>> validationCondition = new HashMap<String, List<Validator>>();
 
-    public final static FormState checkup(Form form, View formView,
-                                          FormValidationCondition condition) {
-        return checkup(form, formView, condition.getConditionMap());
+    public final static FormState validate(Form form, View formView,
+                                           FormValidationCondition condition) {
+        return validate(form, formView, condition.getConditionMap());
     }
 
-    public final static FormState checkup(Form form, View formView,
-                                          HashMap<String, List<Validator>> conditions) {
+    public final static FormState validate(Form form, View formView,
+                                           HashMap<String, List<Validator>> conditions) {
         FormValidator validator = new FormValidator();
         validator.setValidationCondition(conditions);
-        return validator.checkForm(form, formView);
+        return validator.validate(form, formView);
     }
 
     public void setValidationCondition(FormValidationCondition condition) {
@@ -46,7 +46,7 @@ public final class FormValidator {
         return this;
     }
 
-    public FormState checkForm(Form form, View formView) {
+    public FormState validate(Form form, View formView) {
         FormState state = new FormState();
         proceedCheckup(form, state, formView);
         return state;
