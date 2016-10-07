@@ -22,7 +22,7 @@ public class FormTools {
 	}
 
 	public final static String toSentense(String word, String endingPontuation) {
-		word = begginByUperCase(word);
+		word = beginByUpperCase(word);
 		int index = word.indexOf(endingPontuation);
 		// if(index!=word.length()-1)return word+endingPontuation;
 		if (index <= 0) {
@@ -32,11 +32,11 @@ public class FormTools {
 		return word;
 	}
 
-	public final static String begginByUperCase(String word) {
+	public final static String beginByUpperCase(String word) {
 		if (word.length() > 1) {
-			String beggin = word.substring(0, 1).toUpperCase(
+			String begin = word.substring(0, 1).toUpperCase(
 					Locale.getDefault());
-			word = beggin + word.substring(1);
+			word = begin + word.substring(1);
 		}
 		return word;
 	}
@@ -154,7 +154,7 @@ public class FormTools {
 	 * return "0a" else return just the number a
 	 * 
 	 * @param a
-	 * @return a String that represent a "sweet" numeric value of that number.
+	 * @return a String that represent a "sweet" numeric fieldValue of that number.
 	 */
 	public final static String sweetNumber(int a) {
 		if (a > 9) {
@@ -198,9 +198,9 @@ public class FormTools {
 		}
 		// Iterator<String> iterator = otherForm.keySet().iterator();
 		// while (iterator.hasNext()) {
-		// String name = iterator.next();
-		// if(form.containsKey(name)){
-		// name=form.
+		// String fieldName = iterator.next();
+		// if(form.containsKey(fieldName)){
+		// fieldName=form.
 		// }
 		// }
 		return form;

@@ -60,12 +60,10 @@ class ViewUtil {
 	}
 
 	public static List<View> getDirectChildViews(ViewGroup v) {
-		// TODO Auto-generated method stub
 		return getAllChildViews(v, true);
 	}
 
 	public static List<View> getAllChildViews(ViewGroup v) {
-		// TODO Auto-generated method stub
 		return getAllChildViews(v, false);
 	}
 

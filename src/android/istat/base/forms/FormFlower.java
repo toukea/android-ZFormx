@@ -148,7 +148,7 @@ public class FormFlower {
 		FieldModel defaultModel = new FieldModel() {
 
 			@Override
-			public boolean onModelling(Form fieldName, String fieldname, View v) {
+			public boolean onModelling(Form fieldName, String fieldValue, View v) {
 				try {
 					if (v instanceof TextView) {
 						flowTextView(v);

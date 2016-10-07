@@ -3,36 +3,53 @@ package android.istat.base.forms;
 import android.view.View;
 
 public class FormError {
-	String name;
-	View cause;
-	String value;
-	String condition;
+    View viewCause;
+    String fieldName;
+    String fieldValue;
+    String fieldCondition;
+    String message;
 
-	public FormError(String name, String value, String condition) {
-		this.name = name;
-		this.condition = condition;
-	}
+    FormError(String name, String value, String condition, String message) {
+        this.fieldName = name;
+        this.fieldCondition = condition;
+        this.fieldValue = value;
+        this.message = message;
+    }
 
-	public FormError() {
-	}
+    FormError(String name, String value, String condition) {
+        this.fieldName = name;
+        this.fieldCondition = condition;
+        this.fieldValue = value;
+    }
 
-	public boolean hasCause() {
-		return cause != null;
-	}
+    FormError() {
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public boolean hasViewCause() {
+        return viewCause != null;
+    }
 
-	public View getCause() {
-		return cause;
-	}
+    public String getFieldValue() {
+        return fieldValue;
+    }
 
-	public String getCondition() {
-		return condition;
-	}
+    public View getViewCause() {
+        return viewCause;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getFieldCondition() {
+        return fieldCondition;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
