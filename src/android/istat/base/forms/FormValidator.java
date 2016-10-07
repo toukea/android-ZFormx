@@ -68,16 +68,16 @@ public class FormValidator {
     }
 
     public final static class Validator {
-        String condition;
+        String regexCondition;
         String message = "";
 
         public Validator(String condition, String message) {
-            this.condition = condition;
+            this.regexCondition = condition;
             this.message = message;
         }
 
         public Validator(String condition) {
-            this.condition = condition;
+            this.regexCondition = condition;
         }
 
         public String getMessage() {
@@ -85,7 +85,7 @@ public class FormValidator {
         }
 
         public String getRegexCondition() {
-            return condition;
+            return regexCondition;
         }
     }
 }
