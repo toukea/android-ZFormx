@@ -10,27 +10,19 @@ import java.util.List;
 public final class FormFieldError {
 	View viewCause;
 	String fieldName;
-	String fieldValue;
+	Object fieldValue;
 	final List<FormValidator.Validator> failedValidators = new ArrayList<FormValidator.Validator>();
 
-	FormFieldError(String name, String value, String condition, String message) {
+	FormFieldError(String name, Object value) {
 		this.fieldName = name;
 		this.fieldValue = value;
-		this.failedValidators.add(new FormValidator.Validator(condition,
-				message));
 	}
 
-	FormFieldError(String name, String value,
+	FormFieldError(String name, Object value,
 			List<FormValidator.Validator> failedValidators) {
 		this.fieldName = name;
 		this.fieldValue = value;
 		this.failedValidators.addAll(failedValidators);
-	}
-
-	FormFieldError(String name, String value, String condition) {
-		this.fieldName = name;
-		this.fieldValue = value;
-		this.failedValidators.add(new FormValidator.Validator(condition, ""));
 	}
 
 	FormFieldError() {
@@ -79,7 +71,7 @@ public final class FormFieldError {
 		return viewCause != null;
 	}
 
-	public String getFieldValue() {
+	public Object getFieldValue() {
 		return fieldValue;
 	}
 
