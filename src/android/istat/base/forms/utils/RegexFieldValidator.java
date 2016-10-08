@@ -5,17 +5,20 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import android.istat.base.forms.Form;
-import android.istat.base.forms.FormValidator.Validator;
+import android.istat.base.forms.FormValidator.FieldValidator;
 import android.text.TextUtils;
 
-public class RegexValidator extends Validator {
+public final class RegexFieldValidator extends FieldValidator {
 	String regexCondition;
 	String message = "";
 	boolean breakValidationIfError = false;
 
-	public RegexValidator(String condition, String message) {
+	public RegexFieldValidator(String condition, String message) {
 		this.regexCondition = condition;
 		this.message = message;
+	}
+
+	private RegexFieldValidator() {
 	}
 
 	public void setBreakValidationIfError(boolean breakIfError) {
@@ -26,15 +29,16 @@ public class RegexValidator extends Validator {
 		return breakValidationIfError;
 	}
 
-	public RegexValidator(String condition) {
+	public RegexFieldValidator(String condition) {
 		this.regexCondition = condition;
 	}
 
-	public String getMessage() {
+	@Override
+	public String getErrorMessage() {
 		return message;
 	}
 
-	public String getRegexCondition() {
+	public final String getRegexCondition() {
 		return regexCondition;
 	}
 
@@ -42,8 +46,10 @@ public class RegexValidator extends Validator {
 		return null;
 	}
 
-	public final static Validator fromJson(JSONObject json) {
-		return null;
+	public final static FieldValidator fromJson(JSONObject json) {
+		RegexFieldValidator validator = new RegexFieldValidator();
+		validator.fillFrom(json);
+		return validator;
 	}
 
 	@Override

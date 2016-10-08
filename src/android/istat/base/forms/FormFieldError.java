@@ -1,6 +1,6 @@
 package android.istat.base.forms;
 
-import android.istat.base.forms.FormValidator.Validator;
+import android.istat.base.forms.FormValidator.FieldValidator;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -11,7 +11,7 @@ public final class FormFieldError {
 	View viewCause;
 	String fieldName;
 	Object fieldValue;
-	final List<FormValidator.Validator> failedValidators = new ArrayList<FormValidator.Validator>();
+	final List<FormValidator.FieldValidator> failedValidators = new ArrayList<FormValidator.FieldValidator>();
 
 	FormFieldError(String name, Object value) {
 		this.fieldName = name;
@@ -19,7 +19,7 @@ public final class FormFieldError {
 	}
 
 	FormFieldError(String name, Object value,
-			List<FormValidator.Validator> failedValidators) {
+			List<FormValidator.FieldValidator> failedValidators) {
 		this.fieldName = name;
 		this.fieldValue = value;
 		this.failedValidators.addAll(failedValidators);
@@ -30,15 +30,15 @@ public final class FormFieldError {
 
 	public List<String> getMessages() {
 		List<String> messages = new ArrayList<String>();
-		for (Validator validator : failedValidators) {
-			messages.add(validator.getMessage());
+		for (FieldValidator validator : failedValidators) {
+			messages.add(validator.getErrorMessage());
 		}
 		return messages;
 	}
 
 	public String getFirstMessage() {
-		for (Validator validator : failedValidators) {
-			String message = validator.getMessage();
+		for (FieldValidator validator : failedValidators) {
+			String message = validator.getErrorMessage();
 			if (!TextUtils.isEmpty(message)) {
 				return message;
 			}
@@ -48,8 +48,8 @@ public final class FormFieldError {
 
 	public String getMessage(int index) {
 		int count = 0;
-		for (Validator validator : failedValidators) {
-			String message = validator.getMessage();
+		for (FieldValidator validator : failedValidators) {
+			String message = validator.getErrorMessage();
 			if (!TextUtils.isEmpty(message)) {
 				if (count == index) {
 					return message;
@@ -62,7 +62,7 @@ public final class FormFieldError {
 
 	public String getMessageAtIndexs(int index) {
 		if (index < failedValidators.size()) {
-			return failedValidators.get(index).getMessage();
+			return failedValidators.get(index).getErrorMessage();
 		}
 		return null;
 	}
@@ -79,7 +79,7 @@ public final class FormFieldError {
 		return viewCause;
 	}
 
-	public List<FormValidator.Validator> getFailedValidators() {
+	public List<FormValidator.FieldValidator> getFailedValidators() {
 		return failedValidators;
 	}
 
@@ -87,7 +87,7 @@ public final class FormFieldError {
 		return fieldName;
 	}
 
-	void addFailedValidators(FormValidator.Validator validator) {
+	void addFailedValidators(FormValidator.FieldValidator validator) {
 		failedValidators.add(validator);
 	}
 }

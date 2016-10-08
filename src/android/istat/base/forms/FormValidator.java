@@ -4,16 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
-
 import org.json.JSONObject;
-
-import android.text.TextUtils;
 import android.view.View;
 
 public final class FormValidator {
 	FormState formState;
-	HashMap<String, List<Validator>> validationCondition = new HashMap<String, List<Validator>>();
+	HashMap<String, List<FieldValidator>> validationCondition = new HashMap<String, List<FieldValidator>>();
 	ValidationListner validationListener;
 
 	public void setValidationListener(ValidationListner validationListener) {
@@ -26,7 +22,7 @@ public final class FormValidator {
 	}
 
 	public final static FormState validate(Form form, View formView,
-			HashMap<String, List<Validator>> conditions) {
+			HashMap<String, List<FieldValidator>> conditions) {
 		FormValidator validator = new FormValidator();
 		validator.setValidationCondition(conditions);
 		return validator.validate(form, formView);
@@ -37,17 +33,17 @@ public final class FormValidator {
 	}
 
 	public void setValidationCondition(
-			HashMap<String, List<Validator>> validationController) {
+			HashMap<String, List<FieldValidator>> validationController) {
 		if (validationController == null) {
 			return;
 		}
 		this.validationCondition = validationController;
 	}
 
-	public FormValidator addCondition(String field, Validator validator) {
-		List<Validator> validators = validationCondition.get(field);
+	public FormValidator addCondition(String field, FieldValidator validator) {
+		List<FieldValidator> validators = validationCondition.get(field);
 		if (validators == null) {
-			validators = new ArrayList<Validator>();
+			validators = new ArrayList<FieldValidator>();
 		}
 		validators.add(validator);
 		validationCondition.put(field, validators);
@@ -64,11 +60,11 @@ public final class FormValidator {
 		Iterator<String> iterator = form.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			List<Validator> validators = validationCondition.get(key);
+			List<FieldValidator> validators = validationCondition.get(key);
 			Object objValue = form.get(key);
 			FormFieldError error = null;
-			for (Validator validator : validators) {
-				boolean isValidated = validator.onValidate(form, key, objValue);
+			for (FieldValidator validator : validators) {
+				boolean isValidated = validator.validate(form, key, objValue);
 				if (!isValidated) {
 					if (error == null) {
 						error = new FormFieldError(key, objValue);
@@ -88,60 +84,28 @@ public final class FormValidator {
 	}
 
 	public static class FormValidationCondition {
-		final HashMap<String, List<Validator>> conditionMap = new HashMap<String, List<Validator>>();
+		protected final HashMap<String, List<FieldValidator>> conditionMap = new HashMap<String, List<FieldValidator>>();
 
 		public FormValidationCondition() {
 
 		}
 
 		public FormValidationCondition(
-				HashMap<String, List<Validator>> conditionMap) {
+				HashMap<String, List<FieldValidator>> conditionMap) {
 			this.conditionMap.putAll(conditionMap);
 		}
 
-		// public FormValidationCondition addFieldValidator(String fieldName,
-		// Validator validator) {
-		// List<Validator> validators = conditionMap.get(fieldName);
-		// if (validators == null) {
-		// validators = new ArrayList<Validator>();
-		// }
-		// validators.add(validator);
-		// conditionMap.put(fieldName, validators);
-		// return this;
-		// }
-		//
-		// public FormValidationCondition addFieldValidationParams(
-		// String fieldName, String regexCondition, String message) {
-		// List<Validator> validators = conditionMap.get(fieldName);
-		// if (validators == null) {
-		// validators = new ArrayList<Validator>();
-		// }
-		// Validator validator = new Validator(regexCondition, message);
-		// validators.add(validator);
-		// conditionMap.put(fieldName, validators);
-		// return this;
-		// }
-		//
-		// public FormValidationCondition setFieldValidationParams(
-		// String fieldName, String regexCondition, String message) {
-		// List<Validator> validators = new ArrayList<Validator>();
-		// Validator validator = new Validator(regexCondition, message);
-		// validators.add(validator);
-		// conditionMap.put(fieldName, validators);
-		// return this;
-		// }
-
 		public FormValidationCondition setFieldValidators(String fieldName,
-				List<Validator> validators) {
+				List<FieldValidator> validators) {
 			conditionMap.put(fieldName, validators);
 			return this;
 		}
 
-		public List<Validator> getFieldValidators(String fieldName) {
+		public List<FieldValidator> getFieldValidators(String fieldName) {
 			return conditionMap.get(fieldName);
 		}
 
-		HashMap<String, List<Validator>> getConditionMap() {
+		protected HashMap<String, List<FieldValidator>> getConditionMap() {
 			return conditionMap;
 		}
 
@@ -156,7 +120,7 @@ public final class FormValidator {
 		}
 	}
 
-	public static abstract class Validator {
+	public static abstract class FieldValidator {
 		boolean breakValidationIfError = false;
 
 		public void setBreakValidationIfError(boolean breakIfError) {
@@ -167,18 +131,30 @@ public final class FormValidator {
 			return breakValidationIfError;
 		}
 
-		public abstract String getMessage();
+		public abstract String getErrorMessage();
+
+		public final boolean validate(Form form, String fieldName, Object value) {
+			return onValidate(form, fieldName, value);
+		}
 
 		protected abstract boolean onValidate(Form form, String fieldName,
 				Object value);
 
+		public JSONObject toJson() {
+			JSONObject json = new JSONObject();
+			return json;
+		}
+
+		public FieldValidator fillFrom(JSONObject json) {
+			return null;
+		}
 	}
 
 	public static interface ValidationListner {
 		public void onValidationStarting(Form form, View formView);
 
 		public void onValidateField(Form form, String FieldName, Object value,
-				View viewCause, FormValidator.Validator validator,
+				View viewCause, FormValidator.FieldValidator validator,
 				boolean validated);
 
 		public void onValidationCompleted(Form form, View formView,
