@@ -1,8 +1,8 @@
-package android.istat.base.forms;
+package android.istat.base.forms.utils;
 
 import android.annotation.SuppressLint;
+import android.istat.base.forms.Form;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;

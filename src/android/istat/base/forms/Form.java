@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import org.json.JSONObject;
 
+import android.istat.base.forms.utils.FormTools;
+
 public class Form extends HashMap<String, Object> {
 
     /**

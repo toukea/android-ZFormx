@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 }
@@ -6,7 +7,9 @@ dependencies {
 android {
     compileSdkVersion 18
     buildToolsVersion "24.0.2"
-
+    lintOptions {
+        abortOnError false
+    }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
