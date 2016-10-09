@@ -21,7 +21,7 @@ public class ValidationDirectiveBuilder {
 		this.conditionMap.putAll(conditionMap);
 	}
 
-	public ValidationDirectiveBuilder addFieldValidator(String fieldName,
+	public ValidationDirectiveBuilder appendFieldValidator(String fieldName,
 			FieldValidator validator) {
 		List<FieldValidator> validators = conditionMap.get(fieldName);
 		if (validators == null) {
@@ -32,7 +32,7 @@ public class ValidationDirectiveBuilder {
 		return this;
 	}
 
-	public <T extends FieldValidator> ValidationDirectiveBuilder addAllFieldValidator(
+	public <T extends FieldValidator> ValidationDirectiveBuilder appendAllFieldValidator(
 			String fieldName, List<T> validator) {
 		List<FieldValidator> validators = conditionMap.get(fieldName);
 		if (validators == null) {
@@ -43,13 +43,13 @@ public class ValidationDirectiveBuilder {
 		return this;
 	}
 
-	public  ValidationDirectiveBuilder setFieldValidators(String fieldName,
+	public  ValidationDirectiveBuilder applyFieldValidators(String fieldName,
 			List<FieldValidator> validators) {
 		conditionMap.put(fieldName, validators);
 		return this;
 	}
 
-	public ValidationDirectiveBuilder setFieldValidator(String fieldName,
+	public ValidationDirectiveBuilder applyFieldValidator(String fieldName,
 			FieldValidator validator) {
 		List<FieldValidator> validators = new ArrayList<FormValidator.FieldValidator>();
 		validators.add(validator);

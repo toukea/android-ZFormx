@@ -1,4 +1,4 @@
-package android.istat.base.forms;
+package android.istat.base.forms.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import android.view.View;
 import android.view.ViewGroup;
 
-class ViewUtil {
+public class ViewUtil {
 	private ViewUtil() {
 
 	}

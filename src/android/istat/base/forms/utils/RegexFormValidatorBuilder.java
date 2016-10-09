@@ -9,43 +9,43 @@ import android.istat.base.forms.FormValidator.FieldValidator;
 public final class RegexFormValidatorBuilder {
 	RegexValidationDirectiveBuilder conditionBuilder = new RegexValidationDirectiveBuilder();
 
-	public RegexFormValidatorBuilder addFieldValidationParams(String fieldName,
-			String regexCondition, String message) {
-		conditionBuilder.addFieldValidationParams(fieldName, regexCondition,
+	public RegexFormValidatorBuilder appendFieldValidationParams(
+			String fieldName, String regexCondition, String message) {
+		conditionBuilder.appendFieldValidationParams(fieldName, regexCondition,
 				message);
 		return this;
 	}
 
-	public RegexFormValidatorBuilder setFieldValidationParams(String fieldName,
-			String regexCondition, String message) {
-		conditionBuilder.setFieldValidationParams(fieldName, regexCondition,
+	public RegexFormValidatorBuilder applyFieldValidationParams(
+			String fieldName, String regexCondition, String message) {
+		conditionBuilder.applyFieldValidationParams(fieldName, regexCondition,
 				message);
 		return this;
 	}
 
-	public RegexFormValidatorBuilder setFieldValidator(String fieldName,
+	public RegexFormValidatorBuilder applyFieldValidator(String fieldName,
 			RegexFieldValidator validator) {
-		conditionBuilder.setFieldValidator(fieldName, validator);
+		conditionBuilder.applyFieldValidator(fieldName, validator);
 		return this;
 	}
 
-	public RegexFormValidatorBuilder addFieldValidator(String fieldName,
+	public RegexFormValidatorBuilder appendFieldValidator(String fieldName,
 			RegexFieldValidator validator) {
-		conditionBuilder.addFieldValidator(fieldName, validator);
+		conditionBuilder.appendFieldValidator(fieldName, validator);
 		return this;
 	}
 
-	public RegexFormValidatorBuilder addAllFieldValidator(String fieldName,
+	public RegexFormValidatorBuilder appendAllFieldValidator(String fieldName,
 			List<RegexFieldValidator> validator) {
-		conditionBuilder.addAllFieldValidator(fieldName, validator);
+		conditionBuilder.appendAllFieldValidator(fieldName, validator);
 		return this;
 	}
 
-	public RegexFormValidatorBuilder setFieldValidators(String fieldName,
+	public RegexFormValidatorBuilder applyFieldValidators(String fieldName,
 			List<RegexFieldValidator> regexValidators) {
 		List<FieldValidator> validators = new ArrayList<FormValidator.FieldValidator>();
 		validators.addAll(regexValidators);
-		conditionBuilder.setFieldValidators(fieldName, validators);
+		conditionBuilder.applyFieldValidators(fieldName, validators);
 		return this;
 	}
 

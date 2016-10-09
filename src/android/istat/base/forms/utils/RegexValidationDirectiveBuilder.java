@@ -6,7 +6,7 @@ import android.istat.base.forms.FormValidator.FieldValidator;
 
 public final class RegexValidationDirectiveBuilder extends ValidationDirectiveBuilder {
 
-	public RegexValidationDirectiveBuilder addFieldValidationParams(
+	public RegexValidationDirectiveBuilder appendFieldValidationParams(
 			String fieldName, String regexCondition, String message) {
 		List<FieldValidator> validators = conditionMap.get(fieldName);
 		if (validators == null) {
@@ -19,7 +19,7 @@ public final class RegexValidationDirectiveBuilder extends ValidationDirectiveBu
 		return this;
 	}
 
-	public RegexValidationDirectiveBuilder setFieldValidationParams(
+	public RegexValidationDirectiveBuilder applyFieldValidationParams(
 			String fieldName, String regexCondition, String message) {
 		List<FieldValidator> validators = new ArrayList<FieldValidator>();
 		FieldValidator validator = new RegexFieldValidator(regexCondition,
