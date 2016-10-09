@@ -17,26 +17,31 @@ public final class FormValidator {
 	}
 
 	public final static FormState validate(Form form, View formView,
-			FormValidationCondition condition) {
-		return validate(form, formView, condition.getConditionMap());
+			ValidationDirective diective) {
+		return onValidate(form, formView, diective);
 	}
 
 	public final static FormState validate(Form form, View formView,
 			HashMap<String, List<FieldValidator>> conditions) {
+		return onValidate(form, formView, conditions);
+	}
+
+	private static FormState onValidate(Form form, View formView,
+			HashMap<String, List<FieldValidator>> conditions) {
 		FormValidator validator = new FormValidator();
-		validator.setValidationCondition(conditions);
+		validator.setValidationDirective(conditions);
 		return validator.validate(form, formView);
 	}
 
-	public void setValidationCondition(FormValidationCondition condition) {
-		setValidationCondition(condition.getConditionMap());
+	public void setValidationDirective(ValidationDirective directive) {
+		this.validationCondition = directive;
 	}
 
-	public void setValidationCondition(
+	public void setValidationDirective(
 			HashMap<String, List<FieldValidator>> validationController) {
-		if (validationController == null) {
-			return;
-		}
+//		if (validationController == null) {
+//			return;
+//		}
 		this.validationCondition = validationController;
 	}
 
@@ -83,41 +88,14 @@ public final class FormValidator {
 		}
 	}
 
-	public static class FormValidationCondition {
-		protected final HashMap<String, List<FieldValidator>> conditionMap = new HashMap<String, List<FieldValidator>>();
+	public static class ValidationDirective extends
+			HashMap<String, List<FieldValidator>> {
 
-		public FormValidationCondition() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
-		}
-
-		public FormValidationCondition(
-				HashMap<String, List<FieldValidator>> conditionMap) {
-			this.conditionMap.putAll(conditionMap);
-		}
-
-		public FormValidationCondition setFieldValidators(String fieldName,
-				List<FieldValidator> validators) {
-			conditionMap.put(fieldName, validators);
-			return this;
-		}
-
-		public List<FieldValidator> getFieldValidators(String fieldName) {
-			return conditionMap.get(fieldName);
-		}
-
-		protected HashMap<String, List<FieldValidator>> getConditionMap() {
-			return conditionMap;
-		}
-
-		public JSONObject toJson() {
-			return null;
-
-		}
-
-		public final static FormValidationCondition fromJson(JSONObject json) {
-			return null;
-
-		}
 	}
 
 	public static abstract class FieldValidator {
