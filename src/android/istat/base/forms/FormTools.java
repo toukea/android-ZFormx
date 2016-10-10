@@ -8,7 +8,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * @author istat
+ */
 public class FormTools {
     @SuppressLint("SimpleDateFormat")
     public final static Calendar parseToCalandar(Object obj) {

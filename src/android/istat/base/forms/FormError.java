@@ -4,7 +4,9 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @author istat
+ */
 public final class FormError {
     View viewCause;
     String fieldName;

@@ -5,7 +5,9 @@ import java.util.List;
 import android.istat.base.forms.Form;
 import android.istat.base.forms.FormCheckSummary;
 import android.istat.base.forms.FormState;
-
+/**
+ * @author istat
+ */
 public interface MultiFormHandler {
 	public void pullFroms(String url);
 

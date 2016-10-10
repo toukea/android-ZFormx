@@ -2,7 +2,9 @@ package android.istat.base.forms;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @author istat
+ */
 public class FormCheckSummary extends ArrayList<FormState> {
 
 	/**

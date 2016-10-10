@@ -6,65 +6,68 @@ import java.util.List;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * @author istat
+ */
 class ViewUtil {
-	private ViewUtil() {
+    private ViewUtil() {
 
-	}
+    }
 
-	public static List<View> getAllChildViews(View v) {
-		if (!(v instanceof ViewGroup)) {
-			ArrayList<View> viewArrayList = new ArrayList<View>();
-			viewArrayList.add(v);
-			return viewArrayList;
-		}
+    public static List<View> getAllChildViews(View v) {
+        if (!(v instanceof ViewGroup)) {
+            ArrayList<View> viewArrayList = new ArrayList<View>();
+            viewArrayList.add(v);
+            return viewArrayList;
+        }
 
-		ArrayList<View> result = new ArrayList<View>();
+        ArrayList<View> result = new ArrayList<View>();
 
-		ViewGroup viewGroup = (ViewGroup) v;
-		for (int i = 0; i < viewGroup.getChildCount(); i++) {
+        ViewGroup viewGroup = (ViewGroup) v;
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
 
-			View child = viewGroup.getChildAt(i);
+            View child = viewGroup.getChildAt(i);
 
-			ArrayList<View> viewArrayList = new ArrayList<View>();
-			viewArrayList.add(v);
-			viewArrayList.addAll(getAllChildViews(child));
+            ArrayList<View> viewArrayList = new ArrayList<View>();
+            viewArrayList.add(v);
+            viewArrayList.addAll(getAllChildViews(child));
 
-			result.addAll(viewArrayList);
-		}
-		return result;
-	}
+            result.addAll(viewArrayList);
+        }
+        return result;
+    }
 
-	public static List<View> getAllChildViews(View v, boolean ignoreViewGroup) {
-		if (!(v instanceof ViewGroup)) {
-			ArrayList<View> viewArrayList = new ArrayList<View>();
-			viewArrayList.add(v);
-			return viewArrayList;
-		}
+    public static List<View> getAllChildViews(View v, boolean ignoreViewGroup) {
+        if (!(v instanceof ViewGroup)) {
+            ArrayList<View> viewArrayList = new ArrayList<View>();
+            viewArrayList.add(v);
+            return viewArrayList;
+        }
 
-		ArrayList<View> result = new ArrayList<View>();
+        ArrayList<View> result = new ArrayList<View>();
 
-		ViewGroup viewGroup = (ViewGroup) v;
-		for (int i = 0; i < viewGroup.getChildCount(); i++) {
+        ViewGroup viewGroup = (ViewGroup) v;
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
 
-			View child = viewGroup.getChildAt(i);
+            View child = viewGroup.getChildAt(i);
 
-			ArrayList<View> viewArrayList = new ArrayList<View>();
-			if (!ignoreViewGroup) {
-				viewArrayList.add(v);
-			}
-			viewArrayList.addAll(getAllChildViews(child));
+            ArrayList<View> viewArrayList = new ArrayList<View>();
+            if (!ignoreViewGroup) {
+                viewArrayList.add(v);
+            }
+            viewArrayList.addAll(getAllChildViews(child));
 
-			result.addAll(viewArrayList);
-		}
-		return result;
-	}
+            result.addAll(viewArrayList);
+        }
+        return result;
+    }
 
-	public static List<View> getDirectChildViews(ViewGroup v) {
-		return getAllChildViews(v, true);
-	}
+    public static List<View> getDirectChildViews(ViewGroup v) {
+        return getAllChildViews(v, true);
+    }
 
-	public static List<View> getAllChildViews(ViewGroup v) {
-		return getAllChildViews(v, false);
-	}
+    public static List<View> getAllChildViews(ViewGroup v) {
+        return getAllChildViews(v, false);
+    }
 
 }

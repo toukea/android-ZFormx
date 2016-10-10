@@ -3,7 +3,9 @@ package android.istat.base.forms.interfaces;
 
 import android.istat.base.forms.Form;
 import android.istat.base.forms.FormState;
-
+/**
+ * @author istat
+ */
 public interface FormHandler {
 	public void pullFrom(String url);
 

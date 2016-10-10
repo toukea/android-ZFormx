@@ -13,7 +13,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-
+/**
+ * @author istat
+ */
 public class FormFlower {
 	Form form;
 	boolean fillEditableOnly = false;

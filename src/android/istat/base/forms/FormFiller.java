@@ -12,7 +12,9 @@ import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-
+/**
+ * @author istat
+ */
 public class FormFiller {
 	private Form form;
 

@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 
 import android.text.TextUtils;
 import android.view.View;
-
+/**
+ * @author istat
+ */
 public final class FormValidator {
     FormState formState;
     HashMap<String, List<Validator>> validationCondition = new HashMap<String, List<Validator>>();

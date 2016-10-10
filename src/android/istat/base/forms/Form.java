@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.json.JSONObject;
-
+/**
+ * @author istat
+ */
 public class Form extends HashMap<String, Object> {
 
     /**
