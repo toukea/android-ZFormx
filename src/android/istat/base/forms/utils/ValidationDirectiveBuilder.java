@@ -43,7 +43,7 @@ public class ValidationDirectiveBuilder {
 		return this;
 	}
 
-	public  ValidationDirectiveBuilder applyFieldValidators(String fieldName,
+	public ValidationDirectiveBuilder applyFieldValidators(String fieldName,
 			List<FieldValidator> validators) {
 		conditionMap.put(fieldName, validators);
 		return this;
@@ -61,7 +61,7 @@ public class ValidationDirectiveBuilder {
 		return conditionMap.get(fieldName);
 	}
 
-	protected HashMap<String, List<FieldValidator>> create() {
+	public final HashMap<String, List<FieldValidator>> create() {
 		return conditionMap;
 	}
 

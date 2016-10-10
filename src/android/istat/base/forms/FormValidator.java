@@ -26,22 +26,20 @@ public final class FormValidator {
 		return onValidate(form, formView, conditions);
 	}
 
-	private static FormState onValidate(Form form, View formView,
-			HashMap<String, List<FieldValidator>> conditions) {
-		FormValidator validator = new FormValidator();
-		validator.setValidationDirective(conditions);
-		return validator.validate(form, formView);
-	}
-
 	public void setValidationDirective(ValidationDirective directive) {
+		if (directive == null) {
+			this.validationCondition.clear();
+			return;
+		}
 		this.validationCondition = directive;
 	}
 
 	public void setValidationDirective(
 			HashMap<String, List<FieldValidator>> validationController) {
-//		if (validationController == null) {
-//			return;
-//		}
+		if (validationController == null) {
+			this.validationCondition.clear();
+			return;
+		}
 		this.validationCondition = validationController;
 	}
 
@@ -62,6 +60,9 @@ public final class FormValidator {
 	}
 
 	private void proceedCheckup(Form form, FormState state, View formView) {
+		if (validationListener != null) {
+			validationListener.onValidationStarting(form, formView);
+		}
 		Iterator<String> iterator = form.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
@@ -77,6 +78,10 @@ public final class FormValidator {
 					error.viewCause = formView.findViewWithTag(key);
 					error.addFailedValidators(validator);
 					state.addError(error);
+					if (validationListener != null) {
+						validationListener.onValidateField(form, key, objValue,
+								formView, validator, isValidated);
+					}
 					if (validator.hasBreakValidationIfErrorEnable()) {
 						break;
 					}
@@ -86,6 +91,16 @@ public final class FormValidator {
 				state.addError(error);
 			}
 		}
+		if (validationListener != null) {
+			validationListener.onValidationCompleted(form, formView, state);
+		}
+	}
+
+	private static FormState onValidate(Form form, View formView,
+			HashMap<String, List<FieldValidator>> conditions) {
+		FormValidator validator = new FormValidator();
+		validator.setValidationDirective(conditions);
+		return validator.validate(form, formView);
 	}
 
 	public static class ValidationDirective extends

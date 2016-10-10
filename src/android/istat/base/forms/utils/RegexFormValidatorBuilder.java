@@ -9,6 +9,14 @@ import android.istat.base.forms.FormValidator.FieldValidator;
 public final class RegexFormValidatorBuilder {
 	RegexValidationDirectiveBuilder conditionBuilder = new RegexValidationDirectiveBuilder();
 
+	public final static RegexFormValidatorBuilder newInstance() {
+		return new RegexFormValidatorBuilder();
+	}
+
+	private RegexFormValidatorBuilder() {
+
+	}
+
 	public RegexFormValidatorBuilder appendFieldValidationParams(
 			String fieldName, String regexCondition, String message) {
 		conditionBuilder.appendFieldValidationParams(fieldName, regexCondition,
