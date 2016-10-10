@@ -10,9 +10,9 @@ import java.util.List;
  * @author istat
  */
 public final class FormState {
-    List<FormError> errors = new ArrayList<FormError>();
+    List<FormFieldError> errors = new ArrayList<FormFieldError>();
 
-    public List<FormError> getErrors() {
+    public List<FormFieldError> getErrors() {
         return errors;
     }
 
@@ -20,14 +20,14 @@ public final class FormState {
         return errors != null && !errors.isEmpty();
     }
 
-    FormState addError(FormError error) {
+    FormState addError(FormFieldError error) {
         errors.add(error);
         return this;
     }
 
-    public List<FormError> getErrorByViewCause(View cause) {
-        List<FormError> errors = new ArrayList<FormError>();
-        for (FormError error : getErrors()) {
+    public List<FormFieldError> getErrorByViewCause(View cause) {
+        List<FormFieldError> errors = new ArrayList<FormFieldError>();
+        for (FormFieldError error : getErrors()) {
             if (cause != null && cause.equals(error.getViewCause())) {
                 errors.add(error);
             }
@@ -35,9 +35,9 @@ public final class FormState {
         return errors;
     }
 
-    public List<FormError> getErrorByFieldName(String fieldName) {
-        List<FormError> errors = new ArrayList<FormError>();
-        for (FormError error : getErrors()) {
+    public List<FormFieldError> getErrorByFieldName(String fieldName) {
+        List<FormFieldError> errors = new ArrayList<FormFieldError>();
+        for (FormFieldError error : getErrors()) {
             if (!TextUtils.isEmpty(fieldName) && fieldName.equals(error.getFieldValue())) {
                 errors.add(error);
             }

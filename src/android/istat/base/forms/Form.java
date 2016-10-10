@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.json.JSONObject;
+
+import android.istat.base.forms.tools.FormTools;
+
 /**
  * @author istat
  */
@@ -137,7 +140,7 @@ public class Form extends HashMap<String, Object> {
 //                    if (field.getType().equals(String.class)) {
 //                        field.set(obj, form.get(fieldName));
 //                    } else {
-                        throw new RuntimeException(e);
+                    throw new RuntimeException(e);
 //                    }
                 }
             }

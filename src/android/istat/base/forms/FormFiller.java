@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.istat.base.forms.interfaces.FieldModel;
+import android.istat.base.forms.utils.ViewUtil;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
