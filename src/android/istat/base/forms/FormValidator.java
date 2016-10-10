@@ -21,14 +21,19 @@ public final class FormValidator {
         this.validationListener = validationListener;
     }
 
-//	public final static FormState validate(Form form, View formView,
-//			ValidationDirective diective) {
-//		return onValidate(form, formView, diective);
-//	}
-
     public final static FormState validate(Form form, View formView,
                                            HashMap<String, List<FieldValidator>> validationDirective) {
-        return onValidate(form, formView, validationDirective);
+        FormValidator validator = new FormValidator();
+        validator.setValidationDirective(validationDirective);
+        return validator.validate(form, formView);
+    }
+
+    public final static FormState validate(Form form, View formView,
+                                           HashMap<String, List<FieldValidator>> validationDirective, ValidationListener listener) {
+        FormValidator validator = new FormValidator();
+        validator.setValidationDirective(validationDirective);
+        validator.setValidationListener(listener);
+        return validator.validate(form, formView);
     }
 
 //	public void setValidationDirective(ValidationDirective directive) {
@@ -99,13 +104,6 @@ public final class FormValidator {
         if (validationListener != null) {
             validationListener.onValidationCompleted(form, formView, state);
         }
-    }
-
-    private static FormState onValidate(Form form, View formView,
-                                        HashMap<String, List<FieldValidator>> conditions) {
-        FormValidator validator = new FormValidator();
-        validator.setValidationDirective(conditions);
-        return validator.validate(form, formView);
     }
 //
 //	public static class ValidationDirective extends
