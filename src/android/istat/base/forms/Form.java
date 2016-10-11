@@ -55,7 +55,6 @@ public class Form extends HashMap<String, Object> {
         try {
             return (T) super.get(name);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
