@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 /**
  * @author istat
  */
-class ViewUtil {
+public class ViewUtil {
     private ViewUtil() {
 
     }

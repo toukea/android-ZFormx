@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.istat.base.forms.interfaces.FieldModel;
+import android.istat.base.forms.interfaces.FieldHandler;
 import android.istat.base.forms.tools.FormTools;
 import android.text.TextUtils;
 import android.view.View;
@@ -61,8 +61,8 @@ public class FormFlower {
 
 	private void flowView(View v) {
 		if (fieldModels != null && fieldModels.size() > 0) {
-			for (FieldModel model : fieldModels) {
-				boolean result = model.onModelling(form, v.getTag() + "", v);
+			for (FieldHandler model : fieldModels) {
+				boolean result = model.onHandle(form, v.getTag() + "", v);
 				if (result) {
 					return;
 				}
@@ -120,26 +120,26 @@ public class FormFlower {
 	}
 
 	// -----------------------
-	List<FieldModel> fieldModels = new ArrayList<FieldModel>();
+	List<FieldHandler> fieldModels = new ArrayList<FieldHandler>();
 
 	public static FormFlower flowIntoView(Form form, View view,
-			FieldModel... fieldModels) {
+			FieldHandler... fieldModels) {
 		return flowIntoView(form, view, false, fieldModels);
 	}
 
 	public static FormFlower flowIntoView(Form form, View view,
-			boolean editableOnly, FieldModel... fieldModels) {
+			boolean editableOnly, FieldHandler... fieldModels) {
 		return flowIntoView(form, view, editableOnly,
 				fieldModels != null ? Arrays.asList(fieldModels) : null);
 	}
 
 	public static FormFlower flowIntoView(Form form, View view,
-			List<FieldModel> fieldModels) {
+			List<FieldHandler> fieldModels) {
 		return flowIntoView(form, view, false, fieldModels);
 	}
 
 	public static FormFlower flowIntoView(Form form, View view,
-			boolean editableOnly, List<FieldModel> fieldModels) {
+			boolean editableOnly, List<FieldHandler> fieldModels) {
 
 		FormFlower binder = new FormFlower(form);
 		binder.addFieldModels(fieldModels);
@@ -147,11 +147,11 @@ public class FormFlower {
 		return binder;
 	}
 
-	void addFieldModels(List<FieldModel> models) {
-		FieldModel defaultModel = new FieldModel() {
+	void addFieldModels(List<FieldHandler> models) {
+		FieldHandler defaultModel = new FieldHandler() {
 
 			@Override
-			public boolean onModelling(Form fieldName, String fieldValue, View v) {
+			public boolean onHandle(Form fieldName, String fieldValue, View v) {
 				try {
 					if (v instanceof TextView) {
 						flowTextView(v);
@@ -176,7 +176,7 @@ public class FormFlower {
 				return false;
 			}
 		};
-		fieldModels = models != null ? models : new ArrayList<FieldModel>();
+		fieldModels = models != null ? models : new ArrayList<FieldHandler>();
 		fieldModels.add(defaultModel);
 	}
 }

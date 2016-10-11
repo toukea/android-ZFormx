@@ -5,6 +5,6 @@ import android.view.View;
 /**
  * @author istat
  */
-public interface FieldModel {
-	public boolean onModelling(Form form, String fieldName, View view);
+public interface FieldHandler {
+	public boolean onHandle(Form form, String fieldName, View view);
 }

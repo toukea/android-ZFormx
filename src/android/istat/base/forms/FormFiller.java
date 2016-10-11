@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.istat.base.forms.interfaces.FieldModel;
+import android.istat.base.forms.interfaces.FieldHandler;
 import android.istat.base.forms.utils.ViewUtil;
 import android.text.TextUtils;
 import android.view.View;
@@ -101,12 +101,12 @@ public class FormFiller {
 		}
 	}
 
-	List<FieldModel> fieldModels = new ArrayList<FieldModel>();
+	List<FieldHandler> fieldModels = new ArrayList<FieldHandler>();
 
 	private void fillFormFieldWithView(View v, String fieldName) {
 		if (fieldModels != null && fieldModels.size() > 0) {
-			for (FieldModel model : fieldModels) {
-				boolean result = model.onModelling(form, v.getTag() + "", v);
+			for (FieldHandler model : fieldModels) {
+				boolean result = model.onHandle(form, v.getTag() + "", v);
 				if (result) {
 					return;
 				}
@@ -143,34 +143,34 @@ public class FormFiller {
 
 	public static FormFiller fillFromView(Form form, View view,
 			boolean editableOnly) {
-		return fillFromView(form, view, editableOnly, new FieldModel[0]);
+		return fillFromView(form, view, editableOnly, new FieldHandler[0]);
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
-			boolean editableOnly, FieldModel... models) {
+			boolean editableOnly, FieldHandler... models) {
 		return fillFromView(form, view, editableOnly, models != null
 				&& models.length > 0 ? Arrays.asList(models) : null);
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
-			FieldModel... models) {
+			FieldHandler... models) {
 		return fillFromView(form, view, false, models != null
 				&& models.length > 0 ? Arrays.asList(models) : null);
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
-			boolean editableOnly, List<FieldModel> models) {
+			boolean editableOnly, List<FieldHandler> models) {
 		FormFiller filler = new FormFiller(form);
 		filler.addFieldModels(models);
 		filler.fillFormUsingAutoMatchedTargetedView(view, editableOnly);
 		return filler;
 	}
 
-	void addFieldModels(List<FieldModel> models) {
-		FieldModel defaultModel = new FieldModel() {
+	void addFieldModels(List<FieldHandler> models) {
+		FieldHandler defaultModel = new FieldHandler() {
 
 			@Override
-			public boolean onModelling(Form form, String fieldName, View v) {
+			public boolean onHandle(Form form, String fieldName, View v) {
 				try {
 					if (v instanceof TextView) {
 						onFillFromTextView(v, fieldName);
@@ -191,7 +191,7 @@ public class FormFiller {
 				return false;
 			}
 		};
-		fieldModels = models != null ? models : new ArrayList<FieldModel>();
+		fieldModels = models != null ? models : new ArrayList<FieldHandler>();
 		fieldModels.add(defaultModel);
 	}
 

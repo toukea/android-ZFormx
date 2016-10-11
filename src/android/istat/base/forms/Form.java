@@ -118,7 +118,7 @@ public class Form extends HashMap<String, Object> {
 
     public static final <T> T createEntity(Form form, Class<T> clazz) throws IllegalAccessException, InstantiationException {
         T instance = clazz.newInstance();
-        flowFormOnEntity(form, clazz);
+        flowFormOnEntity(form, instance);
         return instance;
     }
 
@@ -127,13 +127,15 @@ public class Form extends HashMap<String, Object> {
     }
 
     public static void flowFormOnEntity(Form form, Object obj, boolean throwException) {
-        Field[] fields = obj.getClass().getDeclaredFields();
+        Class<?> clazz = obj.getClass();
+        Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             try {
                 String fieldName = field.getName();
                 if (form.containsKey(fieldName)) {
                     field.setAccessible(true);
-                    field.set(obj, form.get(fieldName));
+                    Object fieldValue = form.get(fieldName);
+                    field.set(obj, fieldValue);
                 }
             } catch (Exception e) {
                 if (throwException) {
