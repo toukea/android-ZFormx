@@ -101,11 +101,11 @@ public class FormFiller {
 		}
 	}
 
-	List<FieldHandler> fieldModels = new ArrayList<FieldHandler>();
+	List<FieldHandler> fieldHandlers = new ArrayList<FieldHandler>();
 
 	private void fillFormFieldWithView(View v, String fieldName) {
-		if (fieldModels != null && fieldModels.size() > 0) {
-			for (FieldHandler model : fieldModels) {
+		if (fieldHandlers != null && fieldHandlers.size() > 0) {
+			for (FieldHandler model : fieldHandlers) {
 				boolean result = model.onHandle(form, v.getTag() + "", v);
 				if (result) {
 					return;
@@ -147,26 +147,26 @@ public class FormFiller {
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
-			boolean editableOnly, FieldHandler... models) {
-		return fillFromView(form, view, editableOnly, models != null
-				&& models.length > 0 ? Arrays.asList(models) : null);
+			boolean editableOnly, FieldHandler... handlers) {
+		return fillFromView(form, view, editableOnly, handlers != null
+				&& handlers.length > 0 ? Arrays.asList(handlers) : null);
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
-			FieldHandler... models) {
-		return fillFromView(form, view, false, models != null
-				&& models.length > 0 ? Arrays.asList(models) : null);
+			FieldHandler... handlers) {
+		return fillFromView(form, view, false, handlers != null
+				&& handlers.length > 0 ? Arrays.asList(handlers) : null);
 	}
 
 	public static FormFiller fillFromView(Form form, View view,
-			boolean editableOnly, List<FieldHandler> models) {
+			boolean editableOnly, List<FieldHandler> handlers) {
 		FormFiller filler = new FormFiller(form);
-		filler.addFieldModels(models);
+		filler.addFieldhandlers(handlers);
 		filler.fillFormUsingAutoMatchedTargetedView(view, editableOnly);
 		return filler;
 	}
 
-	void addFieldModels(List<FieldHandler> models) {
+	void addFieldhandlers(List<FieldHandler> handlers) {
 		FieldHandler defaultModel = new FieldHandler() {
 
 			@Override
@@ -191,8 +191,8 @@ public class FormFiller {
 				return false;
 			}
 		};
-		fieldModels = models != null ? models : new ArrayList<FieldHandler>();
-		fieldModels.add(defaultModel);
+		fieldHandlers = handlers != null ? handlers : new ArrayList<FieldHandler>();
+		fieldHandlers.add(defaultModel);
 	}
 
 }

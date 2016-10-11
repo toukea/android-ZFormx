@@ -51,6 +51,15 @@ public class Form extends HashMap<String, Object> {
         }
     }
 
+    public <T> T opt(String name) {
+        try {
+            return (T) super.get(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public double optDouble(String name) {
         try {
             return Double.valueOf(name);
