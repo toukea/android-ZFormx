@@ -5,12 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.istat.base.forms.interfaces.FieldHandler;
+import android.istat.base.forms.tools.FormTools;
 import android.istat.base.forms.utils.ViewUtil;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -70,10 +72,40 @@ public final class FormFiller extends FormGetSetter {
         }
     }
 
+    public final static FieldValueGetter<Integer, Spinner> GETTER_SPINNER_INDEX = new FieldValueGetter<Integer, Spinner>() {
+        @Override
+        public Integer getValue(Spinner spinner) {
+            return null;
+        }
+    };
+    public final static FieldValueGetter<String, Spinner> GETTER_SPINNER_CONTAINT = new FieldValueGetter<String, Spinner>() {
+        @Override
+        public String getValue(Spinner spinner) {
+            return null;
+        }
+    };
+
     final static FieldValueGetter<Object, View> DEFAULT_GETTER = new FieldValueGetter<Object, View>() {
 
         @Override
-        public Object getValue(View view) {
+        public Object getValue(View v) {
+            try {
+                if (v instanceof TextView) {
+                    TextView t = (TextView) v;
+                    return t.getText().toString();
+                } else if (v instanceof CheckBox) {
+                    CheckBox t = (CheckBox) v;
+                    return t.isChecked();
+                } else if (v instanceof Spinner) {
+                    Spinner t = (Spinner) v;
+                    return t.getSelectedItemPosition();
+                } else if (v instanceof RadioButton) {
+                    RadioButton t = (RadioButton) v;
+                    return t.isChecked();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     };

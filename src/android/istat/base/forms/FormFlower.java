@@ -65,17 +65,28 @@ public final class FormFlower extends FormGetSetter {
         }
     }
 
-    FieldValueSetter<Object, View> DEFAULT_SETTER = new FieldValueSetter<Object, View>() {
+    public final static FieldValueSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldValueSetter<Integer, Spinner>() {
+
         @Override
-        public void setValue(Object entity, View v) {
+        public void setValue(Integer entity, Spinner spinner) {
+
+        }
+    };
+    public final static FieldValueSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldValueSetter<String, Spinner>() {
+
+        @Override
+        public void setValue(String entity, Spinner spinner) {
+
+        }
+    };
+
+    final static FieldValueSetter<Object, View> DEFAULT_SETTER = new FieldValueSetter<Object, View>() {
+        @Override
+        public void setValue(Object value, View v) {
             try {
-                String value = form.optString(v.getTag() + "");
                 if (v instanceof TextView) {
                     TextView t = (TextView) v;
-
-                    if (!TextUtils.isEmpty(value)) {
-                        t.setText(value);
-                    }
+                    t.setText(FormTools.parseString(value));
                 } else if (v instanceof CheckBox) {
                     CheckBox t = (CheckBox) v;
                     t.setChecked(FormTools.parseBoolean(value));
