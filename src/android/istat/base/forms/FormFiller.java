@@ -70,45 +70,16 @@ public final class FormFiller extends FormGetSetter {
         }
     }
 
-    public final static class TextViewValueGeter extends FormFiller.FieldValueGetter<String, TextView> {
+    final static FieldValueGetter<Object, View> DEFAULT_GETTER = new FieldValueGetter<Object, View>() {
 
         @Override
-        public String getValue(TextView textView) {
+        public Object getValue(View view) {
             return null;
         }
+    };
+
+    @Override
+    protected final FieldHandler getDefaultHandler() {
+        return DEFAULT_GETTER;
     }
-
-    public final static class SpinnerValueGeter extends FormFiller.FieldValueGetter<String, TextView> {
-
-        @Override
-        public String getValue(TextView textView) {
-            return null;
-        }
-    }
-
-    public final static class RadioButtonValueGeter extends FormFiller.FieldValueGetter<String, TextView> {
-
-        @Override
-        public String getValue(TextView textView) {
-            return null;
-        }
-    }
-
-    public final static class RadioGroupValueGeter extends FormFiller.FieldValueGetter<String, TextView> {
-
-        @Override
-        public String getValue(TextView textView) {
-            return null;
-        }
-    }
-
-    public final static class CheckBoxValueGeter extends FormFiller.FieldValueGetter<String, TextView> {
-
-        @Override
-        public String getValue(TextView textView) {
-            return null;
-        }
-    }
-
-
 }

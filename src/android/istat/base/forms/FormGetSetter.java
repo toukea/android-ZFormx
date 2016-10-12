@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author istat
  */
-class FormGetSetter {
+abstract class FormGetSetter {
     protected Form form;
     protected boolean modifyEditableOnly = false;
 
@@ -72,22 +72,8 @@ class FormGetSetter {
     protected final List<FieldHandler> fieldHandlers = new ArrayList<FieldHandler>();
 
     protected void addAllFieldHandlers(List<FieldHandler> handlers) {
-        FieldHandler defaultModel = new FieldHandler() {
-
-            @Override
-            public boolean onHandle(Form fieldName, String fieldValue, View v) {
-                try {
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                return false;
-            }
-        };
-
         fieldHandlers.addAll(handlers);
-        fieldHandlers.add(defaultModel);
+        fieldHandlers.add(getDefaultHandler());
     }
 
     protected final void setModifyEditableOnly(boolean modifyEditableOnly) {
@@ -97,6 +83,8 @@ class FormGetSetter {
     protected final boolean isModifyEditableOnly() {
         return modifyEditableOnly;
     }
+
+    protected abstract FieldHandler getDefaultHandler();
 
     static abstract class FieldValueGetSetter implements FieldHandler {
         boolean override = false;

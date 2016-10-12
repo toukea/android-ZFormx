@@ -65,11 +65,38 @@ public final class FormFlower extends FormGetSetter {
         }
     }
 
-    public final static class TextViewValueSetter extends FieldValueSetter<String, TextView> {
-
+    FieldValueSetter<Object, View> DEFAULT_SETTER = new FieldValueSetter<Object, View>() {
         @Override
-        public void setValue(String entity, TextView textView) {
+        public void setValue(Object entity, View v) {
+            try {
+                String value = form.optString(v.getTag() + "");
+                if (v instanceof TextView) {
+                    TextView t = (TextView) v;
 
+                    if (!TextUtils.isEmpty(value)) {
+                        t.setText(value);
+                    }
+                } else if (v instanceof CheckBox) {
+                    CheckBox t = (CheckBox) v;
+                    t.setChecked(FormTools.parseBoolean(value));
+                } else if (v instanceof Spinner) {
+                    Spinner t = (Spinner) v;
+                    t.setSelection(FormTools.parseInt(value));
+                } else if (v instanceof RadioButton) {
+                    RadioButton t = (RadioButton) v;
+                    t.setChecked(FormTools.parseBoolean(value));
+                } else if (v instanceof RadioGroup) {
+                    RadioButton t = (RadioButton) v;
+                    t.setChecked(FormTools.parseBoolean(value));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    };
+
+    @Override
+    protected final FieldHandler getDefaultHandler() {
+        return DEFAULT_SETTER;
     }
 }
