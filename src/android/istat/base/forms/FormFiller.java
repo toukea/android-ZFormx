@@ -64,7 +64,7 @@ public final class FormFiller extends FormGetSetter {
                     return true;
                 }
             }
-            return super.onHandle(form, fieldName, view);
+            return false;
         }
     }
 
@@ -111,8 +111,12 @@ public final class FormFiller extends FormGetSetter {
     };
 
     @Override
-    protected final FieldValueGetSetter getDefaultHandler() {
-        return DEFAULT_GETTER;
+    protected final List<FieldValueGetSetter> getDefaultHandlers() {
+        return new ArrayList() {
+            {
+                add(DEFAULT_GETTER);
+            }
+        };
     }
 
     @Override

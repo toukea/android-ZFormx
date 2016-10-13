@@ -12,8 +12,8 @@ import java.util.List;
  * @author istat
  */
 abstract class FormGetSetter {
-    protected Form form;
-    protected boolean editableOnlyGetSettable = false;
+    Form form;
+    boolean editableOnlyGetSettable = false;
     final List<FieldValueGetSetter> fieldHandlers = new ArrayList<FieldValueGetSetter>();
 
     FormGetSetter(Form form) {
@@ -46,7 +46,7 @@ abstract class FormGetSetter {
         if (handlers != null && handlers.size() > 0) {
             fieldHandlers.addAll(handlers);
         }
-        fieldHandlers.add(getDefaultHandler());
+        fieldHandlers.addAll(getDefaultHandlers());
     }
 
     private void performViewHandling(View v) {
@@ -70,7 +70,7 @@ abstract class FormGetSetter {
         return editableOnlyGetSettable;
     }
 
-    protected abstract FieldValueGetSetter getDefaultHandler();
+    protected abstract List<FieldValueGetSetter> getDefaultHandlers();
 
     protected final void applyGetSetter(View view) {
         if (view != null) {
@@ -83,14 +83,9 @@ abstract class FormGetSetter {
     }
 
     static abstract class FieldValueGetSetter {
-        boolean override = false;
 
         public FieldValueGetSetter() {
 
-        }
-
-        public FieldValueGetSetter(boolean override) {
-            this.override = override;
         }
 
         protected final boolean isHandleAble(View view) {
@@ -139,8 +134,6 @@ abstract class FormGetSetter {
 //            }
 //        }
 
-        protected boolean onHandle(Form form, String fieldName, View view) {
-            return this.override;
-        }
+        protected abstract boolean onHandle(Form form, String fieldName, View view);
     }
 }

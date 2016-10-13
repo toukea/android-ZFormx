@@ -48,32 +48,31 @@ public final class FormFlower extends FormGetSetter {
     public static abstract class FieldValueSetter<T, V extends View> extends
             FieldValueGetSetter {
 
-        public abstract boolean setValue(T entity, V v);
+        public abstract void setValue(T entity, V v);
 
         @SuppressWarnings("unchecked")
         @Override
         public final boolean onHandle(Form form, String fieldName, View view) {
             if (isHandleAble(view)) {
                 T value = form.opt(fieldName);
-                return setValue(value, (V) view);
+                setValue(value, (V) view);
+                return true;
             }
-            return super.onHandle(form, fieldName, view);
+            return false;
         }
     }
 
     public final static FieldValueSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldValueSetter<Integer, Spinner>() {
 
         @Override
-        public boolean setValue(Integer entity, Spinner spinner) {
-
-            return false;
+        public void setValue(Integer entity, Spinner v) {
+            v.setSelection(FormTools.parseInt(entity));
         }
     };
     public final static FieldValueSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldValueSetter<String, Spinner>() {
 
         @Override
-        public boolean setValue(String entity, Spinner spinner) {
-            return false;
+        public void setValue(String entity, Spinner spinner) {
         }
     };
 
@@ -81,41 +80,48 @@ public final class FormFlower extends FormGetSetter {
 
     }
 
-    final static FieldValueSetter<Object, View> DEFAULT_SETTER = new FieldValueSetter<Object, View>() {
+    public final static FieldFlower<TextView> SETTER_TEXT_çVIEW_TEXT = new FieldFlower<TextView>() {
+
         @Override
-        public boolean setValue(Object value, View v) {
-            try {
-                if (v instanceof TextView) {
-                    TextView t = (TextView) v;
-                    t.setText(FormTools.parseString(value));
-                    return true;
-                } else if (v instanceof CheckBox) {
-                    CheckBox t = (CheckBox) v;
-                    t.setChecked(FormTools.parseBoolean(value));
-                    return true;
-                } else if (v instanceof Spinner) {
-                    Spinner t = (Spinner) v;
-                    t.setSelection(FormTools.parseInt(value));
-                    return true;
-                } else if (v instanceof RadioButton) {
-                    RadioButton t = (RadioButton) v;
-                    t.setChecked(FormTools.parseBoolean(value));
-                    return true;
-                } else if (v instanceof RadioGroup) {
-                    RadioButton t = (RadioButton) v;
-                    t.setChecked(FormTools.parseBoolean(value));
-                    return true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
+        public void setValue(Object value, TextView v) {
+            v.setText(FormTools.parseString(value));
+        }
+    };
+    public final static FieldFlower<CheckBox> SETTER_CHECKBOX_STATE = new FieldFlower<CheckBox>() {
+
+        @Override
+        public void setValue(Object value, CheckBox v) {
+
+            v.setChecked(FormTools.parseBoolean(value));
+
+        }
+    };
+    public final static FieldFlower<RadioButton> SETTER_RADIO_BUTTON_STATE = new FieldFlower<RadioButton>() {
+
+        @Override
+        public void setValue(Object value, RadioButton v) {
+            v.setChecked(FormTools.parseBoolean(value));
+        }
+    };
+    public final static FieldFlower<RadioGroup> SETTER_RADIO_GROUP_SELECTION_TEXT = new FieldFlower<RadioGroup>() {
+
+        @Override
+        public void setValue(Object value, RadioGroup v) {
+
         }
     };
 
     @Override
-    protected final FieldValueGetSetter getDefaultHandler() {
-        return DEFAULT_SETTER;
+    protected final List<FieldValueGetSetter> getDefaultHandlers() {
+        return new ArrayList() {
+            {
+                add(SETTER_SPINNER_INDEX);
+                add(SETTER_TEXT_çVIEW_TEXT);
+                add(SETTER_CHECKBOX_STATE);
+                add(SETTER_RADIO_BUTTON_STATE);
+                add(SETTER_RADIO_GROUP_SELECTION_TEXT);
+            }
+        };
     }
 
     protected final void handleViewGroup(ViewGroup v) {
