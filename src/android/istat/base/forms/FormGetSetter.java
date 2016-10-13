@@ -1,5 +1,6 @@
 package android.istat.base.forms;
 
+import android.istat.base.forms.tools.FormTools;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -36,7 +37,7 @@ abstract class FormGetSetter {
 		if (modifyEditableOnly && !v.isEnabled()) {
 			return;
 		}
-		if (v.getTag() != null && !TextUtils.isEmpty(v.getTag() + "")) {
+		if (v.getTag() != null && !FormTools.isEmpty(v.getTag())) {
 			performMutation(v);
 		}
 	}

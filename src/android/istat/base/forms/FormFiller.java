@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.istat.base.forms.utils.ViewUtil;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -109,5 +111,20 @@ public final class FormFiller extends FormGetSetter {
 	@Override
 	protected final FieldValueGetSetter getDefaultHandler() {
 		return DEFAULT_GETTER;
+	}
+
+	@Override
+	protected void traitViewAsViewGroup(ViewGroup v) {
+		List<View> childV = !isModifyEditableOnly() ? ViewUtil
+				.getDirectChildViews(v) : v.getTouchables();
+		for (View view : childV) {
+			if (view != null) {
+				if (view instanceof ViewGroup) {
+					mutateView((ViewGroup) view);
+				} else {
+					traitViewAsSimpleView(view);
+				}
+			}
+		}
 	}
 }
