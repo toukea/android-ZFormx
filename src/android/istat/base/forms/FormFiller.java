@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.istat.base.forms.tools.FormTools;
 import android.istat.base.forms.utils.ViewUtil;
+import android.provider.UserDictionary;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +64,8 @@ public final class FormFiller extends FormGetSetter {
                 if (value != null) {
                     form.put(fieldName, value);
                     return true;
+                } else {
+                    return false;
                 }
             }
             return false;
@@ -71,13 +75,19 @@ public final class FormFiller extends FormGetSetter {
     public final static FieldValueGetter<Integer, Spinner> GETTER_SPINNER_INDEX = new FieldValueGetter<Integer, Spinner>() {
         @Override
         public Integer getValue(Spinner spinner) {
-            return null;
+            return spinner.getSelectedItemPosition();
         }
     };
-    public final static FieldValueGetter<String, Spinner> GETTER_SPINNER_CONTAINT = new FieldValueGetter<String, Spinner>() {
+    public final static FieldValueGetter<String, Spinner> GETTER_SPINNER_TEXT = new FieldValueGetter<String, Spinner>() {
         @Override
         public String getValue(Spinner spinner) {
-            return null;
+            return FormTools.parseString(spinner.getSelectedItem());
+        }
+    };
+    public final static FieldValueGetter<Object, Spinner> GETTER_SPINNER_ENTITY = new FieldValueGetter<Object, Spinner>() {
+        @Override
+        public Object getValue(Spinner spinner) {
+            return spinner.getSelectedItem();
         }
     };
 

@@ -52,10 +52,15 @@ public final class FormFlower extends FormGetSetter {
 
         @SuppressWarnings("unchecked")
         @Override
-        public final boolean onHandle(Form form, String fieldName, View view) {
+        public final boolean onHandle(Form form, String fieldName, final View view) {
             if (isHandleAble(view)) {
-                T value = form.opt(fieldName);
-                setValue(value, (V) view);
+                final T value = form.opt(fieldName);
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setValue(value, (V) view);
+                    }
+                });
                 return true;
             }
             return false;

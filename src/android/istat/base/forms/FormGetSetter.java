@@ -37,7 +37,7 @@ abstract class FormGetSetter {
         if (editableOnlyGetSettable && !v.isEnabled()) {
             return;
         }
-        if (v.getTag() != null && !FormTools.isEmpty(v.getTag())) {
+        if (v != null && v.getTag() != null && !FormTools.isEmpty(v.getTag())) {
             performViewHandling(v);
         }
     }
