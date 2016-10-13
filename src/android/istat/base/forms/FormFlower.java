@@ -56,7 +56,7 @@ public final class FormFlower extends FormGetSetter {
 		public final boolean onHandle(Form form, String fieldName, View view) {
 			if (isHandlable(view)) {
 				T value = form.opt(fieldName);
-				setValue(value, (V) view);
+				return setValue(value, (V) view);
 			}
 			return super.onHandle(form, fieldName, view);
 		}

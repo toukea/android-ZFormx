@@ -75,7 +75,7 @@ abstract class FormGetSetter {
 	protected abstract FieldValueGetSetter getDefaultHandler();
 
 	static abstract class FieldValueGetSetter {
-		boolean override = true;
+		boolean override = false;
 
 		public FieldValueGetSetter() {
 
