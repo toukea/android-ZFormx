@@ -18,114 +18,111 @@ import android.widget.TextView;
  */
 public final class FormFlower extends FormGetSetter {
 
-	FormFlower(Form form) {
-		super(form);
-	}
+    FormFlower(Form form) {
+        super(form);
+    }
 
-	public static FormFlower flowIntoView(Form form, View view,
-			FieldValueSetter<?, ?>... fieldHandlers) {
-		return flowIntoView(form, view, false, fieldHandlers);
-	}
+    public static void flowIntoView(Form form, View view,
+                                    FieldValueSetter<?, ?>... fieldHandlers) {
+        flowIntoView(form, view, false, fieldHandlers);
+    }
 
-	public static FormFlower flowIntoView(Form form, View view,
-			boolean editableOnly, FieldValueSetter<?, ?>... fieldHandlers) {
-		return flowIntoView(form, view, editableOnly,
-				fieldHandlers != null ? Arrays.asList(fieldHandlers) : null);
-	}
+    public static void flowIntoView(Form form, View view,
+                                    boolean editableOnly, FieldValueSetter<?, ?>... fieldHandlers) {
+        flowIntoView(form, view, editableOnly,
+                fieldHandlers != null ? Arrays.asList(fieldHandlers) : null);
+    }
 
-	public static FormFlower flowIntoView(Form form, View view,
-			boolean editableOnly, List<FieldValueSetter<?, ?>> fieldHandlers) {
-		FormFlower flower = new FormFlower(form);
-		List<FieldValueGetSetter> handlers = new ArrayList<FieldValueGetSetter>();
-		if (fieldHandlers != null && fieldHandlers.size() > 0) {
-			handlers.addAll(fieldHandlers);
-		}
-		flower.addAllFieldHandlers(handlers);
-		flower.setModifyEditableOnly(editableOnly);
-		flower.mutateView(view);
-		return flower;
-	}
+    public static void flowIntoView(Form form, View view,
+                                    boolean editableOnly, List<FieldValueSetter<?, ?>> fieldHandlers) {
+        FormFlower flower = new FormFlower(form);
+        List<FieldValueGetSetter> handlers = new ArrayList<FieldValueGetSetter>();
+        if (fieldHandlers != null && fieldHandlers.size() > 0) {
+            handlers.addAll(fieldHandlers);
+        }
+        flower.setEditableOnlyGetSettable(editableOnly);
+        flower.handleView(view);
 
-	public static abstract class FieldValueSetter<T, V extends View> extends
-			FieldValueGetSetter {
+    }
 
-		public abstract boolean setValue(T entity, V v);
+    public static abstract class FieldValueSetter<T, V extends View> extends
+            FieldValueGetSetter {
 
-		@SuppressWarnings("unchecked")
-		@Override
-		public final boolean onHandle(Form form, String fieldName, View view) {
-			if (isHandlable(view)) {
-				T value = form.opt(fieldName);
-				return setValue(value, (V) view);
-			}
-			return super.onHandle(form, fieldName, view);
-		}
-	}
+        public abstract boolean setValue(T entity, V v);
 
-	public final static FieldValueSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldValueSetter<Integer, Spinner>() {
+        @SuppressWarnings("unchecked")
+        @Override
+        public final boolean onHandle(Form form, String fieldName, View view) {
+            if (isHandleAble(view)) {
+                T value = form.opt(fieldName);
+                return setValue(value, (V) view);
+            }
+            return super.onHandle(form, fieldName, view);
+        }
+    }
 
-		@Override
-		public boolean setValue(Integer entity, Spinner spinner) {
+    public final static FieldValueSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldValueSetter<Integer, Spinner>() {
 
-			return false;
-		}
-	};
-	public final static FieldValueSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldValueSetter<String, Spinner>() {
+        @Override
+        public boolean setValue(Integer entity, Spinner spinner) {
 
-		@Override
-		public boolean setValue(String entity, Spinner spinner) {
-			return false;
-		}
-	};
+            return false;
+        }
+    };
+    public final static FieldValueSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldValueSetter<String, Spinner>() {
 
-	final static FieldValueSetter<Object, View> DEFAULT_SETTER = new FieldValueSetter<Object, View>() {
-		@Override
-		public boolean setValue(Object value, View v) {
-			try {
-				if (v instanceof TextView) {
-					TextView t = (TextView) v;
-					t.setText(FormTools.parseString(value));
-					return true;
-				} else if (v instanceof CheckBox) {
-					CheckBox t = (CheckBox) v;
-					t.setChecked(FormTools.parseBoolean(value));
-					return true;
-				} else if (v instanceof Spinner) {
-					Spinner t = (Spinner) v;
-					t.setSelection(FormTools.parseInt(value));
-					return true;
-				} else if (v instanceof RadioButton) {
-					RadioButton t = (RadioButton) v;
-					t.setChecked(FormTools.parseBoolean(value));
-					return true;
-				} else if (v instanceof RadioGroup) {
-					RadioButton t = (RadioButton) v;
-					t.setChecked(FormTools.parseBoolean(value));
-					return true;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return false;
-		}
-	};
+        @Override
+        public boolean setValue(String entity, Spinner spinner) {
+            return false;
+        }
+    };
 
-	@Override
-	protected final FieldValueGetSetter getDefaultHandler() {
-		return DEFAULT_SETTER;
-	}
+    public abstract static class FieldFlower<V extends View> extends FieldValueSetter<Object, V> {
 
-	protected final void traitViewAsViewGroup(ViewGroup v) {
-		String[] fields = form.getFieldNames();
-		for (String field : fields) {
-			View view = v.findViewWithTag(field);
-			if (view != null) {
-				if (view instanceof ViewGroup) {
-					mutateView(view);
-				} else {
-					traitViewAsSimpleView(view);
-				}
-			}
-		}
-	}
+    }
+
+    final static FieldValueSetter<Object, View> DEFAULT_SETTER = new FieldValueSetter<Object, View>() {
+        @Override
+        public boolean setValue(Object value, View v) {
+            try {
+                if (v instanceof TextView) {
+                    TextView t = (TextView) v;
+                    t.setText(FormTools.parseString(value));
+                    return true;
+                } else if (v instanceof CheckBox) {
+                    CheckBox t = (CheckBox) v;
+                    t.setChecked(FormTools.parseBoolean(value));
+                    return true;
+                } else if (v instanceof Spinner) {
+                    Spinner t = (Spinner) v;
+                    t.setSelection(FormTools.parseInt(value));
+                    return true;
+                } else if (v instanceof RadioButton) {
+                    RadioButton t = (RadioButton) v;
+                    t.setChecked(FormTools.parseBoolean(value));
+                    return true;
+                } else if (v instanceof RadioGroup) {
+                    RadioButton t = (RadioButton) v;
+                    t.setChecked(FormTools.parseBoolean(value));
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    };
+
+    @Override
+    protected final FieldValueGetSetter getDefaultHandler() {
+        return DEFAULT_SETTER;
+    }
+
+    protected final void handleViewGroup(ViewGroup v) {
+        String[] fields = form.getFieldNames();
+        for (String field : fields) {
+            View view = v.findViewWithTag(field);
+            applyGetSetter(view);
+        }
+    }
 }
