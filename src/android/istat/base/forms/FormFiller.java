@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -88,6 +89,17 @@ public final class FormFiller extends FormGetSetter {
         @Override
         public Object getValue(Spinner spinner) {
             return spinner.getSelectedItem();
+        }
+    };
+    public final static FieldValueGetter<Object, RadioGroup> GETTER_RADIO_GROUP_SELECTION_TEXT = new FieldValueGetter<Object, RadioGroup>() {
+        @Override
+        public Object getValue(RadioGroup v) {
+            int selectionId = v.getCheckedRadioButtonId();
+            View selectedView = v.findViewById(selectionId);
+            if (selectedView instanceof RadioButton) {
+                return ((RadioButton) selectedView).getText();
+            }
+            return null;
         }
     };
 

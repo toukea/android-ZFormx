@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.istat.base.forms.tools.FormTools;
+import android.istat.base.forms.utils.ViewUtil;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -108,11 +109,22 @@ public final class FormFlower extends FormGetSetter {
             v.setChecked(FormTools.parseBoolean(value));
         }
     };
-    public final static FieldFlower<RadioGroup> SETTER_RADIO_GROUP_SELECTION_TEXT = new FieldFlower<RadioGroup>() {
+    public final static FieldFlower<RadioGroup> SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX = new FieldFlower<RadioGroup>() {
 
         @Override
         public void setValue(Object value, RadioGroup v) {
-
+            int selectionIndex = FormTools.parseInt(value);
+            List<View> viewChild = ViewUtil.getAllChildViews(v);
+            int index = 0;
+            for (View child : viewChild) {
+                if (child instanceof RadioButton) {
+                    if (index == selectionIndex) {
+                        ((RadioButton) child).setSelected(true);
+                        break;
+                    }
+                    index++;
+                }
+            }
         }
     };
 
@@ -124,7 +136,7 @@ public final class FormFlower extends FormGetSetter {
                 add(SETTER_TEXT_çVIEW_TEXT);
                 add(SETTER_CHECKBOX_STATE);
                 add(SETTER_RADIO_BUTTON_STATE);
-                add(SETTER_RADIO_GROUP_SELECTION_TEXT);
+                add(SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX);
             }
         };
     }
