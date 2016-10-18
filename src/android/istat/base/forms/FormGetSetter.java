@@ -14,7 +14,7 @@ import java.util.List;
 abstract class FormGetSetter {
     Form form;
     boolean editableOnlyGetSettable = false;
-    final List<FieldValueGetSetter> fieldHandlers = new ArrayList<FieldValueGetSetter>();
+    final List<FieldValueGetSetter<?, ?>> fieldHandlers = new ArrayList<FieldValueGetSetter<?, ?>>();
 
     FormGetSetter(Form form) {
         this.form = form;
@@ -42,7 +42,7 @@ abstract class FormGetSetter {
         }
     }
 
-    private void prepareViewHandler(List<FieldValueGetSetter> handlers) {
+    private void prepareViewHandler(List<FieldValueGetSetter<?, ?>> handlers) {
         if (handlers != null && handlers.size() > 0) {
             fieldHandlers.addAll(handlers);
         }
@@ -51,7 +51,7 @@ abstract class FormGetSetter {
 
     private void performViewHandling(View v) {
         if (fieldHandlers != null && fieldHandlers.size() > 0) {
-            for (FieldValueGetSetter handler : fieldHandlers) {
+            for (FieldValueGetSetter<?, ?> handler : fieldHandlers) {
                 boolean result = handler.onHandle(form, v.getTag() + "", v);
                 if (result) {
                     return;
@@ -62,7 +62,8 @@ abstract class FormGetSetter {
                 + v.getClass());
     }
 
-    protected final void setEditableOnlyGetSettable(boolean editableOnlyGetSettable) {
+    protected final void setEditableOnlyGetSettable(
+            boolean editableOnlyGetSettable) {
         this.editableOnlyGetSettable = editableOnlyGetSettable;
     }
 
@@ -70,19 +71,19 @@ abstract class FormGetSetter {
         return editableOnlyGetSettable;
     }
 
-    protected abstract List<FieldValueGetSetter> getDefaultHandlers();
+    protected abstract List<FieldValueGetSetter<?, ?>> getDefaultHandlers();
 
     protected final void applyGetSetter(View view) {
         if (view != null) {
             if (view instanceof ViewGroup) {
-                handleView(view);
+                handleViewGroup((ViewGroup) view);
             } else {
                 handleSingleView(view);
             }
         }
     }
 
-    static abstract class FieldValueGetSetter {
+    static abstract class FieldValueGetSetter<T, V extends View> {
 
         public FieldValueGetSetter() {
 
@@ -109,31 +110,20 @@ abstract class FormGetSetter {
         }
 
         @SuppressWarnings("unchecked")
-        protected final <T> Class<T> getViewTypeClass() {
+        protected final Class<?> getViewTypeClass() {
             try {
                 String className = ((ParameterizedType) getClass()
-                        .getGenericSuperclass()).getActualTypeArguments()[1]
+                        .getGenericSuperclass()).getActualTypeArguments()[0]
                         .toString().replaceFirst("class", "").trim();
                 Class<?> clazz = Class.forName(className);
-                return (Class<T>) clazz;
+                return clazz;
             } catch (Exception e) {
                 throw new IllegalStateException(
                         "Class is not parametrized with generic type!!! Please use extends <> ");
             }
         }
 
-//        protected final boolean handle(Form form, String fieldName, View view) {
-//            if(view!=null){
-//                view.post(new Runnable(){
-//
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                });
-//            }
-//        }
-
-        protected abstract boolean onHandle(Form form, String fieldName, View view);
+        protected abstract boolean onHandle(Form form, String fieldName,
+                                            View view);
     }
 }

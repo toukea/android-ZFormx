@@ -28,16 +28,16 @@ public final class FormFlower extends FormGetSetter {
         flowIntoView(form, view, false, fieldHandlers);
     }
 
-    public static void flowIntoView(Form form, View view,
-                                    boolean editableOnly, FieldValueSetter<?, ?>... fieldHandlers) {
+    public static void flowIntoView(Form form, View view, boolean editableOnly,
+                                    FieldValueSetter<?, ?>... fieldHandlers) {
         flowIntoView(form, view, editableOnly,
                 fieldHandlers != null ? Arrays.asList(fieldHandlers) : null);
     }
 
-    public static void flowIntoView(Form form, View view,
-                                    boolean editableOnly, List<FieldValueSetter<?, ?>> fieldHandlers) {
+    public static void flowIntoView(Form form, View view, boolean editableOnly,
+                                    List<FieldValueSetter<?, ?>> fieldHandlers) {
         FormFlower flower = new FormFlower(form);
-        List<FieldValueGetSetter> handlers = new ArrayList<FieldValueGetSetter>();
+        List<FieldValueGetSetter<?, ?>> handlers = new ArrayList<FieldValueGetSetter<?, ?>>();
         if (fieldHandlers != null && fieldHandlers.size() > 0) {
             handlers.addAll(fieldHandlers);
         }
@@ -47,13 +47,14 @@ public final class FormFlower extends FormGetSetter {
     }
 
     public static abstract class FieldValueSetter<T, V extends View> extends
-            FieldValueGetSetter {
+            FieldValueGetSetter<T, V> {
 
         public abstract void setValue(T entity, V v);
 
         @SuppressWarnings("unchecked")
         @Override
-        public final boolean onHandle(Form form, String fieldName, final View view) {
+        public final boolean onHandle(Form form, String fieldName,
+                                      final View view) {
             if (isHandleAble(view)) {
                 final T value = form.opt(fieldName);
                 view.post(new Runnable() {
@@ -68,25 +69,26 @@ public final class FormFlower extends FormGetSetter {
         }
     }
 
-    public final static FieldValueSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldValueSetter<Integer, Spinner>() {
+    final FieldValueSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldValueSetter<Integer, Spinner>() {
 
         @Override
         public void setValue(Integer entity, Spinner v) {
             v.setSelection(FormTools.parseInt(entity));
         }
     };
-    public final static FieldValueSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldValueSetter<String, Spinner>() {
+    final FieldValueSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldValueSetter<String, Spinner>() {
 
         @Override
         public void setValue(String entity, Spinner spinner) {
         }
     };
 
-    public abstract static class FieldFlower<V extends View> extends FieldValueSetter<Object, V> {
+    public static abstract class FieldFlower<V extends View> extends
+            FieldValueSetter<Object, V> {
 
     }
 
-    public final static FieldFlower<TextView> SETTER_TEXT_çVIEW_TEXT = new FieldFlower<TextView>() {
+    final FieldFlower<TextView> SETTER_TEXT_VIEW_TEXT = new FieldFlower<TextView>() {
 
         @Override
         public void setValue(Object value, TextView v) {
@@ -109,6 +111,7 @@ public final class FormFlower extends FormGetSetter {
             v.setChecked(FormTools.parseBoolean(value));
         }
     };
+
     public final static FieldFlower<RadioGroup> SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX = new FieldFlower<RadioGroup>() {
 
         @Override
@@ -129,11 +132,16 @@ public final class FormFlower extends FormGetSetter {
     };
 
     @Override
-    protected final List<FieldValueGetSetter> getDefaultHandlers() {
-        return new ArrayList() {
+    protected final List<FieldValueGetSetter<?, ?>> getDefaultHandlers() {
+        return new ArrayList<FieldValueGetSetter<?, ?>>() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
+
             {
                 add(SETTER_SPINNER_INDEX);
-                add(SETTER_TEXT_çVIEW_TEXT);
+                add(SETTER_TEXT_VIEW_TEXT);
                 add(SETTER_CHECKBOX_STATE);
                 add(SETTER_RADIO_BUTTON_STATE);
                 add(SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX);

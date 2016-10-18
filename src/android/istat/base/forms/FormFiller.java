@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.istat.base.forms.tools.FormTools;
 import android.istat.base.forms.utils.ViewUtil;
-import android.provider.UserDictionary;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +25,8 @@ public final class FormFiller extends FormGetSetter {
         super(form);
     }
 
-    public static void fillFromView(Form form, View view,
-                                    boolean editableOnly, FieldValueGetter<?, ?>... handlers) {
+    public static void fillFromView(Form form, View view, boolean editableOnly,
+                                    FieldValueGetter<?, ?>... handlers) {
         fillFromView(form, view, editableOnly, handlers);
     }
 
@@ -37,10 +36,10 @@ public final class FormFiller extends FormGetSetter {
                 fieldHandlers != null ? Arrays.asList(fieldHandlers) : null);
     }
 
-    public static void fillFromView(Form form, View view,
-                                    boolean editableOnly, List<FieldValueGetter<?, ?>> fieldHandlers) {
+    public static void fillFromView(Form form, View view, boolean editableOnly,
+                                    List<FieldValueGetter<?, ?>> fieldHandlers) {
         FormFiller filler = new FormFiller(form);
-        List<FieldValueGetSetter> handlers = new ArrayList<FieldValueGetSetter>();
+        List<FieldValueGetter<?, ?>> handlers = new ArrayList<FieldValueGetter<?, ?>>();
         if (fieldHandlers != null && fieldHandlers.size() > 0) {
             handlers.addAll(fieldHandlers);
         }
@@ -48,7 +47,8 @@ public final class FormFiller extends FormGetSetter {
         filler.handleView(view);
     }
 
-    public static abstract class FieldFiller<V extends View> extends FieldValueGetter<Object, V> {
+    public static abstract class FieldFiller<V extends View> extends
+            FieldValueGetter<Object, V> {
 
     }
 
@@ -102,7 +102,6 @@ public final class FormFiller extends FormGetSetter {
             return null;
         }
     };
-
     final static FieldValueGetter<Object, View> DEFAULT_GETTER = new FieldValueGetter<Object, View>() {
 
         @Override
@@ -124,6 +123,8 @@ public final class FormFiller extends FormGetSetter {
                 } else if (v instanceof RadioButton) {
                     RadioButton t = (RadioButton) v;
                     return t.isChecked();
+                } else if (v instanceof RadioGroup) {
+                    return GETTER_RADIO_GROUP_SELECTION_TEXT.getValue((RadioGroup) v);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -133,8 +134,13 @@ public final class FormFiller extends FormGetSetter {
     };
 
     @Override
-    protected final List<FieldValueGetSetter> getDefaultHandlers() {
-        return new ArrayList() {
+    protected final List<FieldValueGetSetter<?, ?>> getDefaultHandlers() {
+        return new ArrayList<FieldValueGetSetter<?, ?>>() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
+
             {
                 add(DEFAULT_GETTER);
             }
