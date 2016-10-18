@@ -96,13 +96,13 @@ abstract class FormGetSetter {
                     .equals(view.getClass()));
         }
 
-        protected final Class<?> getFieldValueTypeClass() {
+        protected final Class<T> getFieldValueTypeClass() {
             try {
                 String className = ((ParameterizedType) getClass()
                         .getGenericSuperclass()).getActualTypeArguments()[0]
                         .toString().replaceFirst("class", "").trim();
                 Class<?> clazz = Class.forName(className);
-                return clazz;
+                return (Class<T>) clazz;
             } catch (Exception e) {
                 throw new IllegalStateException(
                         "Class is not parametrized with generic type!!! Please use extends <> ");
@@ -110,13 +110,13 @@ abstract class FormGetSetter {
         }
 
         @SuppressWarnings("unchecked")
-        protected final Class<?> getViewTypeClass() {
+        protected final Class<V> getViewTypeClass() {
             try {
                 String className = ((ParameterizedType) getClass()
                         .getGenericSuperclass()).getActualTypeArguments()[0]
                         .toString().replaceFirst("class", "").trim();
                 Class<?> clazz = Class.forName(className);
-                return clazz;
+                return (Class<V>) clazz;
             } catch (Exception e) {
                 throw new IllegalStateException(
                         "Class is not parametrized with generic type!!! Please use extends <> ");
