@@ -95,7 +95,7 @@ abstract class FormGetSetter {
                     || clazzView.isAssignableFrom(view.getClass()) || clazzView
                     .equals(view.getClass()));
         }
-
+        @SuppressWarnings("unchecked")
         protected final Class<T> getFieldValueTypeClass() {
             try {
                 String className = ((ParameterizedType) getClass()
