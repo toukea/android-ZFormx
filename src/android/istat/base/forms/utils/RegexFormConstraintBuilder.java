@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import android.istat.base.forms.FormValidator.FieldValidator;
 
-public final class RegexValidationDirectiveBuilder extends
-		ValidationDirectiveBuilder {
-	public final static RegexValidationDirectiveBuilder newInstance() {
-		return new RegexValidationDirectiveBuilder();
+public final class RegexFormConstraintBuilder extends
+		FormConstraintBuilder {
+	public final static RegexFormConstraintBuilder newInstance() {
+		return new RegexFormConstraintBuilder();
 	}
 
-	RegexValidationDirectiveBuilder() {
+	RegexFormConstraintBuilder() {
 
 	}
 
-	public RegexValidationDirectiveBuilder appendFieldValidationParams(
+	public RegexFormConstraintBuilder appendFieldValidationParams(
 			String fieldName, String regexCondition, String message) {
 		List<FieldValidator> validators = conditionMap.get(fieldName);
 		if (validators == null) {
@@ -27,7 +27,7 @@ public final class RegexValidationDirectiveBuilder extends
 		return this;
 	}
 
-	public RegexValidationDirectiveBuilder applyFieldValidationParams(
+	public RegexFormConstraintBuilder applyFieldValidationParams(
 			String fieldName, String regexCondition, String message) {
 		List<FieldValidator> validators = new ArrayList<FieldValidator>();
 		FieldValidator validator = new RegexFieldValidator(regexCondition,

@@ -9,20 +9,20 @@ import org.json.JSONObject;
 import android.istat.base.forms.FormValidator;
 import android.istat.base.forms.FormValidator.FieldValidator;
 
-public class ValidationDirectiveBuilder {
+public class FormConstraintBuilder {
 	protected final HashMap<String, List<FieldValidator>> conditionMap = new HashMap<String, List<FieldValidator>>();
 
-	public ValidationDirectiveBuilder() {
+	public FormConstraintBuilder() {
 
 	}
 
-	public ValidationDirectiveBuilder(
+	public FormConstraintBuilder(
 			HashMap<String, List<FieldValidator>> conditionMap) {
 		this.conditionMap.putAll(conditionMap);
 	}
 
-	public ValidationDirectiveBuilder appendFieldValidator(String fieldName,
-			FieldValidator validator) {
+	public FormConstraintBuilder appendFieldValidator(String fieldName,
+													  FieldValidator validator) {
 		List<FieldValidator> validators = conditionMap.get(fieldName);
 		if (validators == null) {
 			validators = new ArrayList<FieldValidator>();
@@ -32,7 +32,7 @@ public class ValidationDirectiveBuilder {
 		return this;
 	}
 
-	public <T extends FieldValidator> ValidationDirectiveBuilder appendAllFieldValidator(
+	public <T extends FieldValidator> FormConstraintBuilder appendAllFieldValidator(
 			String fieldName, List<T> validator) {
 		List<FieldValidator> validators = conditionMap.get(fieldName);
 		if (validators == null) {
@@ -43,14 +43,14 @@ public class ValidationDirectiveBuilder {
 		return this;
 	}
 
-	public ValidationDirectiveBuilder applyFieldValidators(String fieldName,
-			List<FieldValidator> validators) {
+	public FormConstraintBuilder applyFieldValidators(String fieldName,
+													  List<FieldValidator> validators) {
 		conditionMap.put(fieldName, validators);
 		return this;
 	}
 
-	public ValidationDirectiveBuilder applyFieldValidator(String fieldName,
-			FieldValidator validator) {
+	public FormConstraintBuilder applyFieldValidator(String fieldName,
+													 FieldValidator validator) {
 		List<FieldValidator> validators = new ArrayList<FormValidator.FieldValidator>();
 		validators.add(validator);
 		conditionMap.put(fieldName, validators);

@@ -154,7 +154,7 @@ public final class FormFiller extends FormGetSetter {
 		List<View> childV = !isEditableOnlyGetSettable() ? ViewUtil
 				.getDirectChildViews(v) : v.getTouchables();
 		for (View view : childV) {
-			applyGetSetter(view);
+			onHandleView(view);
 		}
 	}
 }

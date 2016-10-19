@@ -7,7 +7,7 @@ import android.istat.base.forms.FormValidator;
 import android.istat.base.forms.FormValidator.FieldValidator;
 
 public final class RegexFormValidatorBuilder {
-	RegexValidationDirectiveBuilder conditionBuilder = new RegexValidationDirectiveBuilder();
+	RegexFormConstraintBuilder conditionBuilder = new RegexFormConstraintBuilder();
 
 	public final static RegexFormValidatorBuilder newInstance() {
 		return new RegexFormValidatorBuilder();

@@ -80,6 +80,7 @@ public final class FormFlower extends FormGetSetter {
 
         @Override
         public void setValue(String entity, Spinner spinner) {
+
         }
     };
 
@@ -153,7 +154,7 @@ public final class FormFlower extends FormGetSetter {
         String[] fields = form.getFieldNames();
         for (String field : fields) {
             View view = v.findViewWithTag(field);
-            applyGetSetter(view);
+            onHandleView(view);
         }
     }
 }

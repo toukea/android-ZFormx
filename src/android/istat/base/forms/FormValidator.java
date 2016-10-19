@@ -17,21 +17,21 @@ public final class FormValidator {
     HashMap<String, List<FieldValidator>> validationCondition = new HashMap<String, List<FieldValidator>>();
     ValidationListener validationListener;
 
-    public void setValidationListener(ValidationListener validationListener) {
+    public final void setValidationListener(ValidationListener validationListener) {
         this.validationListener = validationListener;
     }
 
     public final static FormState validate(Form form, View formView,
-                                           HashMap<String, List<FieldValidator>> validationDirective) {
+                                           HashMap<String, List<FieldValidator>> constraints) {
         FormValidator validator = new FormValidator();
-        validator.setValidationDirective(validationDirective);
+        validator.setValidationDirective(constraints);
         return validator.validate(form, formView);
     }
 
     public final static FormState validate(Form form, View formView,
-                                           HashMap<String, List<FieldValidator>> validationDirective, ValidationListener listener) {
+                                           HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
         FormValidator validator = new FormValidator();
-        validator.setValidationDirective(validationDirective);
+        validator.setValidationDirective(constraints);
         validator.setValidationListener(listener);
         return validator.validate(form, formView);
     }
@@ -44,7 +44,7 @@ public final class FormValidator {
 //		this.validationCondition = directive;
 //	}
 
-    public void setValidationDirective(
+    public final void setValidationDirective(
             HashMap<String, List<FieldValidator>> validationDirective) {
         if (validationDirective == null) {
             this.validationCondition.clear();
@@ -53,7 +53,7 @@ public final class FormValidator {
         this.validationCondition = validationDirective;
     }
 
-    public FormValidator addCondition(String field, FieldValidator validator) {
+    public final FormValidator addCondition(String field, FieldValidator validator) {
         List<FieldValidator> validators = validationCondition.get(field);
         if (validators == null) {
             validators = new ArrayList<FieldValidator>();
@@ -63,7 +63,7 @@ public final class FormValidator {
         return this;
     }
 
-    public FormState validate(Form form, View formView) {
+    public final FormState validate(Form form, View formView) {
         FormState state = new FormState();
         proceedCheckup(form, state, formView);
         return state;

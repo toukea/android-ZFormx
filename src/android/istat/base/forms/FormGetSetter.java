@@ -73,7 +73,7 @@ abstract class FormGetSetter {
 
     protected abstract List<FieldValueGetSetter<?, ?>> getDefaultHandlers();
 
-    protected final void applyGetSetter(View view) {
+    protected final void onHandleView(View view) {
         if (view != null) {
             if (view instanceof ViewGroup) {
                 handleViewGroup((ViewGroup) view);
