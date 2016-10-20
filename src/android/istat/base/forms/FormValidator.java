@@ -13,7 +13,6 @@ import android.view.View;
  * @author istat
  */
 public final class FormValidator {
-    FormState formState;
     HashMap<String, List<FieldValidator>> validationCondition = new HashMap<String, List<FieldValidator>>();
     ValidationListener validationListener;
 
@@ -21,30 +20,30 @@ public final class FormValidator {
         this.validationListener = validationListener;
     }
 
+    public final static FormState validate(Form form,
+                                           HashMap<String, List<FieldValidator>> constraints) {
+        FormValidator validator = new FormValidator();
+        validator.setConstraints(constraints);
+        View nullView = null;
+        return validator.validate(form, nullView);
+    }
+
     public final static FormState validate(Form form, View formView,
                                            HashMap<String, List<FieldValidator>> constraints) {
         FormValidator validator = new FormValidator();
-        validator.setValidationDirective(constraints);
+        validator.setConstraints(constraints);
         return validator.validate(form, formView);
     }
 
     public final static FormState validate(Form form, View formView,
                                            HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
         FormValidator validator = new FormValidator();
-        validator.setValidationDirective(constraints);
+        validator.setConstraints(constraints);
         validator.setValidationListener(listener);
         return validator.validate(form, formView);
     }
 
-//	public void setValidationDirective(ValidationDirective directive) {
-//		if (directive == null) {
-//			this.validationCondition.clear();
-//			return;
-//		}
-//		this.validationCondition = directive;
-//	}
-
-    public final void setValidationDirective(
+    public final void setConstraints(
             HashMap<String, List<FieldValidator>> validationDirective) {
         if (validationDirective == null) {
             this.validationCondition.clear();
@@ -53,7 +52,7 @@ public final class FormValidator {
         this.validationCondition = validationDirective;
     }
 
-    public final FormValidator addCondition(String field, FieldValidator validator) {
+    public final FormValidator addConstraint(String field, FieldValidator validator) {
         List<FieldValidator> validators = validationCondition.get(field);
         if (validators == null) {
             validators = new ArrayList<FieldValidator>();
@@ -85,7 +84,9 @@ public final class FormValidator {
                     if (error == null) {
                         error = new FormFieldError(key, objValue);
                     }
-                    error.viewCause = formView.findViewWithTag(key);
+                    if (formView != null) {
+                        error.viewCause = formView.findViewWithTag(key);
+                    }
                     error.addFailedValidators(validator);
                     state.addError(error);
                     if (validationListener != null) {
@@ -117,6 +118,8 @@ public final class FormValidator {
 //	}
 
     public static abstract class FieldValidator {
+        final String FIELD_BREAK_IF_ERROR = "breakValidationIfError";
+        final String FIELD_ERROR_MESSAGE = "errorMessage";
         boolean breakValidationIfError = false;
 
         public void setBreakValidationIfError(boolean breakIfError) {
@@ -138,11 +141,18 @@ public final class FormValidator {
 
         public JSONObject toJson() {
             JSONObject json = new JSONObject();
+            try {
+                json.put(FIELD_BREAK_IF_ERROR, breakValidationIfError);
+                json.put(FIELD_ERROR_MESSAGE, getErrorMessage());
+            } catch (Exception e) {
+
+            }
             return json;
         }
 
         public FieldValidator fillFrom(JSONObject json) {
-            return null;
+            this.breakValidationIfError = json.optBoolean(FIELD_BREAK_IF_ERROR);
+            return this;
         }
     }
 

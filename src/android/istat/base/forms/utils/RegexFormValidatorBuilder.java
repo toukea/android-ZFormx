@@ -59,7 +59,7 @@ public final class RegexFormValidatorBuilder {
 
 	public FormValidator create() {
 		FormValidator validator = new FormValidator();
-		validator.setValidationDirective(conditionBuilder.create());
+		validator.setConstraints(conditionBuilder.create());
 		return validator;
 	}
 }

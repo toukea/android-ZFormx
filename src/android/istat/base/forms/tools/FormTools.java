@@ -115,24 +115,12 @@ public class FormTools {
         return word.substring(0, max) + "...";
     }
 
-    public final static String DistanceToKm(String word) {
-        int d = (int) (Double.valueOf(word) * 1);
-        if (word.equals("-1")) {
-            return "---";
-        }
-        if (d > 1500) {
-            return "" + (int) (d / 1000) + "Km";
-        } else {
-            return d + "m";
-        }
-    }
-
-    public final static float getpercentNumericValue(int progresstate,
+    public final static float getpercentNumericValue(int state,
                                                      int STEP, boolean comma) {
         if (comma) {
-            return ((float) (progresstate) * 100 / (float) (STEP));
+            return ((float) (state) * 100 / (float) (STEP));
         } else {
-            return (int) ((float) (progresstate) * 100 / (float) (STEP));
+            return (int) ((float) (state) * 100 / (float) (STEP));
         }
     }
 
