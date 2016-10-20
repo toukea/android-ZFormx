@@ -13,7 +13,7 @@ import android.view.View;
  * @author istat
  */
 public final class FormValidator {
-    HashMap<String, List<FieldValidator>> validationCondition = new HashMap<String, List<FieldValidator>>();
+    HashMap<String, List<FieldValidator>> constraints = new HashMap<String, List<FieldValidator>>();
     ValidationListener validationListener;
 
     public final void setValidationListener(ValidationListener validationListener) {
@@ -22,10 +22,25 @@ public final class FormValidator {
 
     public final static FormState validate(Form form,
                                            HashMap<String, List<FieldValidator>> constraints) {
-        FormValidator validator = new FormValidator();
-        validator.setConstraints(constraints);
-        View nullView = null;
-        return validator.validate(form, nullView);
+        return validate(form, constraints);
+    }
+
+    public final static FormState validate(Form form,
+                                           HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
+        return validate(form, null, constraints, listener);
+    }
+
+    public final static FormState validate(View formView,
+                                           HashMap<String, List<FieldValidator>> constraints) {
+        FormFiller.FillerPolicy nullFillerPolicy = null;
+        return validate(formView, nullFillerPolicy, constraints, null);
+    }
+
+    public final static FormState validate(View formView, FormFiller.FillerPolicy fillerPolicy,
+                                           HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
+        Form form = new Form();
+        FormFiller.fillFromView(form, formView, fillerPolicy);
+        return validate(form, formView, constraints, listener);
     }
 
     public final static FormState validate(Form form, View formView,
@@ -46,19 +61,19 @@ public final class FormValidator {
     public final void setConstraints(
             HashMap<String, List<FieldValidator>> validationDirective) {
         if (validationDirective == null) {
-            this.validationCondition.clear();
+            this.constraints.clear();
             return;
         }
-        this.validationCondition = validationDirective;
+        this.constraints = validationDirective;
     }
 
     public final FormValidator addConstraint(String field, FieldValidator validator) {
-        List<FieldValidator> validators = validationCondition.get(field);
+        List<FieldValidator> validators = constraints.get(field);
         if (validators == null) {
             validators = new ArrayList<FieldValidator>();
         }
         validators.add(validator);
-        validationCondition.put(field, validators);
+        constraints.put(field, validators);
         return this;
     }
 
@@ -68,6 +83,19 @@ public final class FormValidator {
         return state;
     }
 
+    public final FormState validate(Form form) {
+        return FormValidator.validate(form, this.constraints);
+    }
+
+    public final FormState validate(View formView) {
+        FormFiller.FillerPolicy policy = null;
+        return validate(formView, policy);
+    }
+
+    public final FormState validate(View formView, FormFiller.FillerPolicy policy) {
+        return FormValidator.validate(formView, policy, this.constraints, validationListener);
+    }
+
     private void proceedCheckup(Form form, FormState state, View formView) {
         if (validationListener != null) {
             validationListener.onValidationStarting(form, formView);
@@ -75,7 +103,7 @@ public final class FormValidator {
         Iterator<String> iterator = form.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
-            List<FieldValidator> validators = validationCondition.get(key);
+            List<FieldValidator> validators = constraints.get(key);
             Object objValue = form.get(key);
             FormFieldError error = null;
             for (FieldValidator validator : validators) {
