@@ -13,185 +13,202 @@ import android.view.View;
  * @author istat
  */
 public final class FormValidator {
-    HashMap<String, List<FieldValidator>> constraints = new HashMap<String, List<FieldValidator>>();
-    ValidationListener validationListener;
+	HashMap<String, List<FieldValidator>> constraints = new HashMap<String, List<FieldValidator>>();
+	ValidationListener validationListener;
 
-    public final void setValidationListener(ValidationListener validationListener) {
-        this.validationListener = validationListener;
-    }
+	public final void setValidationListener(
+			ValidationListener validationListener) {
+		this.validationListener = validationListener;
+	}
 
-    public final static FormState validate(Form form,
-                                           HashMap<String, List<FieldValidator>> constraints) {
-        return validate(form, constraints);
-    }
+	public final static FormState validate(Form form,
+			HashMap<String, List<FieldValidator>> constraints) {
+		return validate(form, constraints);
+	}
 
-    public final static FormState validate(Form form,
-                                           HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
-        return validate(form, null, constraints, listener);
-    }
+	public final static FormState validate(Form form,
+			HashMap<String, List<FieldValidator>> constraints,
+			ValidationListener listener) {
+		return validate(form, null, constraints, listener);
+	}
 
-    public final static FormState validate(View formView,
-                                           HashMap<String, List<FieldValidator>> constraints) {
-        FormFiller.FillerPolicy nullFillerPolicy = null;
-        return validate(formView, nullFillerPolicy, constraints, null);
-    }
+	public final static FormState validate(View formView,
+			HashMap<String, List<FieldValidator>> constraints) {
+		FormFiller.FillerPolicy nullFillerPolicy = null;
+		return validate(formView, nullFillerPolicy, constraints, null);
+	}
 
-    public final static FormState validate(View formView, FormFiller.FillerPolicy fillerPolicy,
-                                           HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
-        Form form = new Form();
-        FormFiller.fillFromView(form, formView, fillerPolicy);
-        return validate(form, formView, constraints, listener);
-    }
+	public final static FormState validate(View formView,
+			FormFiller.FillerPolicy fillerPolicy,
+			HashMap<String, List<FieldValidator>> constraints,
+			ValidationListener listener) {
+		Form form = new Form();
+		FormFiller.fillFromView(form, formView, fillerPolicy);
+		return validate(form, formView, constraints, listener);
+	}
 
-    public final static FormState validate(Form form, View formView,
-                                           HashMap<String, List<FieldValidator>> constraints) {
-        FormValidator validator = new FormValidator();
-        validator.setConstraints(constraints);
-        return validator.validate(form, formView);
-    }
+	public final static FormState validate(Form form, View formView,
+			HashMap<String, List<FieldValidator>> constraints) {
+		FormValidator validator = new FormValidator();
+		validator.setConstraints(constraints);
+		return validator.validate(form, formView);
+	}
 
-    public final static FormState validate(Form form, View formView,
-                                           HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
-        FormValidator validator = new FormValidator();
-        validator.setConstraints(constraints);
-        validator.setValidationListener(listener);
-        return validator.validate(form, formView);
-    }
+	public final static FormState validate(Form form, View formView,
+			HashMap<String, List<FieldValidator>> constraints,
+			ValidationListener listener) {
+		FormValidator validator = new FormValidator();
+		validator.setConstraints(constraints);
+		validator.setValidationListener(listener);
+		return validator.validate(form, formView);
+	}
 
-    public final void setConstraints(
-            HashMap<String, List<FieldValidator>> validationDirective) {
-        if (validationDirective == null) {
-            this.constraints.clear();
-            return;
-        }
-        this.constraints = validationDirective;
-    }
+	public final void setConstraints(
+			HashMap<String, List<FieldValidator>> validationDirective) {
+		if (validationDirective == null) {
+			this.constraints.clear();
+			return;
+		}
+		this.constraints = validationDirective;
+	}
 
-    public final FormValidator addConstraint(String field, FieldValidator validator) {
-        List<FieldValidator> validators = constraints.get(field);
-        if (validators == null) {
-            validators = new ArrayList<FieldValidator>();
-        }
-        validators.add(validator);
-        constraints.put(field, validators);
-        return this;
-    }
+	public final FormValidator addConstraint(String field,
+			FieldValidator validator) {
+		List<FieldValidator> validators = constraints.get(field);
+		if (validators == null) {
+			validators = new ArrayList<FieldValidator>();
+		}
+		validators.add(validator);
+		constraints.put(field, validators);
+		return this;
+	}
 
-    public final FormState validate(Form form, View formView) {
-        FormState state = new FormState();
-        proceedCheckup(form, state, formView);
-        return state;
-    }
+	public final FormState validate(Form form, View formView) {
+		FormState state = new FormState();
+		proceedCheckup(form, state, formView);
+		return state;
+	}
 
-    public final FormState validate(Form form) {
-        return FormValidator.validate(form, this.constraints);
-    }
+	public final FormState validate(Form form) {
+		return FormValidator.validate(form, this.constraints);
+	}
 
-    public final FormState validate(View formView) {
-        FormFiller.FillerPolicy policy = null;
-        return validate(formView, policy);
-    }
+	public final FormState validate(View formView) {
+		FormFiller.FillerPolicy policy = null;
+		return validate(formView, policy);
+	}
 
-    public final FormState validate(View formView, FormFiller.FillerPolicy policy) {
-        return FormValidator.validate(formView, policy, this.constraints, validationListener);
-    }
+	public final FormState validate(View formView,
+			FormFiller.FillerPolicy policy) {
+		return FormValidator.validate(formView, policy, this.constraints,
+				validationListener);
+	}
 
-    private void proceedCheckup(Form form, FormState state, View formView) {
-        if (validationListener != null) {
-            validationListener.onValidationStarting(form, formView);
-        }
-        Iterator<String> iterator = form.keySet().iterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            List<FieldValidator> validators = constraints.get(key);
-            Object objValue = form.get(key);
-            FormFieldError error = null;
-            for (FieldValidator validator : validators) {
-                boolean isValidated = validator.validate(form, key, objValue);
-                if (!isValidated) {
-                    if (error == null) {
-                        error = new FormFieldError(key, objValue);
-                    }
-                    if (formView != null) {
-                        error.viewCause = formView.findViewWithTag(key);
-                    }
-                    error.addFailedValidators(validator);
-                    state.addError(error);
-                    if (validationListener != null) {
-                        validationListener.onValidateField(form, key, objValue,
-                                formView, validator, isValidated);
-                    }
-                    if (validator.hasBreakValidationIfErrorEnable()) {
-                        break;
-                    }
-                }
-            }
-            if (error != null) {
-                state.addError(error);
-            }
-        }
-        if (validationListener != null) {
-            validationListener.onValidationCompleted(form, formView, state);
-        }
-    }
-//
-//	public static class ValidationDirective extends
-//			HashMap<String, List<FieldValidator>> {
-//
-//		/**
-//		 *
-//		 */
-//		private static final long serialVersionUID = 1L;
-//
-//	}
+	private void proceedCheckup(Form form, FormState state, View formView) {
+		if (validationListener != null) {
+			validationListener.onValidationStarting(form, formView);
+		}
+		Iterator<String> iterator = form.keySet().iterator();
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			List<FieldValidator> validators = constraints.get(key);
+			Object objValue = form.get(key);
+			FormFieldError error = null;
+			for (FieldValidator validator : validators) {
+				boolean isValidated = validator.validate(form, key, objValue);
+				if (!isValidated) {
+					if (error == null) {
+						error = new FormFieldError(key, objValue);
+					}
+					if (formView != null) {
+						error.viewCause = formView.findViewWithTag(key);
+					}
+					error.addFailedValidators(validator);
+					state.addError(error);
+					if (validationListener != null) {
+						validationListener.onValidateField(form, key, objValue,
+								formView, validator, isValidated);
+					}
+					if (validator.hasBreakValidationIfErrorEnable()) {
+						break;
+					}
+				}
+			}
+			if (error != null) {
+				state.addError(error);
+			}
+		}
+		if (validationListener != null) {
+			validationListener.onValidationCompleted(form, formView, state);
+		}
+	}
 
-    public static abstract class FieldValidator {
-        final String FIELD_BREAK_IF_ERROR = "breakValidationIfError";
-        final String FIELD_ERROR_MESSAGE = "errorMessage";
-        boolean breakValidationIfError = false;
+	//
+	// public static class ValidationDirective extends
+	// HashMap<String, List<FieldValidator>> {
+	//
+	// /**
+	// *
+	// */
+	// private static final long serialVersionUID = 1L;
+	//
+	// }
 
-        public void setBreakValidationIfError(boolean breakIfError) {
-            this.breakValidationIfError = breakIfError;
-        }
+	public static abstract class FieldValidator {
+		final String FIELD_BREAK_IF_ERROR = "breakValidationIfError";
+		final String FIELD_ERROR_MESSAGE = "errorMessage";
+		boolean breakValidationIfError = false;
 
-        public boolean hasBreakValidationIfErrorEnable() {
-            return breakValidationIfError;
-        }
+		public FieldValidator() {
 
-        public abstract String getErrorMessage();
+		}
 
-        public final boolean validate(Form form, String fieldName, Object value) {
-            return onValidate(form, fieldName, value);
-        }
+		public FieldValidator(boolean breakValidationIfError) {
+			this.breakValidationIfError = breakValidationIfError;
+		}
 
-        protected abstract boolean onValidate(Form form, String fieldName,
-                                              Object value);
+		public void setBreakValidationIfError(boolean breakIfError) {
+			this.breakValidationIfError = breakIfError;
+		}
 
-        public JSONObject toJson() {
-            JSONObject json = new JSONObject();
-            try {
-                json.put(FIELD_BREAK_IF_ERROR, breakValidationIfError);
-                json.put(FIELD_ERROR_MESSAGE, getErrorMessage());
-            } catch (Exception e) {
+		public boolean hasBreakValidationIfErrorEnable() {
+			return breakValidationIfError;
+		}
 
-            }
-            return json;
-        }
+		public abstract String getErrorMessage();
 
-        public FieldValidator fillFrom(JSONObject json) {
-            this.breakValidationIfError = json.optBoolean(FIELD_BREAK_IF_ERROR);
-            return this;
-        }
-    }
+		public final boolean validate(Form form, String fieldName, Object value) {
+			return onValidate(form, fieldName, value);
+		}
 
-    public static interface ValidationListener {
-        public void onValidationStarting(Form form, View formView);
+		protected abstract boolean onValidate(Form form, String fieldName,
+				Object value);
 
-        public void onValidateField(Form form, String FieldName, Object value,
-                                    View viewCause, FormValidator.FieldValidator validator,
-                                    boolean validated);
+		public JSONObject toJson() {
+			JSONObject json = new JSONObject();
+			try {
+				json.put(FIELD_BREAK_IF_ERROR, breakValidationIfError);
+				json.put(FIELD_ERROR_MESSAGE, getErrorMessage());
+			} catch (Exception e) {
 
-        public void onValidationCompleted(Form form, View formView,
-                                          FormState state);
-    }
+			}
+			return json;
+		}
+
+		public FieldValidator fillFrom(JSONObject json) {
+			this.breakValidationIfError = json.optBoolean(FIELD_BREAK_IF_ERROR);
+			return this;
+		}
+	}
+
+	public static interface ValidationListener {
+		public void onValidationStarting(Form form, View formView);
+
+		public void onValidateField(Form form, String FieldName, Object value,
+				View viewCause, FormValidator.FieldValidator validator,
+				boolean validated);
+
+		public void onValidationCompleted(Form form, View formView,
+				FormState state);
+	}
 }
