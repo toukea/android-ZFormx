@@ -11,6 +11,11 @@ import java.util.List;
  */
 public final class FormState {
     List<FormFieldError> errors = new ArrayList<FormFieldError>();
+    Form form;
+
+    FormState(Form form) {
+        this.form = form;
+    }
 
     public List<FormFieldError> getErrors() {
         return errors;
@@ -23,6 +28,10 @@ public final class FormState {
     FormState addError(FormFieldError error) {
         errors.add(error);
         return this;
+    }
+
+    public Form getForm() {
+        return form;
     }
 
     public List<FormFieldError> getErrorByViewCause(View cause) {

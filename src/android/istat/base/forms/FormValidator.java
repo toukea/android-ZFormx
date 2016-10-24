@@ -38,9 +38,10 @@ public final class FormValidator {
 
     public final static FormState validate(View formView, FormFiller.FillerPolicy fillerPolicy,
                                            HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
-        Form form = new Form();
-        FormFiller.fillFromView(form, formView, fillerPolicy);
-        return validate(form, formView, constraints, listener);
+        FormValidator validator = new FormValidator();
+        validator.setConstraints(constraints);
+        validator.setValidationListener(listener);
+        return validator.validate(formView, fillerPolicy);
     }
 
     public final static FormState validate(Form form, View formView,
@@ -78,13 +79,14 @@ public final class FormValidator {
     }
 
     public final FormState validate(Form form, View formView) {
-        FormState state = new FormState();
+        FormState state = new FormState(form);
         proceedCheckup(form, state, formView);
         return state;
     }
 
     public final FormState validate(Form form) {
-        return FormValidator.validate(form, this.constraints);
+        View nullView = null;
+        return validate(form, nullView);
     }
 
     public final FormState validate(View formView) {
@@ -93,7 +95,9 @@ public final class FormValidator {
     }
 
     public final FormState validate(View formView, FormFiller.FillerPolicy policy) {
-        return FormValidator.validate(formView, policy, this.constraints, validationListener);
+        Form form = new Form();
+        FormFiller.fillFromView(form, formView, policy);
+        return validate(form, formView);
     }
 
     private void proceedCheckup(Form form, FormState state, View formView) {
