@@ -6,56 +6,77 @@ import java.util.HashMap;
 import android.istat.base.forms.Form;
 
 public abstract class ClassFormLoader<T> {
-    final static HashMap<Class<?>, ClassFormLoader<?>> loader = new HashMap<Class<?>, ClassFormLoader<?>>();
+    final static HashMap<Class<?>, ClassFormLoader<?>> objectLoader = new HashMap<Class<?>, ClassFormLoader<?>>();
+    final static HashMap<Class<?>, ClassFormLoader<?>> formLoader = new HashMap<Class<?>, ClassFormLoader<?>>();
 
-    public final static ClassFormLoader<Object> getDefaultLoader() {
-        return DEFAULT_LOADER;
+    public final static ClassFormLoader<Object> getDefaultObjectLoader() {
+        return DEFAULT_OBJECT_LOADER;
     }
 
-    public final static <T> void put(Class<T> clazz, ClassFormLoader<T> newLoader) {
-        loader.put(clazz, newLoader);
+    public final static <T> void putEntityLoader(Class<T> clazz, ClassFormLoader<T> newLoader) {
+        objectLoader.put(clazz, newLoader);
+    }
+
+    public final static <T> void putFormLoader(Class<T> clazz, ClassFormLoader<T> newLoader) {
+        formLoader.put(clazz, newLoader);
     }
 
     @SuppressWarnings("unchecked")
     public static final <T> ClassFormLoader<T> getLoader(Class<T> clazz) {
-        if (!loader.containsKey(clazz)) {
+        if (!formLoader.containsKey(clazz)) {
             return null;
         }
-        return (ClassFormLoader<T>) loader.get(clazz);
+        return (ClassFormLoader<T>) formLoader.get(clazz);
     }
 
     @SuppressWarnings("unchecked")
     public final static <T> void flowFormOn(Form form, T obj) {
-        if (!loader.containsKey(obj.getClass())) {
-            DEFAULT_LOADER.onFlowFormOn(form, obj);
+        if (!formLoader.containsKey(obj.getClass())) {
+            DEFAULT_OBJECT_LOADER.load(form, obj);
             return;
         }
 
-        ClassFormLoader<T> formLoader = (ClassFormLoader<T>) loader.get(obj
+        ClassFormLoader<T> loader = (ClassFormLoader<T>) ClassFormLoader.objectLoader.get(obj
                 .getClass());
-        formLoader.onFlowFormOn(form, obj);
+        loader.onLoad(form, obj);
     }
 
     @SuppressWarnings("unchecked")
     public final static <T> void fillFormFrom(Form form, T obj) {
-        if (!loader.containsKey(obj.getClass())) {
-            DEFAULT_LOADER.onFillFormFrom(form, obj);
+        if (!formLoader.containsKey(obj.getClass())) {
+            DEFAULT_FORM_LOADER.load(form, obj);
             return;
         }
-
-        ClassFormLoader<T> formLoader = (ClassFormLoader<T>) loader.get(obj
+        ClassFormLoader<T> loader = (ClassFormLoader<T>) ClassFormLoader.formLoader.get(obj
                 .getClass());
-        formLoader.onFillFormFrom(form, obj);
+        loader.load(form, obj);
     }
 
-    public abstract void onFlowFormOn(Form form, T entity);
+    final void load(Form form, T entity) {
+        onLoad(form, entity);
+    }
 
-    public abstract void onFillFormFrom(Form form, T entity);
+    public abstract void onLoad(Form form, T entity);
 
-    final static ClassFormLoader<Object> DEFAULT_LOADER = new ClassFormLoader<Object>() {
+    final static ClassFormLoader<Object> DEFAULT_FORM_LOADER = new ClassFormLoader<Object>() {
 
         @Override
-        public void onFlowFormOn(Form form, Object obj) {
+        public void onLoad(Form form, Object entity) {
+            Field[] fields = entity.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                try {
+                    field.setAccessible(true);
+                    form.put(field.getName(), field.get(entity));
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    };
+    final static ClassFormLoader<Object> DEFAULT_OBJECT_LOADER = new ClassFormLoader<Object>() {
+
+        @Override
+        public void onLoad(Form form, Object obj) {
             Class<?> clazz = obj.getClass();
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
@@ -68,20 +89,6 @@ public abstract class ClassFormLoader<T> {
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
-                }
-            }
-
-        }
-
-        @Override
-        public void onFillFormFrom(Form form, Object entity) {
-            Field[] fields = entity.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                try {
-                    field.setAccessible(true);
-                    form.put(field.getName(), field.get(entity));
-                } catch (Exception e) {
-
                 }
             }
         }
