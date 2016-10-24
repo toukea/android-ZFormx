@@ -138,16 +138,6 @@ public final class FormValidator {
             validationListener.onValidationCompleted(form, formView, state);
         }
     }
-//
-//	public static class ValidationDirective extends
-//			HashMap<String, List<FieldValidator>> {
-//
-//		/**
-//		 *
-//		 */
-//		private static final long serialVersionUID = 1L;
-//
-//	}
 
     public static abstract class FieldValidator {
         final String FIELD_BREAK_IF_ERROR = "breakValidationIfError";
