@@ -1,4 +1,4 @@
-package android.istat.base.forms.utils;
+package android.istat.base.forms.tools;
 
 import java.util.regex.Pattern;
 
