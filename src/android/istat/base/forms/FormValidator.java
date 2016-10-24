@@ -144,6 +144,14 @@ public final class FormValidator {
         final String FIELD_ERROR_MESSAGE = "errorMessage";
         boolean breakValidationIfError = false;
 
+        public FieldValidator() {
+
+        }
+
+        public FieldValidator(boolean breakValidationIfError) {
+            this.breakValidationIfError = breakValidationIfError;
+        }
+
         public void setBreakValidationIfError(boolean breakIfError) {
             this.breakValidationIfError = breakIfError;
         }
