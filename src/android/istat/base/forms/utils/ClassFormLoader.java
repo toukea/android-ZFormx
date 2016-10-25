@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import android.istat.base.forms.Form;
+import android.istat.base.forms.tools.FormTools;
 
 public abstract class ClassFormLoader<T> {
     final static HashMap<Class<?>, ClassFormLoader<?>> objectLoader = new HashMap<Class<?>, ClassFormLoader<?>>();
@@ -13,16 +14,18 @@ public abstract class ClassFormLoader<T> {
         return DEFAULT_OBJECT_LOADER;
     }
 
-    public final static <T> void putEntityLoader(Class<T> clazz, ClassFormLoader<T> newLoader) {
+    public final static <T> void putEntityLoader(ClassFormLoader<T> newLoader) {
+        Class<T> clazz = (Class<T>) FormTools.getGenericTypeClass(newLoader.getClass(), 0);
         objectLoader.put(clazz, newLoader);
     }
 
-    public final static <T> void putFormLoader(Class<T> clazz, ClassFormLoader<T> newLoader) {
+    public final static <T> void putFormLoader(ClassFormLoader<T> newLoader) {
+        Class<T> clazz = (Class<T>) FormTools.getGenericTypeClass(newLoader.getClass(), 0);
         formLoader.put(clazz, newLoader);
     }
 
     @SuppressWarnings("unchecked")
-    public static final <T> ClassFormLoader<T> getLoader(Class<T> clazz) {
+    public final static  <T> ClassFormLoader<T> getLoader(Class<T> clazz) {
         if (!formLoader.containsKey(clazz)) {
             return null;
         }
@@ -52,11 +55,11 @@ public abstract class ClassFormLoader<T> {
         loader.load(form, obj);
     }
 
-    final void load(Form form, T entity) {
+    public final void load(Form form, T entity) {
         onLoad(form, entity);
     }
 
-    public abstract void onLoad(Form form, T entity);
+    protected abstract void onLoad(Form form, T entity);
 
     final static ClassFormLoader<Object> DEFAULT_FORM_LOADER = new ClassFormLoader<Object>() {
 

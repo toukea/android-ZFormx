@@ -166,7 +166,7 @@ public class Form extends HashMap<String, Object> {
 
     public final static <T> Form fillFormFromEntity(Form form, T obj, ClassFormLoader<T> loader) {
         if (loader != null) {
-            loader.onLoad(form, obj);
+            loader.load(form, obj);
         } else {
             ClassFormLoader.fillFormFrom(form, obj);
         }
@@ -175,7 +175,7 @@ public class Form extends HashMap<String, Object> {
 
     public static <T> void flowFormOnEntity(Form form, T obj, ClassFormLoader<T> loader) {
         if (loader != null) {
-            loader.onLoad(form, obj);
+            loader.load(form, obj);
         } else {
             ClassFormLoader.flowFormOn(form, obj);
         }

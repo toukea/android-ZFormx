@@ -2,12 +2,15 @@ package android.istat.base.forms.tools;
 
 import android.annotation.SuppressLint;
 import android.istat.base.forms.Form;
+import android.istat.base.forms.utils.ClassFormLoader;
 
+import java.lang.reflect.ParameterizedType;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
 /**
  * @author istat
  */
@@ -197,4 +200,19 @@ public class FormTools {
         // }
         return form;
     }
+
+    public static final Class<?> getGenericTypeClass(Class<?> baseClass, int genericIndex) {
+        try {
+            String className = ((ParameterizedType) baseClass
+                    .getGenericSuperclass()).getActualTypeArguments()[genericIndex]
+                    .toString().replaceFirst("class", "").trim();
+            Class<?> clazz = Class.forName(className);
+            return clazz;
+        } catch (Exception e) {
+            throw new IllegalStateException(
+                    "Class is not parametrized with generic type!!! Please use extends <> ");
+        }
+    }
+
+
 }
