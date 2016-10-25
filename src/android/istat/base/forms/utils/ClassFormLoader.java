@@ -14,7 +14,7 @@ public abstract class ClassFormLoader<T> {
         return DEFAULT_OBJECT_LOADER;
     }
 
-    public final static <T> void putEntityLoader(ClassFormLoader<T> newLoader) {
+    public final static <T> void putClassLoader(ClassFormLoader<T> newLoader) {
         Class<T> clazz = (Class<T>) FormTools.getGenericTypeClass(newLoader.getClass(), 0);
         objectLoader.put(clazz, newLoader);
     }
