@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
-ext {
-    PUBLISH_GROUP_ID = 'istat.android.network.http'
-    PUBLISH_ARTIFACT_ID = 'istat-network'
-    PUBLISH_VERSION = '2.4.0'
-}
-apply from: 'file:///home/istat/Scripts/gradle/android-release-jar.gradle.txt'
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-}
+//apply plugin: 'maven'
+//ext {
+//    PUBLISH_GROUP_ID = 'istat.android.freedev.forms'
+//    PUBLISH_ARTIFACT_ID = 'istat-zformx'
+//    PUBLISH_VERSION = '1.0.0'
+//}
+//apply from: 'file:///home/istat/Scripts/gradle/android-release-jar.gradle.txt'
+//dependencies {
+//    compile fileTree(dir: 'libs', include: '*.jar')
+//}
 
 android {
     compileSdkVersion 18
