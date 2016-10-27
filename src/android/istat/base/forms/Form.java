@@ -1,6 +1,5 @@
 package android.istat.base.forms;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -167,7 +166,7 @@ public class Form extends HashMap<String, Object> {
 
     public final static <T> Form fillFormFromEntity(Form form, T obj, ClassFormLoader<T> loader) {
         if (loader != null) {
-            loader.onFillFormFrom(form, obj);
+            loader.load(form, obj);
         } else {
             ClassFormLoader.fillFormFrom(form, obj);
         }
@@ -176,7 +175,7 @@ public class Form extends HashMap<String, Object> {
 
     public static <T> void flowFormOnEntity(Form form, T obj, ClassFormLoader<T> loader) {
         if (loader != null) {
-            loader.onFlowFormOn(form, obj);
+            loader.load(form, obj);
         } else {
             ClassFormLoader.flowFormOn(form, obj);
         }
