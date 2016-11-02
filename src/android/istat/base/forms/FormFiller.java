@@ -25,28 +25,58 @@ public final class FormFiller extends FormGetSetter {
         super(form);
     }
 
+    /**
+     * fill a form from view.
+     *
+     * @param form
+     * @param view
+     * @param getters
+     */
+    public static void fillFromView(Form form, View view,
+                                    FieldValueGetter<?, ?>... getters) {
+        fillFromView(form, view, false, getters);
+    }
+
+    /**
+     * fill a form from view.
+     *
+     * @param form
+     * @param view
+     * @param editableOnly specify if only editable field should be flow on.
+     * @param getters
+     */
     public static void fillFromView(Form form, View view, boolean editableOnly,
-                                    FieldValueGetter<?, ?>... fieldHandlers) {
+                                    FieldValueGetter<?, ?>... getters) {
 
         fillFromView(form, view, false,
-                fieldHandlers != null ? Arrays.asList(fieldHandlers) : null);
+                getters != null ? Arrays.asList(getters) : null);
     }
 
-    public static void fillFromView(Form form, View view,
-                                    FieldValueGetter<?, ?>... fieldHandlers) {
-        fillFromView(form, view, false, fieldHandlers);
-    }
-
+    /**
+     * fill a form from view.
+     *
+     * @param form
+     * @param view
+     * @param policy
+     */
     public static void fillFromView(Form form, View view, FillerPolicy policy) {
         fillFromView(form, view, policy != null ? policy.editableOnly : false, policy != null ? policy.fieldGetters : null);
     }
 
+    /**
+     * fill a form from view.
+     *
+     * @param form
+     * @param view
+     * @param editableOnly specify if only editable field should be flow on.
+     * @param getters
+     */
     public static void fillFromView(Form form, View view, boolean editableOnly,
-                                    List<FieldValueGetter<?, ?>> fieldHandlers) {
+                                    List<FieldValueGetter<?, ?>> getters) {
         FormFiller filler = new FormFiller(form);
         List<FieldValueGetter<?, ?>> handlers = new ArrayList<FieldValueGetter<?, ?>>();
-        if (fieldHandlers != null && fieldHandlers.size() > 0) {
-            handlers.addAll(fieldHandlers);
+        if (getters != null && getters.size() > 0) {
+            handlers.addAll(getters);
         }
         filler.setEditableOnlyGetSettable(editableOnly);
         filler.handleView(view);
@@ -193,9 +223,9 @@ public final class FormFiller extends FormGetSetter {
             return this;
         }
 
-        public FillerPolicy setFieldGetters(List<FieldValueGetter<?, ?>> fieldHandlers) {
+        public FillerPolicy setFieldGetters(List<FieldValueGetter<?, ?>> getters) {
             this.fieldGetters.clear();
-            this.fieldGetters.addAll(fieldHandlers);
+            this.fieldGetters.addAll(getters);
             return this;
         }
 

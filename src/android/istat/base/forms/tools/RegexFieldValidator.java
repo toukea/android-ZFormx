@@ -9,8 +9,8 @@ import android.istat.base.forms.FormValidator.FieldValidator;
 import android.text.TextUtils;
 
 public final class RegexFieldValidator extends FieldValidator {
-    String regexCondition;
-    String errorMessage = "";
+    private String regexCondition;
+    private String errorMessage = "";
     boolean breakValidationIfError = false;
 
     public RegexFieldValidator(boolean breakValidationIfError) {

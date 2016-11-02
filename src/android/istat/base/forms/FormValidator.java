@@ -16,8 +16,9 @@ public final class FormValidator {
     HashMap<String, List<FieldValidator>> constraints = new HashMap<String, List<FieldValidator>>();
     ValidationListener validationListener;
 
-    public final void setValidationListener(ValidationListener validationListener) {
+    public final FormValidator setValidationListener(ValidationListener validationListener) {
         this.validationListener = validationListener;
+        return this;
     }
 
     public final static FormState validate(Form form,

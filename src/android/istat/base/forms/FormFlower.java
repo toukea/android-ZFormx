@@ -23,29 +23,57 @@ public final class FormFlower extends FormGetSetter {
         super(form);
     }
 
+    /**
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldValueSetter}
+     *
+     * @param form
+     * @param view
+     * @param setters
+     */
     public static void flowIntoView(Form form, View view,
-                                    FieldValueSetter<?, ?>... fieldHandlers) {
-        flowIntoView(form, view, false, fieldHandlers);
+                                    FieldValueSetter<?, ?>... setters) {
+        flowIntoView(form, view, false, setters);
     }
 
+    /**
+     * * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldValueSetter}
+     *
+     * @param form
+     * @param view
+     * @param editableOnly specify if only editable field should be flow on.
+     * @param setters
+     */
     public static void flowIntoView(Form form, View view, boolean editableOnly,
-                                    FieldValueSetter<?, ?>... fieldHandlers) {
+                                    FieldValueSetter<?, ?>... setters) {
         flowIntoView(form, view, editableOnly,
-                fieldHandlers != null ? Arrays.asList(fieldHandlers) : null);
+                setters != null ? Arrays.asList(setters) : null);
     }
 
+    /**
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldValueSetter}
+     *
+     * @param form
+     * @param view
+     * @param editableOnly
+     * @param setters
+     */
     public static void flowIntoView(Form form, View view, boolean editableOnly,
-                                    List<FieldValueSetter<?, ?>> fieldHandlers) {
+                                    List<FieldValueSetter<?, ?>> setters) {
         FormFlower flower = new FormFlower(form);
         List<FieldValueGetSetter<?, ?>> handlers = new ArrayList<FieldValueGetSetter<?, ?>>();
-        if (fieldHandlers != null && fieldHandlers.size() > 0) {
-            handlers.addAll(fieldHandlers);
+        if (setters != null && setters.size() > 0) {
+            handlers.addAll(setters);
         }
         flower.setEditableOnlyGetSettable(editableOnly);
         flower.handleView(view);
 
     }
 
+    /**
+     *
+     * @param <T>
+     * @param <V>
+     */
     public static abstract class FieldValueSetter<T, V extends View> extends
             FieldValueGetSetter<T, V> {
 

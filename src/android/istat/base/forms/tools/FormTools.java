@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.istat.base.forms.Form;
 import android.istat.base.forms.utils.ClassFormLoader;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -212,6 +215,15 @@ public class FormTools {
             throw new IllegalStateException(
                     "Class is not parametrized with generic type!!! Please use extends <> ");
         }
+    }
+
+    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> cLass) {
+        List<Field> fields = new ArrayList<Field>();
+        while (!cLass.equals(Object.class)) {
+            Collections.addAll(fields, cLass.getDeclaredFields());
+            cLass = cLass.getSuperclass();
+        }
+        return fields;
     }
 
 
