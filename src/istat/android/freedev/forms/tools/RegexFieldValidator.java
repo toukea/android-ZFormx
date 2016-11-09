@@ -1,11 +1,11 @@
-package android.istat.base.forms.tools;
+package istat.android.freedev.forms.tools;
 
 import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
-import android.istat.base.forms.Form;
-import android.istat.base.forms.FormValidator.FieldValidator;
+import istat.android.freedev.forms.Form;
+import istat.android.freedev.forms.FormValidator.FieldValidator;
 import android.text.TextUtils;
 
 public final class RegexFieldValidator extends FieldValidator {

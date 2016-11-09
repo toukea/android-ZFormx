@@ -1,8 +1,8 @@
-package android.istat.base.forms.tools;
+package istat.android.freedev.forms.tools;
 
 import android.annotation.SuppressLint;
-import android.istat.base.forms.Form;
-import android.istat.base.forms.utils.ClassFormLoader;
+import istat.android.freedev.forms.Form;
+import istat.android.freedev.forms.utils.ClassFormLoader;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;

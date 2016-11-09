@@ -1,4 +1,4 @@
-package android.istat.base.forms.utils;
+package istat.android.freedev.forms.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import android.istat.base.forms.FormValidator;
-import android.istat.base.forms.FormValidator.FieldValidator;
+import istat.android.freedev.forms.FormValidator;
+import istat.android.freedev.forms.FormValidator.FieldValidator;
 
 public class FormConstraintBuilder {
 	protected final HashMap<String, List<FieldValidator>> conditionMap = new HashMap<String, List<FieldValidator>>();

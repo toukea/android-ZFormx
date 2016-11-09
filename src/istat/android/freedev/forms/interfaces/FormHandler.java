@@ -1,7 +1,7 @@
-package android.istat.base.forms.interfaces;
+package istat.android.freedev.forms.interfaces;
 
-import android.istat.base.forms.Form;
-import android.istat.base.forms.FormState;
+import istat.android.freedev.forms.Form;
+import istat.android.freedev.forms.FormState;
 /**
  * @author istat
  */

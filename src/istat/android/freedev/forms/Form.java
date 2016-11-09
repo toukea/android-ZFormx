@@ -1,12 +1,12 @@
-package android.istat.base.forms;
+package istat.android.freedev.forms;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
 import org.json.JSONObject;
 
-import android.istat.base.forms.tools.FormTools;
-import android.istat.base.forms.utils.ClassFormLoader;
+import istat.android.freedev.forms.tools.FormTools;
+import istat.android.freedev.forms.utils.ClassFormLoader;
 
 /**
  * @author istat

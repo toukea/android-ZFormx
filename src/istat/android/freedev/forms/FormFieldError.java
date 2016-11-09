@@ -1,6 +1,5 @@
-package android.istat.base.forms;
+package istat.android.freedev.forms;
 
-import android.istat.base.forms.FormValidator.FieldValidator;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -30,14 +29,14 @@ public final class FormFieldError {
 
 	public List<String> getMessages() {
 		List<String> messages = new ArrayList<String>();
-		for (FieldValidator validator : failedValidators) {
+		for (FormValidator.FieldValidator validator : failedValidators) {
 			messages.add(validator.getErrorMessage());
 		}
 		return messages;
 	}
 
 	public String getFirstMessage() {
-		for (FieldValidator validator : failedValidators) {
+		for (FormValidator.FieldValidator validator : failedValidators) {
 			String message = validator.getErrorMessage();
 			if (!TextUtils.isEmpty(message)) {
 				return message;
@@ -48,7 +47,7 @@ public final class FormFieldError {
 
 	public String getMessage(int index) {
 		int count = 0;
-		for (FieldValidator validator : failedValidators) {
+		for (FormValidator.FieldValidator validator : failedValidators) {
 			String message = validator.getErrorMessage();
 			if (!TextUtils.isEmpty(message)) {
 				if (count == index) {

@@ -1,9 +1,9 @@
-package android.istat.base.forms.tools;
+package istat.android.freedev.forms.tools;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.istat.base.forms.FormValidator.FieldValidator;
-import android.istat.base.forms.utils.FormConstraintBuilder;
+import istat.android.freedev.forms.FormValidator.FieldValidator;
+import istat.android.freedev.forms.utils.FormConstraintBuilder;
 
 public final class RegexFormConstraintBuilder extends FormConstraintBuilder {
 	public final static RegexFormConstraintBuilder newInstance() {

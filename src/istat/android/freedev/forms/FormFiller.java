@@ -1,11 +1,11 @@
-package android.istat.base.forms;
+package istat.android.freedev.forms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.istat.base.forms.tools.FormTools;
-import android.istat.base.forms.utils.ViewUtil;
+import istat.android.freedev.forms.tools.FormTools;
+import istat.android.freedev.forms.utils.ViewUtil;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;

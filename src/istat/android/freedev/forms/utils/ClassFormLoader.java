@@ -1,12 +1,12 @@
-package android.istat.base.forms.utils;
+package istat.android.freedev.forms.utils;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import android.istat.base.forms.Form;
-import android.istat.base.forms.tools.FormTools;
+import istat.android.freedev.forms.Form;
+import istat.android.freedev.forms.tools.FormTools;
 import android.os.Bundle;
 
 public abstract class ClassFormLoader<T> {

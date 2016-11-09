@@ -1,6 +1,6 @@
-package android.istat.base.forms;
+package istat.android.freedev.forms;
 
-import android.istat.base.forms.tools.FormTools;
+import istat.android.freedev.forms.tools.FormTools;
 import android.view.View;
 import android.view.ViewGroup;
 

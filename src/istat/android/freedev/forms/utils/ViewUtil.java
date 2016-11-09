@@ -1,4 +1,4 @@
-package android.istat.base.forms.utils;
+package istat.android.freedev.forms.utils;
 
 import java.util.ArrayList;
 import java.util.List;

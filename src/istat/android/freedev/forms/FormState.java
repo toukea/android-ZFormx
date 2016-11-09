@@ -1,4 +1,4 @@
-package android.istat.base.forms;
+package istat.android.freedev.forms;
 
 import android.text.TextUtils;
 import android.view.View;
