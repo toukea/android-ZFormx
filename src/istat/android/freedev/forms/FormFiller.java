@@ -223,7 +223,7 @@ public final class FormFiller extends FormGetSetter {
             return this;
         }
 
-        public FillerPolicy setFieldGetters(List<FieldValueGetter<?, ?>> getters) {
+        public FillerPolicy setGetters(List<FieldValueGetter<?, ?>> getters) {
             this.fieldGetters.clear();
             this.fieldGetters.addAll(getters);
             return this;
