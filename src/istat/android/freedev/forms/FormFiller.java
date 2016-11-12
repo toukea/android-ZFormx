@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import istat.android.freedev.forms.tools.FormTools;
+import istat.android.freedev.forms.utils.ClassFormLoader;
 import istat.android.freedev.forms.utils.ViewUtil;
 
 import android.util.Log;
@@ -30,12 +31,17 @@ public final class FormFiller extends FormGetSetter {
     }
 
     public void fillFrom(View v) {
-
+        handleView(v, null);
     }
 
     public Form fillFrom(Object obj) {
         form.fillFrom(obj);
         return form;
+    }
+
+    public FormFiller addFormLoader(ClassFormLoader loader) {
+        ClassFormLoader.putAsFormLoader(loader);
+        return this;
     }
 
     /**

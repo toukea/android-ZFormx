@@ -23,7 +23,7 @@ public abstract class ClassFormLoader<T> {
 
 
     @SuppressWarnings("unchecked")
-    public final static <T> void putAsClassLoader(ClassFormLoader<T> newLoader) {
+    public final static <T> void putAsObjectLoader(ClassFormLoader<T> newLoader) {
         Class<T> clazz = (Class<T>) FormTools.getGenericTypeClass(
                 newLoader.getClass(), 0);
         objectLoader.put(clazz, newLoader);

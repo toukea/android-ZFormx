@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import istat.android.freedev.forms.tools.FormTools;
+import istat.android.freedev.forms.utils.ClassFormLoader;
 import istat.android.freedev.forms.utils.ViewUtil;
 
 import android.view.View;
@@ -25,12 +26,17 @@ public final class FormFlower extends FormGetSetter {
     }
 
     public void flowOn(View v) {
-        handleView(v);
+        handleView(v, null);
     }
 
     public <T> T flowOn(T obj) {
         form.flowOn(obj);
         return obj;
+    }
+
+    public FormFlower addObjectLoader(ClassFormLoader loader) {
+        ClassFormLoader.putAsObjectLoader(loader);
+        return this;
     }
 
     public FormFlower setFlowEditableonly(boolean state) {
@@ -42,6 +48,7 @@ public final class FormFlower extends FormGetSetter {
 
         return this;
     }
+
     public FormFlower addFieldSetter(FieldValueSetter setter) {
 
         return this;
