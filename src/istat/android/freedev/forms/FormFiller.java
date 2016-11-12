@@ -6,6 +6,7 @@ import java.util.List;
 
 import istat.android.freedev.forms.tools.FormTools;
 import istat.android.freedev.forms.utils.ViewUtil;
+
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,21 @@ import android.widget.TextView;
  * @author istat
  */
 public final class FormFiller extends FormGetSetter {
+    public static FormFiller from(Form form) {
+        return new FormFiller(form);
+    }
 
     FormFiller(Form form) {
         super(form);
+    }
+
+    public void fillFrom(View v) {
+
+    }
+
+    public Form fillFrom(Object obj) {
+        form.fillFrom(obj);
+        return form;
     }
 
     /**

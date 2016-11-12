@@ -6,6 +6,7 @@ import java.util.List;
 
 import istat.android.freedev.forms.tools.FormTools;
 import istat.android.freedev.forms.utils.ViewUtil;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -21,6 +22,33 @@ public final class FormFlower extends FormGetSetter {
 
     FormFlower(Form form) {
         super(form);
+    }
+
+    public void flowOn(View v) {
+        handleView(v);
+    }
+
+    public <T> T flowOn(T obj) {
+        form.flowOn(obj);
+        return obj;
+    }
+
+    public FormFlower setFlowEditableonly(boolean state) {
+        setEditableOnlyGetSettable(state);
+        return this;
+    }
+
+    public FormFlower addFieldSetter(FieldFlower flower) {
+
+        return this;
+    }
+    public FormFlower addFieldSetter(FieldValueSetter setter) {
+
+        return this;
+    }
+
+    public static FormFlower from(Form form) {
+        return new FormFlower(form);
     }
 
     /**
@@ -70,7 +98,6 @@ public final class FormFlower extends FormGetSetter {
     }
 
     /**
-     *
      * @param <T>
      * @param <V>
      */
