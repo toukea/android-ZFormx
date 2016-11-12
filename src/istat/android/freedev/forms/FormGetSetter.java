@@ -20,7 +20,7 @@ abstract class FormGetSetter {
         this.form = form;
     }
 
-    protected final void handleView(View formBaseView) {
+    protected final void handleView(View formBaseView, List<FieldValueGetSetter<?, ?>> fieldHandlers) {
         prepareViewHandler(fieldHandlers);
         if (formBaseView != null) {
             if (formBaseView instanceof ViewGroup) {
@@ -95,6 +95,7 @@ abstract class FormGetSetter {
                     || clazzView.isAssignableFrom(view.getClass()) || clazzView
                     .equals(view.getClass()));
         }
+
         @SuppressWarnings("unchecked")
         protected final Class<T> getFieldValueTypeClass() {
             try {

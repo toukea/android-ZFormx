@@ -65,12 +65,11 @@ public final class FormFlower extends FormGetSetter {
             handlers.addAll(setters);
         }
         flower.setEditableOnlyGetSettable(editableOnly);
-        flower.handleView(view);
+        flower.handleView(view, handlers);
 
     }
 
     /**
-     *
      * @param <T>
      * @param <V>
      */

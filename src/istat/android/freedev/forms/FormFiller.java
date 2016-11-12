@@ -74,12 +74,12 @@ public final class FormFiller extends FormGetSetter {
     public static void fillFromView(Form form, View view, boolean editableOnly,
                                     List<FieldValueGetter<?, ?>> getters) {
         FormFiller filler = new FormFiller(form);
-        List<FieldValueGetter<?, ?>> handlers = new ArrayList<FieldValueGetter<?, ?>>();
+        List<FieldValueGetSetter<?, ?>> handlers = new ArrayList<FieldValueGetSetter<?, ?>>();
         if (getters != null && getters.size() > 0) {
             handlers.addAll(getters);
         }
         filler.setEditableOnlyGetSettable(editableOnly);
-        filler.handleView(view);
+        filler.handleView(view, handlers);
     }
 
     public static abstract class FieldFiller<V extends View> extends
@@ -88,7 +88,7 @@ public final class FormFiller extends FormGetSetter {
     }
 
     public static abstract class FieldValueGetter<T, V extends View> extends
-            FieldValueGetSetter {
+            FieldValueGetSetter<T, V> {
         public abstract T getValue(V v);
 
         @SuppressWarnings("unchecked")
@@ -223,7 +223,7 @@ public final class FormFiller extends FormGetSetter {
             return this;
         }
 
-        public FillerPolicy setFieldGetters(List<FieldValueGetter<?, ?>> getters) {
+        public FillerPolicy setGetters(List<FieldValueGetter<?, ?>> getters) {
             this.fieldGetters.clear();
             this.fieldGetters.addAll(getters);
             return this;
