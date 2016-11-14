@@ -1,6 +1,7 @@
 package istat.android.freedev.forms;
 
 import istat.android.freedev.forms.tools.FormTools;
+
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,13 +15,13 @@ import java.util.List;
 abstract class FormGetSetter {
     Form form;
     boolean editableOnlyGetSettable = false;
-    final List<FieldValueGetSetter<?, ?>> fieldHandlers = new ArrayList<FieldValueGetSetter<?, ?>>();
+    private final List<FieldViewGetSetter<?, ?>> fieldHandlers = new ArrayList<FieldViewGetSetter<?, ?>>();
 
     FormGetSetter(Form form) {
         this.form = form;
     }
 
-    protected final void handleView(View formBaseView, List<FieldValueGetSetter<?, ?>> fieldHandlers) {
+    protected final void handleView(View formBaseView, List<FieldViewGetSetter<?, ?>> fieldHandlers) {
         prepareViewHandler(fieldHandlers);
         if (formBaseView != null) {
             if (formBaseView instanceof ViewGroup) {
@@ -42,7 +43,7 @@ abstract class FormGetSetter {
         }
     }
 
-    private void prepareViewHandler(List<FieldValueGetSetter<?, ?>> handlers) {
+    private void prepareViewHandler(List<FieldViewGetSetter<?, ?>> handlers) {
         if (handlers != null && handlers.size() > 0) {
             fieldHandlers.addAll(handlers);
         }
@@ -51,7 +52,7 @@ abstract class FormGetSetter {
 
     private void performViewHandling(View v) {
         if (fieldHandlers != null && fieldHandlers.size() > 0) {
-            for (FieldValueGetSetter<?, ?> handler : fieldHandlers) {
+            for (FieldViewGetSetter<?, ?> handler : fieldHandlers) {
                 boolean result = handler.onHandle(form, v.getTag() + "", v);
                 if (result) {
                     return;
@@ -71,7 +72,7 @@ abstract class FormGetSetter {
         return editableOnlyGetSettable;
     }
 
-    protected abstract List<FieldValueGetSetter<?, ?>> getDefaultHandlers();
+    protected abstract List<FieldViewGetSetter<?, ?>> getDefaultHandlers();
 
     protected final void onHandleView(View view) {
         if (view != null) {
@@ -83,9 +84,9 @@ abstract class FormGetSetter {
         }
     }
 
-    static abstract class FieldValueGetSetter<T, V extends View> {
+    static abstract class FieldViewGetSetter<T, V extends View> {
 
-        public FieldValueGetSetter() {
+        public FieldViewGetSetter() {
 
         }
 

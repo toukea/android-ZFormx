@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import istat.android.freedev.forms.tools.FormTools;
-import istat.android.freedev.forms.utils.ClassFormLoader;
 import istat.android.freedev.forms.utils.ViewUtil;
 
 import android.view.View;
@@ -20,6 +19,7 @@ import android.widget.TextView;
  * @author istat
  */
 public final class FormFlower extends FormGetSetter {
+    private final List<FieldViewGetSetter<?, ?>> setters = new ArrayList<FieldViewGetSetter<?, ?>>();
 
     FormFlower(Form form) {
         super(form);
@@ -34,44 +34,64 @@ public final class FormFlower extends FormGetSetter {
         return obj;
     }
 
-    public FormFlower addObjectLoader(ClassFormLoader loader) {
-        ClassFormLoader.putAsObjectLoader(loader);
-        return this;
-    }
-
-    public FormFlower setFlowEditableonly(boolean state) {
+    public FormFlower setFlowEditableOnly(boolean state) {
         setEditableOnlyGetSettable(state);
         return this;
     }
 
-    public FormFlower addFieldSetter(FieldFlower flower) {
-
+    public FormFlower addViewSetter(FieldFlower flower) {
+        setters.add(flower);
         return this;
     }
 
-    public FormFlower addFieldSetter(FieldValueSetter setter) {
-
+    public FormFlower addViewSetter(FieldViewSetter setter) {
+        setters.add(setter);
         return this;
     }
 
-    public static FormFlower from(Form form) {
+    public FormFlower addViewSetter(FieldViewSetter... setters) {
+        for (FieldViewSetter setter : setters) {
+            addViewSetter(setter);
+        }
+        return this;
+    }
+
+    public FormFlower addViewSetter(List<FieldViewSetter> setters) {
+        for (FieldViewSetter setter : setters) {
+            addViewSetter(setter);
+        }
+        return this;
+    }
+
+    public static FormFlower use(Form form) {
         return new FormFlower(form);
     }
 
     /**
-     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldValueSetter}
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldViewSetter}
+     * using default Setters only.
+     *
+     * @param form
+     * @param view
+     */
+    public static void flowIntoView(Form form, View view) {
+        flowIntoView(form, view, false, new FieldViewSetter<?, ?>[0]);
+    }
+
+    /**
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldViewSetter}
      *
      * @param form
      * @param view
      * @param setters
      */
     public static void flowIntoView(Form form, View view,
-                                    FieldValueSetter<?, ?>... setters) {
+                                    FieldViewSetter<?, ?>... setters) {
         flowIntoView(form, view, false, setters);
     }
 
     /**
-     * * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldValueSetter}
+     * * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldViewSetter}
      *
      * @param form
      * @param view
@@ -79,13 +99,13 @@ public final class FormFlower extends FormGetSetter {
      * @param setters
      */
     public static void flowIntoView(Form form, View view, boolean editableOnly,
-                                    FieldValueSetter<?, ?>... setters) {
+                                    FieldViewSetter<?, ?>... setters) {
         flowIntoView(form, view, editableOnly,
                 setters != null ? Arrays.asList(setters) : null);
     }
 
     /**
-     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldValueSetter}
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link FieldViewSetter}
      *
      * @param form
      * @param view
@@ -93,9 +113,9 @@ public final class FormFlower extends FormGetSetter {
      * @param setters
      */
     public static void flowIntoView(Form form, View view, boolean editableOnly,
-                                    List<FieldValueSetter<?, ?>> setters) {
+                                    List<FieldViewSetter<?, ?>> setters) {
         FormFlower flower = new FormFlower(form);
-        List<FieldValueGetSetter<?, ?>> handlers = new ArrayList<FieldValueGetSetter<?, ?>>();
+        List<FieldViewGetSetter<?, ?>> handlers = new ArrayList<FieldViewGetSetter<?, ?>>();
         if (setters != null && setters.size() > 0) {
             handlers.addAll(setters);
         }
@@ -108,8 +128,8 @@ public final class FormFlower extends FormGetSetter {
      * @param <T>
      * @param <V>
      */
-    public static abstract class FieldValueSetter<T, V extends View> extends
-            FieldValueGetSetter<T, V> {
+    public static abstract class FieldViewSetter<T, V extends View> extends
+            FieldViewGetSetter<T, V> {
 
         public abstract void setValue(T entity, V v);
 
@@ -131,14 +151,14 @@ public final class FormFlower extends FormGetSetter {
         }
     }
 
-    final FieldValueSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldValueSetter<Integer, Spinner>() {
+    final FieldViewSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldViewSetter<Integer, Spinner>() {
 
         @Override
         public void setValue(Integer entity, Spinner v) {
             v.setSelection(FormTools.parseInt(entity));
         }
     };
-    final FieldValueSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldValueSetter<String, Spinner>() {
+    final FieldViewSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldViewSetter<String, Spinner>() {
 
         @Override
         public void setValue(String entity, Spinner spinner) {
@@ -147,7 +167,7 @@ public final class FormFlower extends FormGetSetter {
     };
 
     public static abstract class FieldFlower<V extends View> extends
-            FieldValueSetter<Object, V> {
+            FieldViewSetter<Object, V> {
 
     }
 
@@ -195,8 +215,8 @@ public final class FormFlower extends FormGetSetter {
     };
 
     @Override
-    protected final List<FieldValueGetSetter<?, ?>> getDefaultHandlers() {
-        return new ArrayList<FieldValueGetSetter<?, ?>>() {
+    protected final List<FieldViewGetSetter<?, ?>> getDefaultHandlers() {
+        return new ArrayList<FieldViewGetSetter<?, ?>>() {
             /**
              *
              */
