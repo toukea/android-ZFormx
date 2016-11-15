@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import istat.android.freedev.forms.tools.FormTools;
+import istat.android.freedev.forms.utils.ClassFormLoader;
 import istat.android.freedev.forms.utils.ViewUtil;
 
 import android.view.View;
@@ -30,7 +31,11 @@ public final class FormFlower extends FormGetSetter {
     }
 
     public <T> T flowOn(T obj) {
-        form.flowOn(obj);
+        return flowOn(obj, null);
+    }
+
+    public <T> T flowOn(T obj, ClassFormLoader loader) {
+        form.flowOn(obj, loader);
         return obj;
     }
 
