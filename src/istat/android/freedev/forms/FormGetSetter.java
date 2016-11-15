@@ -13,6 +13,7 @@ import java.util.List;
  * @author istat
  */
 abstract class FormGetSetter {
+    public final static int MODE_VISIBLE_ONLY = 0, MODE_EDITABLE_ONLY = 1, MODE_ALL = 2, MODE_EMPTY_ONLY = 3;
     Form form;
     boolean editableOnlyGetSettable = false;
     private final List<FieldViewGetSetter<?, ?>> fieldHandlers = new ArrayList<FieldViewGetSetter<?, ?>>();
@@ -90,7 +91,7 @@ abstract class FormGetSetter {
 
         }
 
-        protected final boolean isHandleAble(View view) {
+        protected boolean isHandleAble(View view) {
             Class<?> clazzView = getViewTypeClass();
             return (view.getClass().isAssignableFrom(clazzView)
                     || clazzView.isAssignableFrom(view.getClass())
@@ -98,7 +99,7 @@ abstract class FormGetSetter {
         }
 
         @SuppressWarnings("unchecked")
-        protected final Class<FieldType> getValueTypeClass() {
+        final Class<FieldType> getValueTypeClass() {
             try {
                 String className = ((ParameterizedType) getClass()
                         .getGenericSuperclass()).getActualTypeArguments()[0]
@@ -112,7 +113,7 @@ abstract class FormGetSetter {
         }
 
         @SuppressWarnings("unchecked")
-        protected final Class<ViewType> getViewTypeClass() {
+        final Class<ViewType> getViewTypeClass() {
             try {
                 String className = ((ParameterizedType) getClass()
                         .getGenericSuperclass()).getActualTypeArguments()[0]

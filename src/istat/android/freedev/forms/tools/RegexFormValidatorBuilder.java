@@ -3,18 +3,20 @@ package istat.android.freedev.forms.tools;
 import java.util.ArrayList;
 import java.util.List;
 
+import istat.android.freedev.forms.Form;
 import istat.android.freedev.forms.FormValidator;
 import istat.android.freedev.forms.FormValidator.FieldValidator;
 
 public final class RegexFormValidatorBuilder {
     private RegexFormConstraintBuilder conditionBuilder = new RegexFormConstraintBuilder();
+    Form form;
 
-    public final static RegexFormValidatorBuilder newInstance() {
-        return new RegexFormValidatorBuilder();
+    public final static RegexFormValidatorBuilder from(Form form) {
+        return new RegexFormValidatorBuilder(form);
     }
 
-    private RegexFormValidatorBuilder() {
-
+    private RegexFormValidatorBuilder(Form form) {
+        this.form = form;
     }
 
     public RegexFormValidatorBuilder appendFieldValidationParams(
@@ -58,7 +60,7 @@ public final class RegexFormValidatorBuilder {
     }
 
     public FormValidator create() {
-        FormValidator validator = new FormValidator();
+        FormValidator validator = FormValidator.from(form);
         validator.setConstraints(conditionBuilder.create());
         return validator;
     }

@@ -23,7 +23,6 @@ import android.widget.TextView;
  */
 public final class FormFiller extends FormGetSetter {
     private final List<FieldViewGetSetter<?, ?>> getters = new ArrayList<FieldViewGetSetter<?, ?>>();
-    //FillerPolicy policy = new FillerPolicy();
 
     public static FormFiller use(Form form) {
         return new FormFiller(form);

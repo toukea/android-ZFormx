@@ -8,8 +8,13 @@ import istat.android.freedev.forms.tools.FormTools;
 import istat.android.freedev.forms.utils.ClassFormLoader;
 import istat.android.freedev.forms.utils.ViewUtil;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -28,7 +33,24 @@ public final class FormFlower extends FormGetSetter {
     }
 
     public void flowInto(View v) {
-        handleView(v, null);
+        handleView(v, setters);
+    }
+
+    public void flowInto(Window window) {
+        flowInto(window.getDecorView());
+    }
+
+    public void flowInto(Activity activity) {
+        flowInto(activity.getWindow().getDecorView());
+    }
+
+    public void flowInto(Dialog activity) {
+        flowInto(activity.getWindow().getDecorView());
+    }
+
+    @SuppressLint("NewApi")
+    public void flowInto(Fragment fragment) {
+        flowInto(fragment.getView());
     }
 
     public <T> T flowInto(T obj) {

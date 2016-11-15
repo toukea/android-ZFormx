@@ -22,6 +22,13 @@ public class Form extends HashMap<String, Object> {
         return keySet().toArray(new String[keySet().size()]);
     }
 
+    public Class<?> getFieldTypeClass(String field) {
+        if (containsKey(field)) {
+            return get(field).getClass();
+        }
+        return Object.class;
+    }
+
     public String optString(String string) {
         Object value = get(string);
         return value != null ? value.toString() : "";

@@ -18,6 +18,10 @@ public class FormValidator {
     Form form;
     View view;
 
+    private FormValidator() {
+
+    }
+
     public static FormValidator from(Form form) {
         FormValidator validator = new FormValidator();
         validator.form = form;
