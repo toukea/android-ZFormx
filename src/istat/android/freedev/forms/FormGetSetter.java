@@ -84,7 +84,7 @@ abstract class FormGetSetter {
         }
     }
 
-    static abstract class FieldViewGetSetter<T, V extends View> {
+    static abstract class FieldViewGetSetter<FieldType, ViewType extends View> {
 
         public FieldViewGetSetter() {
 
@@ -93,18 +93,18 @@ abstract class FormGetSetter {
         protected final boolean isHandleAble(View view) {
             Class<?> clazzView = getViewTypeClass();
             return (view.getClass().isAssignableFrom(clazzView)
-                    || clazzView.isAssignableFrom(view.getClass()) || clazzView
-                    .equals(view.getClass()));
+                    || clazzView.isAssignableFrom(view.getClass())
+                    || clazzView.equals(view.getClass()));
         }
 
         @SuppressWarnings("unchecked")
-        protected final Class<T> getFieldValueTypeClass() {
+        protected final Class<FieldType> getValueTypeClass() {
             try {
                 String className = ((ParameterizedType) getClass()
                         .getGenericSuperclass()).getActualTypeArguments()[0]
                         .toString().replaceFirst("class", "").trim();
                 Class<?> clazz = Class.forName(className);
-                return (Class<T>) clazz;
+                return (Class<FieldType>) clazz;
             } catch (Exception e) {
                 throw new IllegalStateException(
                         "Class is not parametrized with generic type!!! Please use extends <> ");
@@ -112,13 +112,13 @@ abstract class FormGetSetter {
         }
 
         @SuppressWarnings("unchecked")
-        protected final Class<V> getViewTypeClass() {
+        protected final Class<ViewType> getViewTypeClass() {
             try {
                 String className = ((ParameterizedType) getClass()
                         .getGenericSuperclass()).getActualTypeArguments()[0]
                         .toString().replaceFirst("class", "").trim();
                 Class<?> clazz = Class.forName(className);
-                return (Class<V>) clazz;
+                return (Class<ViewType>) clazz;
             } catch (Exception e) {
                 throw new IllegalStateException(
                         "Class is not parametrized with generic type!!! Please use extends <> ");

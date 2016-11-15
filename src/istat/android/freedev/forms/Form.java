@@ -116,7 +116,7 @@ public class Form extends HashMap<String, Object> {
         return createEntity(this, clazz);
     }
 
-    public void flowOn(Object obj) {
+    public void flowInto(Object obj) {
         flowFormOnEntity(this, obj);
     }
 
@@ -130,7 +130,7 @@ public class Form extends HashMap<String, Object> {
         return createEntity(this, clazz, loader);
     }
 
-    public <T> void flowOn(T obj, ClassFormLoader<T> loader) {
+    public <T> void flowInto(T obj, ClassFormLoader<T> loader) {
         flowFormOnEntity(this, obj, loader);
     }
 

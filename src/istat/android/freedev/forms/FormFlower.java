@@ -11,6 +11,7 @@ import istat.android.freedev.forms.utils.ViewUtil;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -26,16 +27,16 @@ public final class FormFlower extends FormGetSetter {
         super(form);
     }
 
-    public void flowOn(View v) {
+    public void flowInto(View v) {
         handleView(v, null);
     }
 
-    public <T> T flowOn(T obj) {
-        return flowOn(obj, null);
+    public <T> T flowInto(T obj) {
+        return flowInto(obj, null);
     }
 
-    public <T> T flowOn(T obj, ClassFormLoader loader) {
-        form.flowOn(obj, loader);
+    public <T> T flowInto(T obj, ClassFormLoader loader) {
+        form.flowInto(obj, loader);
         return obj;
     }
 
@@ -218,6 +219,19 @@ public final class FormFlower extends FormGetSetter {
             }
         }
     };
+    public final static FieldViewSetter<Integer, ImageView> SETTER_IMAGE_VIEW_INT_RESSOURCE = new FieldViewSetter<Integer, ImageView>() {
+
+
+        @Override
+        public void setValue(Integer entity, ImageView imageView) {
+            try {
+                imageView.setImageResource(entity);
+            } catch (Exception e) {
+
+            }
+        }
+    };
+
 
     @Override
     protected final List<FieldViewGetSetter<?, ?>> getDefaultHandlers() {
@@ -233,6 +247,7 @@ public final class FormFlower extends FormGetSetter {
                 add(SETTER_CHECKBOX_STATE);
                 add(SETTER_RADIO_BUTTON_STATE);
                 add(SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX);
+                add(SETTER_IMAGE_VIEW_INT_RESSOURCE);
             }
         };
     }
