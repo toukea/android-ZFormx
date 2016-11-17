@@ -1,8 +1,11 @@
 package istat.android.freedev.forms.tools;
 
 import android.annotation.SuppressLint;
+import android.view.View;
+
 import istat.android.freedev.forms.Form;
-import istat.android.freedev.forms.utils.ClassFormLoader;
+import istat.android.freedev.forms.FormFiller;
+import istat.android.freedev.forms.FormFlower;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -204,6 +207,10 @@ public class FormTools {
         return form;
     }
 
+    public static final Class<?> getGenericTypeClass(Object obj, int genericIndex) {
+        return getGenericTypeClass(obj.getClass(), genericIndex);
+    }
+
     public static final Class<?> getGenericTypeClass(Class<?> baseClass, int genericIndex) {
         try {
             String className = ((ParameterizedType) baseClass
@@ -212,6 +219,7 @@ public class FormTools {
             Class<?> clazz = Class.forName(className);
             return clazz;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalStateException(
                     "Class is not parametrized with generic type!!! Please use extends <> ");
         }
@@ -224,6 +232,23 @@ public class FormTools {
             cLass = cLass.getSuperclass();
         }
         return fields;
+    }
+
+    public final static <T extends FormFlower.FieldViewSetter> boolean isSetHandleAble(T obj, View view) {
+        Class<?> setterClass = obj.getClass();
+        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
+        boolean handleAble = (view.getClass().isAssignableFrom(clazzView)
+                || clazzView.isAssignableFrom(view.getClass())
+                || clazzView.equals(view.getClass()));
+        return handleAble;
+    }
+
+    public final static <T extends FormFiller.FieldViewGetter> boolean isGetHandleAble(T obj, View view) {
+        Class<?> setterClass = obj.getClass();
+        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
+        return (view.getClass().isAssignableFrom(clazzView)
+                || clazzView.isAssignableFrom(view.getClass())
+                || clazzView.equals(view.getClass()));
     }
 
 

@@ -159,6 +159,10 @@ public final class FormFlower extends FormGetSetter {
     public static abstract class FieldViewSetter<T, V extends View> extends
             FieldViewGetSetter<T, V> {
 
+        public FieldViewSetter(Class<T> valueType, Class<V> viewType) {
+            super(valueType, viewType);
+        }
+
         public abstract void setValue(T entity, V v);
 
         @SuppressWarnings("unchecked")
@@ -179,14 +183,14 @@ public final class FormFlower extends FormGetSetter {
         }
     }
 
-    final FieldViewSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldViewSetter<Integer, Spinner>() {
+    final FieldViewSetter<Integer, Spinner> SETTER_SPINNER_INDEX = new FieldViewSetter<Integer, Spinner>(Integer.class, Spinner.class) {
 
         @Override
         public void setValue(Integer entity, Spinner v) {
             v.setSelection(FormTools.parseInt(entity));
         }
     };
-    final FieldViewSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldViewSetter<String, Spinner>() {
+    final FieldViewSetter<String, Spinner> SETTER_SPINNER_CONTAINT = new FieldViewSetter<String, Spinner>(String.class, Spinner.class) {
 
         @Override
         public void setValue(String entity, Spinner spinner) {
@@ -197,16 +201,19 @@ public final class FormFlower extends FormGetSetter {
     public static abstract class FieldFlower<V extends View> extends
             FieldViewSetter<Object, V> {
 
+        public FieldFlower(Class<V> viewType) {
+            super(Object.class, viewType);
+        }
     }
 
-    final FieldFlower<TextView> SETTER_TEXT_VIEW_TEXT = new FieldFlower<TextView>() {
+    final FieldFlower<TextView> SETTER_TEXT_VIEW_TEXT = new FieldFlower<TextView>(TextView.class) {
 
         @Override
         public void setValue(Object value, TextView v) {
             v.setText(FormTools.parseString(value));
         }
     };
-    public final static FieldFlower<CheckBox> SETTER_CHECKBOX_STATE = new FieldFlower<CheckBox>() {
+    public final static FieldFlower<CheckBox> SETTER_CHECKBOX_STATE = new FieldFlower<CheckBox>(CheckBox.class) {
 
         @Override
         public void setValue(Object value, CheckBox v) {
@@ -215,7 +222,7 @@ public final class FormFlower extends FormGetSetter {
 
         }
     };
-    public final static FieldFlower<RadioButton> SETTER_RADIO_BUTTON_STATE = new FieldFlower<RadioButton>() {
+    public final static FieldFlower<RadioButton> SETTER_RADIO_BUTTON_STATE = new FieldFlower<RadioButton>(RadioButton.class) {
 
         @Override
         public void setValue(Object value, RadioButton v) {
@@ -223,7 +230,7 @@ public final class FormFlower extends FormGetSetter {
         }
     };
 
-    public final static FieldFlower<RadioGroup> SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX = new FieldFlower<RadioGroup>() {
+    public final static FieldFlower<RadioGroup> SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX = new FieldFlower<RadioGroup>(RadioGroup.class) {
 
         @Override
         public void setValue(Object value, RadioGroup v) {
@@ -241,7 +248,7 @@ public final class FormFlower extends FormGetSetter {
             }
         }
     };
-    public final static FieldViewSetter<Integer, ImageView> SETTER_IMAGE_VIEW_INT_RESSOURCE = new FieldViewSetter<Integer, ImageView>() {
+    public final static FieldViewSetter<Integer, ImageView> SETTER_IMAGE_VIEW_INT_RESOURCE = new FieldViewSetter<Integer, ImageView>(Integer.class, ImageView.class) {
 
 
         @Override
@@ -269,7 +276,7 @@ public final class FormFlower extends FormGetSetter {
                 add(SETTER_CHECKBOX_STATE);
                 add(SETTER_RADIO_BUTTON_STATE);
                 add(SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX);
-                add(SETTER_IMAGE_VIEW_INT_RESSOURCE);
+                add(SETTER_IMAGE_VIEW_INT_RESOURCE);
             }
         };
     }

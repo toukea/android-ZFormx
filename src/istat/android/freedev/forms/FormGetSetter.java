@@ -5,7 +5,6 @@ import istat.android.freedev.forms.tools.FormTools;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +15,8 @@ abstract class FormGetSetter {
     public final static int MODE_VISIBLE_ONLY = 0, MODE_EDITABLE_ONLY = 1, MODE_ALL = 2, MODE_EMPTY_ONLY = 3;
     Form form;
     boolean editableOnlyGetSettable = false;
+    boolean visibleOnlyGetSettable = false;
+    boolean emptyOnlyGetSettable = false;
     private final List<FieldViewGetSetter<?, ?>> fieldHandlers = new ArrayList<FieldViewGetSetter<?, ?>>();
 
     FormGetSetter(Form form) {
@@ -85,10 +86,13 @@ abstract class FormGetSetter {
         }
     }
 
-    static abstract class FieldViewGetSetter<FieldType, ViewType extends View> {
+    static abstract class FieldViewGetSetter<ValueType, ViewType extends View> {
+        Class<ValueType> valueType;
+        Class<ViewType> viewType;
 
-        public FieldViewGetSetter() {
-
+        public FieldViewGetSetter(Class<ValueType> valueType, Class<ViewType> viewType) {
+            this.valueType = valueType;
+            this.viewType = viewType;
         }
 
         protected boolean isHandleAble(View view) {
@@ -99,31 +103,13 @@ abstract class FormGetSetter {
         }
 
         @SuppressWarnings("unchecked")
-        final Class<FieldType> getValueTypeClass() {
-            try {
-                String className = ((ParameterizedType) getClass()
-                        .getGenericSuperclass()).getActualTypeArguments()[0]
-                        .toString().replaceFirst("class", "").trim();
-                Class<?> clazz = Class.forName(className);
-                return (Class<FieldType>) clazz;
-            } catch (Exception e) {
-                throw new IllegalStateException(
-                        "Class is not parametrized with generic type!!! Please use extends <> ");
-            }
+        final Class<ValueType> getValueTypeClass() {
+            return valueType;
         }
 
         @SuppressWarnings("unchecked")
         final Class<ViewType> getViewTypeClass() {
-            try {
-                String className = ((ParameterizedType) getClass()
-                        .getGenericSuperclass()).getActualTypeArguments()[0]
-                        .toString().replaceFirst("class", "").trim();
-                Class<?> clazz = Class.forName(className);
-                return (Class<ViewType>) clazz;
-            } catch (Exception e) {
-                throw new IllegalStateException(
-                        "Class is not parametrized with generic type!!! Please use extends <> ");
-            }
+            return viewType;
         }
 
         protected abstract boolean onHandle(Form form, String fieldName,

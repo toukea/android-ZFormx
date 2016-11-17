@@ -142,10 +142,17 @@ public final class FormFiller extends FormGetSetter {
     public static abstract class FieldFiller<V extends View> extends
             FieldViewGetter<Object, V> {
 
+        public FieldFiller(Class<V> viewType) {
+            super(Object.class, viewType);
+        }
     }
 
     public static abstract class FieldViewGetter<T, V extends View> extends
             FieldViewGetSetter<T, V> {
+        public FieldViewGetter(Class<T> valueType, Class<V> viewType) {
+            super(valueType, viewType);
+        }
+
         public abstract T getValue(V v);
 
         @SuppressWarnings("unchecked")
@@ -165,25 +172,25 @@ public final class FormFiller extends FormGetSetter {
         }
     }
 
-    public final static FieldViewGetter<Integer, Spinner> GETTER_SPINNER_INDEX = new FieldViewGetter<Integer, Spinner>() {
+    public final static FieldViewGetter<Integer, Spinner> GETTER_SPINNER_INDEX = new FieldViewGetter<Integer, Spinner>(Integer.class, Spinner.class) {
         @Override
         public Integer getValue(Spinner spinner) {
             return spinner.getSelectedItemPosition();
         }
     };
-    public final static FieldViewGetter<String, Spinner> GETTER_SPINNER_TEXT = new FieldViewGetter<String, Spinner>() {
+    public final static FieldViewGetter<String, Spinner> GETTER_SPINNER_TEXT = new FieldViewGetter<String, Spinner>(String.class, Spinner.class) {
         @Override
         public String getValue(Spinner spinner) {
             return FormTools.parseString(spinner.getSelectedItem());
         }
     };
-    public final static FieldViewGetter<Object, Spinner> GETTER_SPINNER_ENTITY = new FieldViewGetter<Object, Spinner>() {
+    public final static FieldFiller<Spinner> GETTER_SPINNER_ENTITY = new FieldFiller<Spinner>(Spinner.class) {
         @Override
         public Object getValue(Spinner spinner) {
             return spinner.getSelectedItem();
         }
     };
-    public final static FieldViewGetter<Object, RadioGroup> GETTER_RADIO_GROUP_SELECTION_TEXT = new FieldViewGetter<Object, RadioGroup>() {
+    public final static FieldFiller<RadioGroup> GETTER_RADIO_GROUP_SELECTION_TEXT = new FieldFiller<RadioGroup>(RadioGroup.class) {
         @Override
         public Object getValue(RadioGroup v) {
             int selectionId = v.getCheckedRadioButtonId();
@@ -194,7 +201,7 @@ public final class FormFiller extends FormGetSetter {
             return null;
         }
     };
-    final static FieldViewGetter<Object, View> DEFAULT_GETTER = new FieldViewGetter<Object, View>() {
+    final static FieldFiller<View> DEFAULT_GETTER = new FieldFiller<View>(View.class) {
 
         @Override
         public Object getValue(View v) {
