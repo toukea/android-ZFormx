@@ -1,5 +1,7 @@
 package istat.android.freedev.forms.tools;
 
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +11,13 @@ import istat.android.freedev.forms.FormValidator.FieldValidator;
 
 public final class RegexFormValidatorBuilder {
     private RegexFormConstraintBuilder conditionBuilder = new RegexFormConstraintBuilder();
-    Form form;
 
-    public final static RegexFormValidatorBuilder from(Form form) {
-        return new RegexFormValidatorBuilder(form);
+    public final static RegexFormValidatorBuilder newInstance() {
+        return new RegexFormValidatorBuilder();
     }
 
-    private RegexFormValidatorBuilder(Form form) {
-        this.form = form;
+    private RegexFormValidatorBuilder() {
+
     }
 
     public RegexFormValidatorBuilder appendFieldValidationParams(
@@ -59,8 +60,14 @@ public final class RegexFormValidatorBuilder {
         return this;
     }
 
-    public FormValidator create() {
+    public FormValidator create(Form form) {
         FormValidator validator = FormValidator.from(form);
+        validator.setConstraints(conditionBuilder.create());
+        return validator;
+    }
+
+    public FormValidator create(Form form, View view) {
+        FormValidator validator = FormValidator.from(form, view);
         validator.setConstraints(conditionBuilder.create());
         return validator;
     }

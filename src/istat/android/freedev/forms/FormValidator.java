@@ -155,7 +155,7 @@ public class FormValidator {
                         state.addError(error);
                         if (validationListener != null) {
                             validationListener.onValidateField(form, key, objValue,
-                                    formView, validator, isValidated);
+                                    error.viewCause, validator, isValidated);
                         }
                         if (validator.hasBreakValidationIfErrorEnable()) {
                             break;
