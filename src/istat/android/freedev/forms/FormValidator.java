@@ -111,23 +111,25 @@ public final class FormValidator {
             List<FieldValidator> validators = constraints.get(key);
             Object objValue = form.get(key);
             FormFieldError error = null;
-            for (FieldValidator validator : validators) {
-                boolean isValidated = validator.validate(form, key, objValue);
-                if (!isValidated) {
-                    if (error == null) {
-                        error = new FormFieldError(key, objValue);
-                    }
-                    if (formView != null) {
-                        error.viewCause = formView.findViewWithTag(key);
-                    }
-                    error.addFailedValidators(validator);
-                    state.addError(error);
-                    if (validationListener != null) {
-                        validationListener.onValidateField(form, key, objValue,
-                                formView, validator, isValidated);
-                    }
-                    if (validator.hasBreakValidationIfErrorEnable()) {
-                        break;
+            if (validators != null) {
+                for (FieldValidator validator : validators) {
+                    boolean isValidated = validator.validate(form, key, objValue);
+                    if (!isValidated) {
+                        if (error == null) {
+                            error = new FormFieldError(key, objValue);
+                        }
+                        if (formView != null) {
+                            error.viewCause = formView.findViewWithTag(key);
+                        }
+                        error.addFailedValidators(validator);
+                        state.addError(error);
+                        if (validationListener != null) {
+                            validationListener.onValidateField(form, key, objValue,
+                                    formView, validator, isValidated);
+                        }
+                        if (validator.hasBreakValidationIfErrorEnable()) {
+                            break;
+                        }
                     }
                 }
             }
