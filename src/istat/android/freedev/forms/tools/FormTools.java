@@ -234,22 +234,22 @@ public class FormTools {
         return fields;
     }
 
-    public final static <T extends FormFlower.FieldViewSetter> boolean isSetHandleAble(T obj, View view) {
-        Class<?> setterClass = obj.getClass();
-        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
-        boolean handleAble = (view.getClass().isAssignableFrom(clazzView)
-                || clazzView.isAssignableFrom(view.getClass())
-                || clazzView.equals(view.getClass()));
-        return handleAble;
-    }
-
-    public final static <T extends FormFiller.FieldViewGetter> boolean isGetHandleAble(T obj, View view) {
-        Class<?> setterClass = obj.getClass();
-        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
-        return (view.getClass().isAssignableFrom(clazzView)
-                || clazzView.isAssignableFrom(view.getClass())
-                || clazzView.equals(view.getClass()));
-    }
+//    public final static <T extends FormFlower.FieldViewSetter> boolean isSetHandleAble(T obj, View view) {
+//        Class<?> setterClass = obj.getClass();
+//        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
+//        boolean handleAble = (view.getClass().isAssignableFrom(clazzView)
+//                || clazzView.isAssignableFrom(view.getClass())
+//                || clazzView.equals(view.getClass()));
+//        return handleAble;
+//    }
+//
+//    public final static <T extends FormFiller.FieldViewGetter> boolean isGetHandleAble(T obj, View view) {
+//        Class<?> setterClass = obj.getClass();
+//        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
+//        return (view.getClass().isAssignableFrom(clazzView)
+//                || clazzView.isAssignableFrom(view.getClass())
+//                || clazzView.equals(view.getClass()));
+//    }
 
 
 }

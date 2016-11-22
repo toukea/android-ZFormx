@@ -97,9 +97,15 @@ abstract class FormGetSetter {
 
         protected boolean isHandleAble(View view) {
             Class<?> clazzView = getViewTypeClass();
-            return (view.getClass().isAssignableFrom(clazzView)
+            Class<?> clazzValue = getValueTypeClass();
+            boolean valueTypeHandleAble = (view.getClass().isAssignableFrom(clazzValue)
+                    || clazzValue.isAssignableFrom(view.getClass())
+                    || clazzValue.equals(view.getClass()));
+
+            boolean viewTypeHandleAble = (view.getClass().isAssignableFrom(clazzView)
                     || clazzView.isAssignableFrom(view.getClass())
                     || clazzView.equals(view.getClass()));
+            return valueTypeHandleAble && viewTypeHandleAble;
         }
 
         @SuppressWarnings("unchecked")

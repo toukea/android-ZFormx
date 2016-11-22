@@ -1,7 +1,10 @@
 package istat.android.freedev.forms;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -12,11 +15,13 @@ import istat.android.freedev.forms.utils.ClassFormLoader;
  * @author istat
  */
 public class Form extends HashMap<String, Object> {
+    public final static Object DEFAULT_EMPTY_VALUE = "";
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
+    Object emptyValue = DEFAULT_EMPTY_VALUE;
 
     public String[] getFieldNames() {
         return keySet().toArray(new String[keySet().size()]);
@@ -24,7 +29,10 @@ public class Form extends HashMap<String, Object> {
 
     public Class<?> getFieldTypeClass(String field) {
         if (containsKey(field)) {
-            return get(field).getClass();
+            Object obj = get(field);
+            if (obj != null) {
+                return obj.getClass();
+            }
         }
         return Object.class;
     }
@@ -187,5 +195,62 @@ public class Form extends HashMap<String, Object> {
             ClassFormLoader.flowFormOn(form, obj);
         }
 
+    }
+
+    /**
+     * define which value will be the default empty value for auto created field.
+     *
+     * @param emptyValue
+     */
+    public void setEmptyValue(Object emptyValue) {
+        this.emptyValue = emptyValue;
+    }
+
+    /**
+     * Add some value to the form. with default value.
+     * defined by {@link #setEmptyValue(Object)}.
+     * default empty value is {@link #DEFAULT_EMPTY_VALUE}
+     *
+     * @param fields
+     */
+    public void setFieldNames(String... fields) {
+        List<String> tmp = new ArrayList<String>();
+        Collections.addAll(tmp, fields);
+        String[] currentField = getFieldNames();
+        for (String field : currentField) {
+            if (!tmp.contains(field)) {
+                remove(field);
+            }
+        }
+        for (String field : tmp) {
+            if (!this.containsKey(field)) {
+                addFieldName(field);
+            }
+        }
+    }
+
+    /**
+     * Add some value to the form. with default value.
+     * defined by {@link #setEmptyValue(Object)}.
+     * default empty value is {@link #DEFAULT_EMPTY_VALUE}
+     *
+     * @param fields
+     */
+    public void addFieldNames(String... fields) {
+        if (fields != null && fields.length > 0) {
+            for (String field : fields) {
+                put(field, emptyValue);
+            }
+        }
+    }
+
+    /**
+     * Add field to form with an empty empty value. defined by {@link #setEmptyValue(Object)}.
+     * default empty value is {@link #DEFAULT_EMPTY_VALUE}
+     *
+     * @param field
+     */
+    public void addFieldName(String field) {
+        addFieldNames(field);
     }
 }

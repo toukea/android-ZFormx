@@ -32,6 +32,31 @@ public final class FormFiller extends FormGetSetter {
         super(form);
     }
 
+    public FormFiller addFieldToFill(String... fields) {
+        form.addFieldNames(fields);
+        return this;
+    }
+
+    public FormFiller addFieldToFill(List<String> fields) {
+        form.addFieldNames(fields.toArray(new String[fields.size()]));
+        return this;
+    }
+
+    public FormFiller setFieldToFill(String... fields) {
+        form.setFieldNames(fields);
+        return this;
+    }
+
+    public FormFiller setFieldToFill(List<String> fields) {
+        form.setFieldNames(fields.toArray(new String[fields.size()]));
+        return this;
+    }
+
+    public FormFiller addFieldToFill(String field) {
+        form.addFieldNames(field);
+        return this;
+    }
+
     public Form fillWith(View v) {
         handleView(v, getters);
         return form;
