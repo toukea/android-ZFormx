@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.text.TextUtils;
 import android.view.View;
 
 /**
@@ -17,9 +18,14 @@ public class FormValidator {
     ValidationListener validationListener;
     Form form;
     View view;
+    FormFiller.FillerPolicy fillerPolicy;
 
     private FormValidator() {
 
+    }
+
+    public void setFillerPolicy(FormFiller.FillerPolicy fillerPolicy) {
+        this.fillerPolicy = fillerPolicy;
     }
 
     public static FormValidator from(Form form) {
@@ -42,7 +48,11 @@ public class FormValidator {
     }
 
     public final FormState validate() {
-        return validate(form, view);
+        if (fillerPolicy != null) {
+            return validate(form, view, fillerPolicy);
+        } else {
+            return validate(form, view);
+        }
     }
 
     public final FormValidator setValidationListener(ValidationListener validationListener) {
@@ -126,7 +136,10 @@ public class FormValidator {
 //    }
 
     final FormState validate(View formView, FormFiller.FillerPolicy policy) {
-        Form form = new Form();
+        return validate(new Form(), formView, policy);
+    }
+
+    final FormState validate(Form form, View formView, FormFiller.FillerPolicy policy) {
         FormFiller.fillWithView(form, formView, policy);
         return validate(form, formView);
     }
@@ -217,16 +230,20 @@ public class FormValidator {
             this.breakValidationIfError = json.optBoolean(FIELD_BREAK_IF_ERROR);
             return this;
         }
+
+        public boolean hasErrorMessage() {
+            return !TextUtils.isEmpty(getErrorMessage());
+        }
     }
 
     public static interface ValidationListener {
-        public void onValidationStarting(Form form, View formView);
+        void onValidationStarting(Form form, View formView);
 
-        public void onValidateField(Form form, String FieldName, Object value,
-                                    View viewCause, FormValidator.FieldValidator validator,
-                                    boolean validated);
+        void onValidateField(Form form, String FieldName, Object value,
+                             View viewCause, FormValidator.FieldValidator validator,
+                             boolean validated);
 
-        public void onValidationCompleted(Form form, View formView,
-                                          FormState state);
+        void onValidationCompleted(Form form, View formView,
+                                   FormState state);
     }
 }

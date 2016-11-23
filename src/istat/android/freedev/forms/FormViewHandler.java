@@ -6,24 +6,33 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author istat
  */
-abstract class FormGetSetter {
+abstract class FormViewHandler {
     public final static int MODE_VISIBLE_ONLY = 0, MODE_EDITABLE_ONLY = 1, MODE_ALL = 2, MODE_EMPTY_ONLY = 3;
     Form form;
     boolean editableOnlyGetSettable = false;
     boolean visibleOnlyGetSettable = false;
     boolean emptyOnlyGetSettable = false;
-    private final List<FieldViewGetSetter<?, ?>> fieldHandlers = new ArrayList<FieldViewGetSetter<?, ?>>();
+    private final List<FieldViewHandler<?, ?>> fieldHandlers = new ArrayList<FieldViewHandler<?, ?>>();
+    private List<String> ignores = new ArrayList<String>();
 
-    FormGetSetter(Form form) {
+    FormViewHandler(Form form) {
         this.form = form;
     }
 
-    protected final void handleView(View formBaseView, List<FieldViewGetSetter<?, ?>> fieldHandlers) {
+    public FormViewHandler ignoreField(String... fieldNames) {
+        if (fieldNames != null && fieldNames.length > 0) {
+            Collections.addAll(ignores, fieldNames);
+        }
+        return this;
+    }
+
+    protected final void handleView(View formBaseView, List<FieldViewHandler<?, ?>> fieldHandlers) {
         prepareViewHandler(fieldHandlers);
         if (formBaseView != null) {
             if (formBaseView instanceof ViewGroup) {
@@ -45,7 +54,7 @@ abstract class FormGetSetter {
         }
     }
 
-    private void prepareViewHandler(List<FieldViewGetSetter<?, ?>> handlers) {
+    private void prepareViewHandler(List<FieldViewHandler<?, ?>> handlers) {
         if (handlers != null && handlers.size() > 0) {
             fieldHandlers.addAll(handlers);
         }
@@ -54,7 +63,7 @@ abstract class FormGetSetter {
 
     private void performViewHandling(View v) {
         if (fieldHandlers != null && fieldHandlers.size() > 0) {
-            for (FieldViewGetSetter<?, ?> handler : fieldHandlers) {
+            for (FieldViewHandler<?, ?> handler : fieldHandlers) {
                 boolean result = handler.onHandle(form, v.getTag() + "", v);
                 if (result) {
                     return;
@@ -74,7 +83,7 @@ abstract class FormGetSetter {
         return editableOnlyGetSettable;
     }
 
-    protected abstract List<FieldViewGetSetter<?, ?>> getDefaultHandlers();
+    protected abstract List<FieldViewHandler<?, ?>> getDefaultHandlers();
 
     protected final void onHandleView(View view) {
         if (view != null) {
@@ -86,13 +95,19 @@ abstract class FormGetSetter {
         }
     }
 
-    static abstract class FieldViewGetSetter<ValueType, ViewType extends View> {
+    static abstract class FieldViewHandler<ValueType, ViewType extends View> {
         Class<ValueType> valueType;
         Class<ViewType> viewType;
 
-        public FieldViewGetSetter(Class<ValueType> valueType, Class<ViewType> viewType) {
+        public FieldViewHandler(Class<ValueType> valueType, Class<ViewType> viewType) {
             this.valueType = valueType;
             this.viewType = viewType;
+        }
+
+        @Deprecated
+        public FieldViewHandler() {
+            this.valueType = (Class<ValueType>) FormTools.getGenericTypeClass(this, 0);
+            this.viewType = (Class<ViewType>) FormTools.getGenericTypeClass(this, 1);
         }
 
         protected boolean isHandleAble(View view) {

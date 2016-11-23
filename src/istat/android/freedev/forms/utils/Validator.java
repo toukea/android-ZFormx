@@ -13,9 +13,11 @@ import istat.android.freedev.forms.Form;
 import istat.android.freedev.forms.FormState;
 
 /**
+ * Not Yet used for now.
+ *
  * @author istat
  */
-public abstract class Validator {
+abstract class Validator {
     HashMap<String, List<FieldValidator>> constraints = new HashMap<String, List<FieldValidator>>();
     ValidationListener validationListener;
 

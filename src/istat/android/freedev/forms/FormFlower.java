@@ -25,8 +25,8 @@ import android.widget.TextView;
 /**
  * @author istat
  */
-public final class FormFlower extends FormGetSetter {
-    private final List<FieldViewGetSetter<?, ?>> setters = new ArrayList<FieldViewGetSetter<?, ?>>();
+public final class FormFlower extends FormViewHandler {
+    private final List<FieldViewHandler<?, ?>> setters = new ArrayList<FieldViewHandler<?, ?>>();
 
     FormFlower(Form form) {
         super(form);
@@ -143,7 +143,7 @@ public final class FormFlower extends FormGetSetter {
     public static void flowIntoView(Form form, View view, boolean editableOnly,
                                     List<FieldViewSetter<?, ?>> setters) {
         FormFlower flower = new FormFlower(form);
-        List<FieldViewGetSetter<?, ?>> handlers = new ArrayList<FieldViewGetSetter<?, ?>>();
+        List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
         if (setters != null && setters.size() > 0) {
             handlers.addAll(setters);
         }
@@ -157,11 +157,17 @@ public final class FormFlower extends FormGetSetter {
      * @param <V>
      */
     public static abstract class FieldViewSetter<T, V extends View> extends
-            FieldViewGetSetter<T, V> {
+            FieldViewHandler<T, V> {
 
         public FieldViewSetter(Class<T> valueType, Class<V> viewType) {
             super(valueType, viewType);
         }
+
+        @Deprecated
+        public FieldViewSetter() {
+            super();
+        }
+
 
         public abstract void setValue(T entity, V v);
 
@@ -263,8 +269,8 @@ public final class FormFlower extends FormGetSetter {
 
 
     @Override
-    protected final List<FieldViewGetSetter<?, ?>> getDefaultHandlers() {
-        return new ArrayList<FieldViewGetSetter<?, ?>>() {
+    protected final List<FieldViewHandler<?, ?>> getDefaultHandlers() {
+        return new ArrayList<FieldViewHandler<?, ?>>() {
             /**
              *
              */

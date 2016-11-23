@@ -21,8 +21,8 @@ import android.widget.TextView;
 /**
  * @author istat
  */
-public final class FormFiller extends FormGetSetter {
-    private final List<FieldViewGetSetter<?, ?>> getters = new ArrayList<FieldViewGetSetter<?, ?>>();
+public final class FormFiller extends FormViewHandler {
+    private final List<FieldViewHandler<?, ?>> getters = new ArrayList<FieldViewHandler<?, ?>>();
 
     public static FormFiller use(Form form) {
         return new FormFiller(form);
@@ -156,7 +156,7 @@ public final class FormFiller extends FormGetSetter {
     public static void fillWithView(Form form, View view, boolean editableOnly,
                                     List<FieldViewGetter<?, ?>> getters) {
         FormFiller filler = new FormFiller(form);
-        List<FieldViewGetSetter<?, ?>> handlers = new ArrayList<FieldViewGetSetter<?, ?>>();
+        List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
         if (getters != null && getters.size() > 0) {
             handlers.addAll(getters);
         }
@@ -173,9 +173,14 @@ public final class FormFiller extends FormGetSetter {
     }
 
     public static abstract class FieldViewGetter<T, V extends View> extends
-            FieldViewGetSetter<T, V> {
+            FieldViewHandler<T, V> {
         public FieldViewGetter(Class<T> valueType, Class<V> viewType) {
             super(valueType, viewType);
+        }
+
+        @Deprecated
+        public FieldViewGetter() {
+            super();
         }
 
         public abstract T getValue(V v);
@@ -259,8 +264,8 @@ public final class FormFiller extends FormGetSetter {
     };
 
     @Override
-    protected final List<FieldViewGetSetter<?, ?>> getDefaultHandlers() {
-        return new ArrayList<FieldViewGetSetter<?, ?>>() {
+    protected final List<FieldViewHandler<?, ?>> getDefaultHandlers() {
+        return new ArrayList<FieldViewHandler<?, ?>>() {
             /**
              *
              */
@@ -319,6 +324,11 @@ public final class FormFiller extends FormGetSetter {
         }
 
         public FillerPolicy appendGetter(FieldViewGetter<?, ?> getter) {
+            this.fieldGetters.add(getter);
+            return this;
+        }
+
+        public FillerPolicy appendGetter(FieldFiller<?> getter) {
             this.fieldGetters.add(getter);
             return this;
         }
