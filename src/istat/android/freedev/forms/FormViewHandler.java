@@ -88,7 +88,16 @@ abstract class FormViewHandler {
     protected final void onHandleView(View view) {
         if (view != null) {
             if (view instanceof ViewGroup) {
-                handleViewGroup((ViewGroup) view);
+                if (view != null && view.getTag() != null && !FormTools.isEmpty(view.getTag())) {
+                    try {
+                        handleSingleView(view);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+//                        handleViewGroup((ViewGroup) view);
+                    }
+                } else {
+                    handleViewGroup((ViewGroup) view);
+                }
             } else {
                 handleSingleView(view);
             }

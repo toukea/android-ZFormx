@@ -119,4 +119,11 @@ public final class LazyFormValidator extends RegexFormAbsValidatorBuilder {
         validator.setValidationListener(mValidationListener);
         return validator;
     }
+
+    public static abstract  class  LazyValidationListener implements FormValidator.ValidationListener {
+        @Override
+        public void onValidateField(Form form, String FieldName, Object value, View viewCause, FormValidator.FieldValidator validator, boolean validated) {
+
+        }
+    }
 }

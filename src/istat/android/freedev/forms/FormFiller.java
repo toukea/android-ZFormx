@@ -57,7 +57,7 @@ public final class FormFiller extends FormViewHandler {
         return this;
     }
 
-    public Form fillWith(View v) {
+    public Form fillWith(View v) throws FormFieldError.ViewNotSupportedException {
         handleView(v, getters);
         return form;
     }
@@ -103,7 +103,7 @@ public final class FormFiller extends FormViewHandler {
      * @param form
      * @param view
      */
-    public static void fillWithView(Form form, View view) {
+    public static void fillWithView(Form form, View view) throws FormFieldError.ViewNotSupportedException {
         fillWithView(form, view, false, new FieldViewGetter<?, ?>[0]);
     }
 
@@ -115,7 +115,7 @@ public final class FormFiller extends FormViewHandler {
      * @param getters
      */
     public static void fillWithView(Form form, View view,
-                                    FieldViewGetter<?, ?>... getters) {
+                                    FieldViewGetter<?, ?>... getters) throws FormFieldError.ViewNotSupportedException {
         fillWithView(form, view, false, getters);
     }
 
@@ -141,7 +141,7 @@ public final class FormFiller extends FormViewHandler {
      * @param view
      * @param policy
      */
-    public static void fillWithView(Form form, View view, FillerPolicy policy) {
+    public static void fillWithView(Form form, View view, FillerPolicy policy) throws FormFieldError.ViewNotSupportedException {
         fillWithView(form, view, policy != null ? policy.editableOnly : false, policy != null ? policy.fieldGetters : null);
     }
 
@@ -154,7 +154,7 @@ public final class FormFiller extends FormViewHandler {
      * @param getters
      */
     public static void fillWithView(Form form, View view, boolean editableOnly,
-                                    List<FieldViewGetter<?, ?>> getters) {
+                                    List<FieldViewGetter<?, ?>> getters) throws FormFieldError.ViewNotSupportedException {
         FormFiller filler = new FormFiller(form);
         List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
         if (getters != null && getters.size() > 0) {

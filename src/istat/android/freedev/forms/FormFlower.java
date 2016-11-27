@@ -32,24 +32,24 @@ public final class FormFlower extends FormViewHandler {
         super(form);
     }
 
-    public void flowInto(View v) {
+    public void flowInto(View v) throws FormFieldError.ViewNotSupportedException {
         handleView(v, setters);
     }
 
-    public void flowInto(Window window) {
+    public void flowInto(Window window) throws FormFieldError.ViewNotSupportedException {
         flowInto(window.getDecorView());
     }
 
-    public void flowInto(Activity activity) {
+    public void flowInto(Activity activity) throws FormFieldError.ViewNotSupportedException {
         flowInto(activity.getWindow().getDecorView());
     }
 
-    public void flowInto(Dialog activity) {
+    public void flowInto(Dialog activity) throws FormFieldError.ViewNotSupportedException {
         flowInto(activity.getWindow().getDecorView());
     }
 
     @SuppressLint("NewApi")
-    public void flowInto(Fragment fragment) {
+    public void flowInto(Fragment fragment) throws FormFieldError.ViewNotSupportedException {
         flowInto(fragment.getView());
     }
 

@@ -8,6 +8,7 @@ import istat.android.freedev.forms.FormFiller;
 import istat.android.freedev.forms.FormFlower;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -225,11 +226,16 @@ public class FormTools {
         }
     }
 
-    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> cLass) {
+    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> klass) {
         List<Field> fields = new ArrayList<Field>();
-        while (!cLass.equals(Object.class)) {
-            Collections.addAll(fields, cLass.getDeclaredFields());
-            cLass = cLass.getSuperclass();
+        while (!klass.equals(Object.class)) {
+            for (Field field : klass.getDeclaredFields()) {
+                if (field!=null &&field.toString().contains("static")) {
+                    continue;
+                }
+                fields.add(field);
+            }
+            klass = klass.getSuperclass();
         }
         return fields;
     }
