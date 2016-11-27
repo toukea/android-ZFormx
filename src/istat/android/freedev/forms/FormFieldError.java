@@ -90,7 +90,7 @@ public final class FormFieldError {
         failedValidators.add(validator);
     }
 
-    public class ViewNotSupportedException extends RuntimeException {
+    public static class ViewNotSupportedException extends RuntimeException {
         public ViewNotSupportedException(String message) {
             super(message);
         }

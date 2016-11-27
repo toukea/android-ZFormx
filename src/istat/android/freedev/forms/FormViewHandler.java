@@ -70,7 +70,7 @@ abstract class FormViewHandler {
                 }
             }
         }
-        throw new RuntimeException("unsupported view for form autoBind::"
+        throw new FormFieldError.ViewNotSupportedException("unsupported view for form autoBind::"
                 + v.getClass());
     }
 
