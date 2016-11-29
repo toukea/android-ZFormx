@@ -7,6 +7,7 @@ import java.util.List;
 
 import istat.android.freedev.forms.Form;
 import istat.android.freedev.forms.tools.FormTools;
+
 import android.os.Bundle;
 
 public abstract class ClassFormLoader<T> {
@@ -23,7 +24,7 @@ public abstract class ClassFormLoader<T> {
 
 
     @SuppressWarnings("unchecked")
-    public final static <T> void putAsClassLoader(ClassFormLoader<T> newLoader) {
+    public final static <T> void putAsObjectLoader(ClassFormLoader<T> newLoader) {
         Class<T> clazz = (Class<T>) FormTools.getGenericTypeClass(
                 newLoader.getClass(), 0);
         objectLoader.put(clazz, newLoader);
@@ -77,7 +78,7 @@ public abstract class ClassFormLoader<T> {
 
         @Override
         public void onLoad(Form form, Object entity) {
-            List<Field> fields = FormTools.getAllFieldIncludingPrivateAndSuper(entity.getClass());
+            List<Field> fields = FormTools.getAllFieldFields(entity.getClass(), true, false);
             for (Field field : fields) {
                 try {
                     field.setAccessible(true);
@@ -93,7 +94,7 @@ public abstract class ClassFormLoader<T> {
         @Override
         public void onLoad(Form form, Object obj) {
             Class<?> clazz = obj.getClass();
-            List<Field> fields = FormTools.getAllFieldIncludingPrivateAndSuper(clazz);
+            List<Field> fields = FormTools.getAllFieldFields(clazz, true, false);
             for (Field field : fields) {
                 try {
                     String fieldName = field.getName();

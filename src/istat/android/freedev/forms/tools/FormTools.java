@@ -1,10 +1,14 @@
 package istat.android.freedev.forms.tools;
 
 import android.annotation.SuppressLint;
+import android.view.View;
+
 import istat.android.freedev.forms.Form;
-import istat.android.freedev.forms.utils.ClassFormLoader;
+import istat.android.freedev.forms.FormFiller;
+import istat.android.freedev.forms.FormFlower;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -204,6 +208,10 @@ public class FormTools {
         return form;
     }
 
+    public static final Class<?> getGenericTypeClass(Object obj, int genericIndex) {
+        return getGenericTypeClass(obj.getClass(), genericIndex);
+    }
+
     public static final Class<?> getGenericTypeClass(Class<?> baseClass, int genericIndex) {
         try {
             String className = ((ParameterizedType) baseClass
@@ -212,19 +220,62 @@ public class FormTools {
             Class<?> clazz = Class.forName(className);
             return clazz;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalStateException(
                     "Class is not parametrized with generic type!!! Please use extends <> ");
         }
     }
 
-    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> cLass) {
+    public static List<Field> getAllFieldFields(Class<?> klass, boolean includingPrivateAndSuper, boolean acceptStatic) {
+        if (includingPrivateAndSuper) {
+            return getAllFieldIncludingPrivateAndSuper(klass, acceptStatic);
+        } else {
+            List<Field> fields = new ArrayList<Field>();
+            Field[] tmp = klass.getDeclaredFields();
+            for (Field f : tmp) {
+                if (f != null && (f.toString().contains("static") && !acceptStatic)) {
+                    continue;
+                }
+                fields.add(f);
+            }
+            return fields;
+        }
+    }
+
+    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> klassc) {
+        return getAllFieldIncludingPrivateAndSuper(klassc, false);
+    }
+
+    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> klass, boolean acceptStatic) {
         List<Field> fields = new ArrayList<Field>();
-        while (!cLass.equals(Object.class)) {
-            Collections.addAll(fields, cLass.getDeclaredFields());
-            cLass = cLass.getSuperclass();
+        while (!klass.equals(Object.class)) {
+            for (Field field : klass.getDeclaredFields()) {
+                if (field != null && (field.toString().contains("static") && !acceptStatic)) {
+                    continue;
+                }
+                fields.add(field);
+            }
+            klass = klass.getSuperclass();
         }
         return fields;
     }
+
+//    public final static <T extends FormFlower.FieldViewSetter> boolean isSetHandleAble(T obj, View view) {
+//        Class<?> setterClass = obj.getClass();
+//        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
+//        boolean handleAble = (view.getClass().isAssignableFrom(clazzView)
+//                || clazzView.isAssignableFrom(view.getClass())
+//                || clazzView.equals(view.getClass()));
+//        return handleAble;
+//    }
+//
+//    public final static <T extends FormFiller.FieldViewGetter> boolean isGetHandleAble(T obj, View view) {
+//        Class<?> setterClass = obj.getClass();
+//        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
+//        return (view.getClass().isAssignableFrom(clazzView)
+//                || clazzView.isAssignableFrom(view.getClass())
+//                || clazzView.equals(view.getClass()));
+//    }
 
 
 }

@@ -7,14 +7,53 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.text.TextUtils;
 import android.view.View;
 
 /**
  * @author istat
  */
-public final class FormValidator {
+public class FormValidator {
     HashMap<String, List<FieldValidator>> constraints = new HashMap<String, List<FieldValidator>>();
     ValidationListener validationListener;
+    Form form;
+    View view;
+    FormFiller.FillerPolicy fillerPolicy;
+
+    private FormValidator() {
+
+    }
+
+    public void setFillerPolicy(FormFiller.FillerPolicy fillerPolicy) {
+        this.fillerPolicy = fillerPolicy;
+    }
+
+    public static FormValidator from(Form form) {
+        FormValidator validator = new FormValidator();
+        validator.form = form;
+        return validator;
+    }
+
+    public static FormValidator from(View view) {
+        FormValidator validator = new FormValidator();
+        validator.view = view;
+        return validator;
+    }
+
+    public static FormValidator from(Form form, View view) {
+        FormValidator validator = new FormValidator();
+        validator.view = view;
+        validator.form = form;
+        return validator;
+    }
+
+    public final FormState validate() {
+        if (fillerPolicy != null) {
+            return validate(form, view, fillerPolicy);
+        } else {
+            return validate(form, view);
+        }
+    }
 
     public final FormValidator setValidationListener(ValidationListener validationListener) {
         this.validationListener = validationListener;
@@ -79,25 +118,29 @@ public final class FormValidator {
         return this;
     }
 
-    public final FormState validate(Form form, View formView) {
+
+    final FormState validate(Form form, View formView) {
         FormState state = new FormState(form);
         proceedCheckup(form, state, formView);
         return state;
     }
 
-    public final FormState validate(Form form) {
-        View nullView = null;
-        return validate(form, nullView);
+//    final FormState validate(Form form) {
+//        View nullView = null;
+//        return validate(form, nullView);
+//    }
+//
+//    final FormState validate(View formView) {
+//        FormFiller.FillerPolicy policy = null;
+//        return validate(formView, policy);
+//    }
+
+    final FormState validate(View formView, FormFiller.FillerPolicy policy) {
+        return validate(new Form(), formView, policy);
     }
 
-    public final FormState validate(View formView) {
-        FormFiller.FillerPolicy policy = null;
-        return validate(formView, policy);
-    }
-
-    public final FormState validate(View formView, FormFiller.FillerPolicy policy) {
-        Form form = new Form();
-        FormFiller.fillFromView(form, formView, policy);
+    final FormState validate(Form form, View formView, FormFiller.FillerPolicy policy) {
+        FormFiller.fillWithView(form, formView, policy);
         return validate(form, formView);
     }
 
@@ -187,16 +230,20 @@ public final class FormValidator {
             this.breakValidationIfError = json.optBoolean(FIELD_BREAK_IF_ERROR);
             return this;
         }
+
+        public boolean hasErrorMessage() {
+            return !TextUtils.isEmpty(getErrorMessage());
+        }
     }
 
     public static interface ValidationListener {
-        public void onValidationStarting(Form form, View formView);
+        void onValidationStarting(Form form, View formView);
 
-        public void onValidateField(Form form, String FieldName, Object value,
-                                    View viewCause, FormValidator.FieldValidator validator,
-                                    boolean validated);
+        void onValidateField(Form form, String FieldName, Object value,
+                             View viewCause, FormValidator.FieldValidator validator,
+                             boolean validated);
 
-        public void onValidationCompleted(Form form, View formView,
-                                          FormState state);
+        void onValidationCompleted(Form form, View formView,
+                                   FormState state);
     }
 }

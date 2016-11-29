@@ -1,7 +1,12 @@
 package istat.android.freedev.forms;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -12,14 +17,26 @@ import istat.android.freedev.forms.utils.ClassFormLoader;
  * @author istat
  */
 public class Form extends HashMap<String, Object> {
+    public final static Object DEFAULT_EMPTY_VALUE = "";
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
+    Object emptyValue = DEFAULT_EMPTY_VALUE;
 
     public String[] getFieldNames() {
         return keySet().toArray(new String[keySet().size()]);
+    }
+
+    public Class<?> getFieldTypeClass(String field) {
+        if (containsKey(field)) {
+            Object obj = get(field);
+            if (obj != null) {
+                return obj.getClass();
+            }
+        }
+        return Object.class;
     }
 
     public String optString(String string) {
@@ -116,7 +133,7 @@ public class Form extends HashMap<String, Object> {
         return createEntity(this, clazz);
     }
 
-    public void flowOn(Object obj) {
+    public void flowInto(Object obj) {
         flowFormOnEntity(this, obj);
     }
 
@@ -130,7 +147,7 @@ public class Form extends HashMap<String, Object> {
         return createEntity(this, clazz, loader);
     }
 
-    public <T> void flowOn(T obj, ClassFormLoader<T> loader) {
+    public <T> void flowInto(T obj, ClassFormLoader<T> loader) {
         flowFormOnEntity(this, obj, loader);
     }
 
@@ -180,5 +197,103 @@ public class Form extends HashMap<String, Object> {
             ClassFormLoader.flowFormOn(form, obj);
         }
 
+    }
+
+    public boolean clearValue(String... values) {
+        if (values == null || values.length == 0) {
+            return this.values().removeAll(Collections.singletonList(null));
+        }
+        List<String> valueArray = Arrays.asList(values);
+        return this.values().removeAll(valueArray);
+    }
+
+    public int clearkey(String... values) {
+        if (values == null) {
+            return 0;
+        }
+        List<String> arrayList = Arrays.asList(values);
+        Iterator<String> iterator = keySet().iterator();
+        int count = 0;
+        while (iterator.hasNext()) {
+            String name = iterator.next();
+            if (arrayList.contains(name)) {
+                remove(name);
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * define which value will be the default empty value for auto created field.
+     *
+     * @param emptyValue
+     */
+    public void setEmptyValue(Object emptyValue) {
+        this.emptyValue = emptyValue;
+    }
+
+    /**
+     * Add some value to the form. with default value.
+     * defined by {@link #setEmptyValue(Object)}.
+     * default empty value is {@link #DEFAULT_EMPTY_VALUE}
+     *
+     * @param fields
+     */
+    public void setFieldNames(String... fields) {
+        List<String> tmp = new ArrayList<String>();
+        Collections.addAll(tmp, fields);
+        String[] currentField = getFieldNames();
+        for (String field : currentField) {
+            if (!tmp.contains(field)) {
+                remove(field);
+            }
+        }
+        for (String field : tmp) {
+            if (!this.containsKey(field)) {
+                addFieldName(field);
+            }
+        }
+    }
+
+    /**
+     * Add some value to the form. with default value.
+     * defined by {@link #setEmptyValue(Object)}.
+     * default empty value is {@link #DEFAULT_EMPTY_VALUE}
+     *
+     * @param fields
+     */
+    public void addFieldNames(String... fields) {
+        if (fields != null && fields.length > 0) {
+            for (String field : fields) {
+                put(field, emptyValue);
+            }
+        }
+    }
+
+    /**
+     * Add field to form with an empty empty value. defined by {@link #setEmptyValue(Object)}.
+     * default empty value is {@link #DEFAULT_EMPTY_VALUE}
+     *
+     * @param field
+     */
+    public void addFieldName(String field) {
+        addFieldNames(field);
+    }
+
+    public static <T> Form createClass(Class<T> managedClass) {
+        return createClass(managedClass, null);
+    }
+
+    public static <T> Form createClass(Class<T> managedClass, Object emptyValue) {
+        List<Field> fields = FormTools.getAllFieldFields(managedClass, true, false);
+        String[] fieldNames = new String[fields.size()];
+        for (int i = 0; i < fields.size(); i++) {
+            fieldNames[i] = fields.get(i).getName();
+        }
+        Form form = new Form();
+        form.setEmptyValue(emptyValue);
+        form.setFieldNames(fieldNames);
+        return form;
     }
 }

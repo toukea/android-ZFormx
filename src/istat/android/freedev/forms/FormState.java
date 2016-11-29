@@ -17,9 +17,9 @@ public final class FormState {
 		this.form = form;
 	}
 
-	public FormState() {
-
-	}
+//	public FormState() {
+//
+//	}
 
 	public List<FormFieldError> getErrors() {
 		return errors;
