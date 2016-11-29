@@ -15,7 +15,7 @@ import java.util.List;
 abstract class FormViewHandler {
     public final static int MODE_VISIBLE_ONLY = 0, MODE_EDITABLE_ONLY = 1, MODE_ALL = 2, MODE_EMPTY_ONLY = 3;
     Form form;
-    boolean editableOnlyGetSettable = false;
+    boolean accessibleOnlyGetSettable = false;
     boolean visibleOnlyGetSettable = false;
     boolean emptyOnlyGetSettable = false;
     private final List<FieldViewHandler<?, ?>> fieldHandlers = new ArrayList<FieldViewHandler<?, ?>>();
@@ -46,7 +46,7 @@ abstract class FormViewHandler {
     protected abstract void handleViewGroup(ViewGroup v);
 
     protected final void handleSingleView(View v) {
-        if (editableOnlyGetSettable && !v.isEnabled()) {
+        if (accessibleOnlyGetSettable && !v.isEnabled()) {
             return;
         }
         if (v != null && v.getTag() != null && !FormTools.isEmpty(v.getTag())) {
@@ -74,13 +74,13 @@ abstract class FormViewHandler {
                 + v.getClass());
     }
 
-    protected final void setEditableOnlyGetSettable(
-            boolean editableOnlyGetSettable) {
-        this.editableOnlyGetSettable = editableOnlyGetSettable;
+    protected final void setAccessibleOnlyGetSettable(
+            boolean accessibleOnlyGetSettable) {
+        this.accessibleOnlyGetSettable = accessibleOnlyGetSettable;
     }
 
-    protected final boolean isEditableOnlyGetSettable() {
-        return editableOnlyGetSettable;
+    protected final boolean isAccessibleOnlyGetSettable() {
+        return accessibleOnlyGetSettable;
     }
 
     protected abstract List<FieldViewHandler<?, ?>> getDefaultHandlers();
@@ -93,7 +93,6 @@ abstract class FormViewHandler {
                         handleSingleView(view);
                     } catch (Exception e) {
                         e.printStackTrace();
-//                        handleViewGroup((ViewGroup) view);
                     }
                 } else {
                     handleViewGroup((ViewGroup) view);

@@ -91,8 +91,8 @@ public final class FormFiller extends FormViewHandler {
         return this;
     }
 
-    public FormFiller setFillEditableOnly(boolean state) {
-        setEditableOnlyGetSettable(state);
+    public FormFiller setFillAccessibleOnly(boolean state) {
+        setAccessibleOnlyGetSettable(state);
         return this;
     }
 
@@ -160,7 +160,7 @@ public final class FormFiller extends FormViewHandler {
         if (getters != null && getters.size() > 0) {
             handlers.addAll(getters);
         }
-        filler.setEditableOnlyGetSettable(editableOnly);
+        filler.setAccessibleOnlyGetSettable(editableOnly);
         filler.handleView(view, handlers);
     }
 
@@ -279,10 +279,22 @@ public final class FormFiller extends FormViewHandler {
 
     @Override
     protected final void handleViewGroup(ViewGroup v) {
-        List<View> childV = !isEditableOnlyGetSettable() ? ViewUtil
-                .getDirectChildViews(v) : v.getTouchables();
-        for (View view : childV) {
-            onHandleView(view);
+        String[] fields = form.getFieldNames();
+        if (fields != null && fields.length > 0) {
+            for (String field : fields) {
+                View view = v.findViewWithTag(field);
+                onHandleView(view);
+            }
+        } else {
+            if (v.getTag() != null && !"".equals(v.getTag() + "")) {
+                onHandleView(v);
+            } else {
+                List<View> childV = !isAccessibleOnlyGetSettable() ? ViewUtil
+                        .getDirectChildViews(v) : v.getTouchables();
+                for (View view : childV) {
+                    onHandleView(view);
+                }
+            }
         }
     }
 

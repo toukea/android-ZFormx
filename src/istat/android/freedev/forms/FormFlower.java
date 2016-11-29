@@ -62,8 +62,8 @@ public final class FormFlower extends FormViewHandler {
         return obj;
     }
 
-    public FormFlower setFlowEditableOnly(boolean state) {
-        setEditableOnlyGetSettable(state);
+    public FormFlower setFlowAccessibleOnly(boolean state) {
+        setAccessibleOnlyGetSettable(state);
         return this;
     }
 
@@ -147,7 +147,7 @@ public final class FormFlower extends FormViewHandler {
         if (setters != null && setters.size() > 0) {
             handlers.addAll(setters);
         }
-        flower.setEditableOnlyGetSettable(editableOnly);
+        flower.setAccessibleOnlyGetSettable(editableOnly);
         flower.handleView(view, handlers);
 
     }
