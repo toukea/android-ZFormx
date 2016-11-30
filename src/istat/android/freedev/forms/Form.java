@@ -285,8 +285,21 @@ public class Form extends HashMap<String, Object> {
         return createClass(managedClass, null);
     }
 
-    public static <T> Form createClass(Class<T> managedClass, Object emptyValue) {
-        List<Field> fields = FormTools.getAllFieldFields(managedClass, true, false);
+    /***
+     * deprecated, use {@link #createFromClass(Class, Object)} instead.
+     *
+     * @param cLass
+     * @param emptyValue
+     * @param <T>
+     * @return
+     */
+    @Deprecated
+    public static <T> Form createClass(Class<T> cLass, Object emptyValue) {
+        return createClass(cLass, emptyValue);
+    }
+
+    public static <T> Form createFromClass(Class<T> cLass, Object emptyValue) {
+        List<Field> fields = FormTools.getAllFieldFields(cLass, true, false);
         String[] fieldNames = new String[fields.size()];
         for (int i = 0; i < fields.size(); i++) {
             fieldNames[i] = fields.get(i).getName();
