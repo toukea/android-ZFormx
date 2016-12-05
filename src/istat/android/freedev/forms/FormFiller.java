@@ -28,6 +28,17 @@ public final class FormFiller extends FormViewHandler {
         return new FormFiller(form);
     }
 
+    public static FormFiller use(Form form, Class<?> model) {
+        Form formTmp = Form.fromClass(model);
+        form.putAll(formTmp);
+        return new FormFiller(form);
+    }
+
+    public static FormFiller useModel(Class<?> model) {
+        Form form = Form.fromClass(model);
+        return new FormFiller(form);
+    }
+
     FormFiller(Form form) {
         super(form);
     }
