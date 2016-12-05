@@ -282,7 +282,7 @@ public class Form extends HashMap<String, Object> {
     }
 
     public static <T> Form createClass(Class<T> managedClass) {
-        return createClass(managedClass, null);
+        return createFromClass(managedClass, null);
     }
 
     /***
@@ -295,7 +295,7 @@ public class Form extends HashMap<String, Object> {
      */
     @Deprecated
     public static <T> Form createClass(Class<T> cLass, Object emptyValue) {
-        return createClass(cLass, emptyValue);
+        return createFromClass(cLass, emptyValue);
     }
 
     public static <T> Form createFromClass(Class<T> cLass, Object emptyValue) {

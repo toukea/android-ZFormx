@@ -20,6 +20,7 @@ abstract class FormViewHandler {
     boolean emptyOnlyGetSettable = false;
     private final List<FieldViewHandler<?, ?>> fieldHandlers = new ArrayList<FieldViewHandler<?, ?>>();
     private List<String> ignores = new ArrayList<String>();
+    private boolean throwOnHandlingFail = true;
 
     FormViewHandler(Form form) {
         this.form = form;
@@ -70,8 +71,20 @@ abstract class FormViewHandler {
                 }
             }
         }
-        throw new FormFieldError.ViewNotSupportedException("unsupported view for form autoBind::"
-                + v.getClass());
+
+        if (throwOnHandlingFail)
+            throw new FormFieldError.ViewNotSupportedException("unsupported view for form autoBind::"
+                    + v.getClass());
+    }
+
+    /**
+     * Spécify if the handler will throw {@link istat.android.freedev.forms.FormFieldError.ViewNotSupportedException}
+     * when it failed to handle a given tagged view.
+     *
+     * @param throwOnHandlingFail
+     */
+    public void setThrowOnHandlingFail(boolean throwOnHandlingFail) {
+        this.throwOnHandlingFail = throwOnHandlingFail;
     }
 
     protected final void setAccessibleOnlyGetSettable(
