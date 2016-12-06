@@ -16,7 +16,7 @@ Form object is as simple HashMap Object. so you can put name value pair correspo
 Object mObject = form.get("someFieldName");
 int years = form.optInt("years");
 String lastName = form.optString("lastName");
-String firstName = form.optString("lastName");
+String firstName = form.optString("firstName");
 ```
 
 # From Form to Object and vice versa.
