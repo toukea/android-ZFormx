@@ -30,7 +30,7 @@ class User{
     Object someFieldName:
 }
 ```
-Now, i can create as empty form from User.class.
+Now, i can create an empty form from User.class.
 ```java
 Form form = Form.fromClass(User.class);
 ```
