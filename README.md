@@ -14,9 +14,9 @@ It is also possible to retrieve inserted value from your form Object
 Form object is as simple HashMap Object. so you can put name value pair corresponding at form's fieldName, values. 
 ```java
 Object mObject = form.get("someFieldName");
-int years = form.optIn("years");
-String lastName = form.optIn("lastName");
-String firstName = form.optIn("lastName");
+int years = form.optIny("years");
+String lastName = form.optString("lastName");
+String firstName = form.optString("lastName");
 ```
 
 # From Form to Object and vice versa.
