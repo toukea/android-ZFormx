@@ -20,7 +20,7 @@ abstract class FormViewHandler {
     boolean emptyOnlyGetSettable = false;
     private final List<FieldViewHandler<?, ?>> fieldHandlers = new ArrayList<FieldViewHandler<?, ?>>();
     private List<String> ignores = new ArrayList<String>();
-    private boolean throwOnHandlingFail = true;
+    protected boolean throwOnHandlingFail = true;
 
     FormViewHandler(Form form) {
         this.form = form;
