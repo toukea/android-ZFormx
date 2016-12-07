@@ -14,9 +14,9 @@ It is also possible to retrieve inserted value from your form Object
 Form object is as simple HashMap Object. so you can put name value pair corresponding at form's fieldName, values. 
 ```java
 Object mObject = form.get("someFieldName");
-int years = form.optIn("years");
-String lastName = form.optIn("lastName");
-String firstName = form.optIn("lastName");
+int years = form.optInt("years");
+String lastName = form.optString("lastName");
+String firstName = form.optString("firstName");
 ```
 
 # From Form to Object and vice versa.
@@ -30,7 +30,7 @@ class User{
     Object someFieldName:
 }
 ```
-Now, i can create as empty form from User.class.
+Now, i can create an empty form from User.class.
 ```java
 Form form = Form.fromClass(User.class);
 ```
@@ -77,7 +77,7 @@ So, let create some Xml layout View.
 Now , from my Activity, i can flow <b>Form</b> Entity into that created View which has id = R.id.form_layout.
 ```java
 View mFormView = findViewById(R.id.form_layout);
-FormFlower.user(mForm) //create a flower with a specific Form Entity
+FormFlower.use(mForm) //create a flower with a specific Form Entity (mForm)
           .setFlowAccessibleOnly(false) //spécify if you want to flow enabled view Only (desabled view and not fowussable view would be ignored.)
           .flowInto(mFormView); //flow the form entity into the formView
 ```
