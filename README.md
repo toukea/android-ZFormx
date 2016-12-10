@@ -87,7 +87,7 @@ Documentation in progress... :-)
 # Fill Form Entity content from created view.
 ```java
 View mFormView = findViewById(R.id.form_layout);
-FormFlower.use(mForm) //create a filler using a specific Form Entity (mForm)
+FormFiller.use(mForm) //create a filler using a specific Form Entity (mForm)
           .setFillAccessibleOnly(false) //spécify if you want to flow enabled view Only (desabled view and not fowussable view would be ignored.)
           .fillWith(mFormView); //fill the view with form field value.
 ```
