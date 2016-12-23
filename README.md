@@ -78,7 +78,7 @@ Now , from my Activity, i can flow <b>Form</b> Entity into that created View whi
 ```java
 View mFormView = findViewById(R.id.form_layout);
 FormFlower.use(mForm) //create a flower using a specific Form Entity (mForm)
-            /*spécify if you want to flow enabled view Only 
+            /*setFillAccessibleOnly spécify if you want to flow enabled view Only 
             (desabled view and not fowussable view would be ignored.)*/
           .setFlowAccessibleOnly(false) 
           .flowInto(mFormView); //flow the form entity into the formView
@@ -90,7 +90,7 @@ Documentation in progress... :-)
 ```java
 View mFormView = findViewById(R.id.form_layout);
 FormFiller.use(mForm) //create a filler using a specific Form Entity (mForm)
-            /*spécify if you want to flow enabled view Only
+            /*setFillAccessibleOnly spécify if you want to flow enabled view Only
             (desabled view and not fowussable view would be ignored.)*/
           .setFillAccessibleOnly(false) 
           .fillWith(mFormView); //fill the form with view values.
