@@ -78,7 +78,9 @@ Now , from my Activity, i can flow <b>Form</b> Entity into that created View whi
 ```java
 View mFormView = findViewById(R.id.form_layout);
 FormFlower.use(mForm) //create a flower using a specific Form Entity (mForm)
-          .setFlowAccessibleOnly(false) //spécify if you want to flow enabled view Only (desabled view and not fowussable view would be ignored.)
+            /*spécify if you want to flow enabled view Only 
+            (desabled view and not fowussable view would be ignored.)*/
+          .setFlowAccessibleOnly(false) 
           .flowInto(mFormView); //flow the form entity into the formView
 ```
 # Flow Form Entity content into Object instance.
@@ -88,8 +90,10 @@ Documentation in progress... :-)
 ```java
 View mFormView = findViewById(R.id.form_layout);
 FormFiller.use(mForm) //create a filler using a specific Form Entity (mForm)
-          .setFillAccessibleOnly(false) //spécify if you want to flow enabled view Only (desabled view and not fowussable view would be ignored.)
-          .fillWith(mFormView); //fill the view with form field value.
+            /*spécify if you want to flow enabled view Only
+            (desabled view and not fowussable view would be ignored.)*/
+          .setFillAccessibleOnly(false) 
+          .fillWith(mFormView); //fill the form with view values.
 ```
 
 # Fill Form Entity content from Object instance.
