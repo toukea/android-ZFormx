@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -273,6 +274,9 @@ public final class FormFiller extends FormViewHandler {
                 } else if (v instanceof Spinner) {
                     Spinner t = (Spinner) v;
                     return t.getSelectedItemPosition();
+                } else if (v instanceof ImageView) {
+                    ImageView t = (ImageView) v;
+                    return t.getContentDescription();
                 } else if (v instanceof RadioButton) {
                     RadioButton t = (RadioButton) v;
                     return t.isChecked();

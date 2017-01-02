@@ -77,7 +77,7 @@ So, let create some Xml layout View.
 Now , from my Activity, i can flow <b>Form</b> Entity into that created View which has id = R.id.form_layout.
 ```java
 View mFormView = findViewById(R.id.form_layout);
-FormFlower.use(mForm) //create a flower using a specific Form Entity (mForm)
+FormFiller.use(mForm) //create a flower using a specific Form Entity (mForm)
           .setFlowAccessibleOnly(false) //spécify if you want to flow enabled view Only (desabled view and not fowussable view would be ignored.)
           .flowInto(mFormView); //flow the form entity into the formView
 ```
