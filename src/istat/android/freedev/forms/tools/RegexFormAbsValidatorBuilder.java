@@ -56,16 +56,4 @@ class RegexFormAbsValidatorBuilder {
         conditionBuilder.applyFieldValidators(fieldName, validators);
         return this;
     }
-
-//    public FormValidator create(Form form) {
-//        FormValidator validator = FormValidator.from(form);
-//        validator.setConstraints(conditionBuilder.create());
-//        return validator;
-//    }
-//
-//    public FormValidator create(Form form, View view) {
-//        FormValidator validator = FormValidator.from(form, view);
-//        validator.setConstraints(conditionBuilder.create());
-//        return validator;
-//    }
 }

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import istat.android.freedev.forms.Form;
 import istat.android.freedev.forms.FormValidator.FieldValidator;
+
 import android.text.TextUtils;
 
 public final class RegexFieldValidator extends FieldValidator {
@@ -49,7 +50,8 @@ public final class RegexFieldValidator extends FieldValidator {
     }
 
     public JSONObject toJson() {
-        return null;
+        JSONObject json = new JSONObject();
+        return json;
     }
 
     public final static FieldValidator fromJson(JSONObject json) {
@@ -69,4 +71,9 @@ public final class RegexFieldValidator extends FieldValidator {
         }
         return true;
     }
+
+    public final static String REGEX_EMAIL = "[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}";
+    public final static String REGEX_PHONE = "^(\\+)?[0-9]{6,}$";
+    public final static String REGEX_NUMBER = "\\d";
+    public final static String REGEX_NAME = "";
 }
