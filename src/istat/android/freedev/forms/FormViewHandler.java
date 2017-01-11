@@ -4,6 +4,7 @@ import istat.android.freedev.forms.tools.FormTools;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -101,7 +102,9 @@ abstract class FormViewHandler {
     protected final void onHandleView(View view) {
         if (view != null) {
             if (view instanceof ViewGroup) {
-                if (view != null && view.getTag() != null && !FormTools.isEmpty(view.getTag())) {
+                if (view instanceof AdapterView) {
+                    handleSingleView(view);
+                } else if (view.getTag() != null && !FormTools.isEmpty(view.getTag())) {
                     try {
                         handleSingleView(view);
                     } catch (Exception e) {

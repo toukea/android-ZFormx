@@ -51,7 +51,6 @@ public abstract class ClassFormLoader<T> {
             DEFAULT_OBJECT_LOADER.load(form, obj);
             return;
         }
-
         ClassFormLoader<T> loader = (ClassFormLoader<T>) ClassFormLoader.objectLoader
                 .get(obj.getClass());
         loader.onLoad(form, obj);
