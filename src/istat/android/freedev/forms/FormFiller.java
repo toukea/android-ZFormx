@@ -344,7 +344,7 @@ public final class FormFiller extends FormViewHandler {
             return policy;
         }
 
-        public List<ViewExtractor<?, ?>> getFielGetters() {
+        public List<ViewExtractor<?, ?>> getFieldExtractors() {
             return fieldGetters;
         }
 
@@ -357,18 +357,18 @@ public final class FormFiller extends FormViewHandler {
             return this;
         }
 
-        public FillerPolicy setGetters(List<ViewExtractor<?, ?>> getters) {
+        public FillerPolicy setExtractor(List<ViewExtractor<?, ?>> getters) {
             this.fieldGetters.clear();
             this.fieldGetters.addAll(getters);
             return this;
         }
 
-        public FillerPolicy appendGetter(ViewExtractor<?, ?> getter) {
+        public FillerPolicy appendExtractor(ViewExtractor<?, ?> getter) {
             this.fieldGetters.add(getter);
             return this;
         }
 
-        public FillerPolicy appendGetter(FieldFiller<?> getter) {
+        public FillerPolicy appendExtractor(FieldFiller<?> getter) {
             this.fieldGetters.add(getter);
             return this;
         }
