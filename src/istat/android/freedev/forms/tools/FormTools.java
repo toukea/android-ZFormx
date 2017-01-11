@@ -260,7 +260,7 @@ public class FormTools {
         return fields;
     }
 
-//    public final static <T extends FormFlower.FieldViewSetter> boolean isSetHandleAble(T obj, View view) {
+//    public final static <T extends FormFlower.ValueInjector> boolean isSetHandleAble(T obj, View view) {
 //        Class<?> setterClass = obj.getClass();
 //        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
 //        boolean handleAble = (view.getClass().isAssignableFrom(clazzView)
@@ -269,7 +269,7 @@ public class FormTools {
 //        return handleAble;
 //    }
 //
-//    public final static <T extends FormFiller.FieldViewGetter> boolean isGetHandleAble(T obj, View view) {
+//    public final static <T extends FormFiller.ViewExtractor> boolean isGetHandleAble(T obj, View view) {
 //        Class<?> setterClass = obj.getClass();
 //        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
 //        return (view.getClass().isAssignableFrom(clazzView)

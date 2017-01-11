@@ -130,7 +130,7 @@ public class Form extends HashMap<String, Object> {
 
     public <T> T as(Class<T> clazz) throws InstantiationException,
             IllegalAccessException {
-        return createEntity(this, clazz);
+        return createObject(this, clazz);
     }
 
     public void flowInto(Object obj) {
@@ -144,7 +144,7 @@ public class Form extends HashMap<String, Object> {
 
     public <T> T as(Class<T> clazz, ClassFormLoader<T> loader) throws InstantiationException,
             IllegalAccessException {
-        return createEntity(this, clazz, loader);
+        return createObject(this, clazz, loader);
     }
 
     public <T> void flowInto(T obj, ClassFormLoader<T> loader) {
@@ -152,20 +152,20 @@ public class Form extends HashMap<String, Object> {
     }
 
     //------------------------------------------------------
-    public final static <T> Form createFrom(T obj, ClassFormLoader<T> loader) {
+    public final static <T> Form fromObject(T obj, ClassFormLoader<T> loader) {
         Form form = new Form();
         return fillFormFromEntity(form, obj, loader);
     }
 
-    public final static <T> Form createFrom(T obj) {
-        return createFrom(obj, null);
+    public final static <T> Form fromObject(T obj) {
+        return fromObject(obj, null);
     }
 
-    public static final <T> T createEntity(Form form, Class<T> clazz) throws InstantiationException, IllegalAccessException {
-        return createEntity(form, clazz, null);
+    public static final <T> T createObject(Form form, Class<T> clazz) throws InstantiationException, IllegalAccessException {
+        return createObject(form, clazz, null);
     }
 
-    public static final <T> T createEntity(Form form, Class<T> clazz, ClassFormLoader<T> loader)
+    public static final <T> T createObject(Form form, Class<T> clazz, ClassFormLoader<T> loader)
             throws IllegalAccessException, InstantiationException {
         T instance = clazz.newInstance();
         flowFormOnEntity(form, instance, loader);
@@ -281,24 +281,12 @@ public class Form extends HashMap<String, Object> {
         addFieldNames(field);
     }
 
-    public static <T> Form createClass(Class<T> managedClass) {
-        return createClass(managedClass, null);
+    public static <T> Form fromClass(Class<T> managedClass) {
+        return fromClass(managedClass, null);
     }
 
-    /***
-     * deprecated, use {@link #createFromClass(Class, Object)} instead.
-     *
-     * @param cLass
-     * @param emptyValue
-     * @param <T>
-     * @return
-     */
-    @Deprecated
-    public static <T> Form createClass(Class<T> cLass, Object emptyValue) {
-        return createClass(cLass, emptyValue);
-    }
 
-    public static <T> Form createFromClass(Class<T> cLass, Object emptyValue) {
+    public static <T> Form fromClass(Class<T> cLass, Object emptyValue) {
         List<Field> fields = FormTools.getAllFieldFields(cLass, true, false);
         String[] fieldNames = new String[fields.size()];
         for (int i = 0; i < fields.size(); i++) {

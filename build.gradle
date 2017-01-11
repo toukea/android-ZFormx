@@ -5,8 +5,6 @@ ext {
     PUBLISH_ARTIFACT_ID = 'istat-zformx'
     PUBLISH_VERSION = '1.1.0'
 }
-
-//apply use: 'release-aar.gradle'
 apply from: 'release-jar.gradle'
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
