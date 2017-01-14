@@ -75,5 +75,7 @@ public final class RegexFieldValidator extends FieldValidator {
     public final static String REGEX_EMAIL = "[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}";
     public final static String REGEX_PHONE = "^(\\+)?[0-9]{6,}$";
     public final static String REGEX_NUMBER = "\\d";
-    public final static String REGEX_NAME = "";
+    public final static String REGEX_NAME = ".+";
+    public final static String REGEX_FILE_PATH = "^.+[^/]$";
+    public final static String REGEX_DIRECTORY_PATH = "^.*/$";
 }

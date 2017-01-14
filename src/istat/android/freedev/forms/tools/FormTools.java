@@ -226,12 +226,12 @@ public class FormTools {
         }
     }
 
-    public static List<Field> getAllFieldFields(Class<?> klass, boolean includingPrivateAndSuper, boolean acceptStatic) {
+    public static List<Field> getAllFieldFields(Class<?> cLass, boolean includingPrivateAndSuper, boolean acceptStatic) {
         if (includingPrivateAndSuper) {
-            return getAllFieldIncludingPrivateAndSuper(klass, acceptStatic);
+            return getAllFieldIncludingPrivateAndSuper(cLass, acceptStatic);
         } else {
             List<Field> fields = new ArrayList<Field>();
-            Field[] tmp = klass.getDeclaredFields();
+            Field[] tmp = cLass.getDeclaredFields();
             for (Field f : tmp) {
                 if (f != null && (f.toString().contains("static") && !acceptStatic)) {
                     continue;
