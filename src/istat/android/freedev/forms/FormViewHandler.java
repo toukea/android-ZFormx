@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -122,10 +123,18 @@ abstract class FormViewHandler {
     static abstract class FieldViewHandler<ValueType, ViewType extends View> {
         Class<ValueType> valueType;
         Class<ViewType> viewType;
+        List<String> acceptedField;
 
         public FieldViewHandler(Class<ValueType> valueType, Class<ViewType> viewType) {
             this.valueType = valueType;
             this.viewType = viewType;
+        }
+
+        public FieldViewHandler(Class<ValueType> valueType, Class<ViewType> viewType, String... acceptedField) {
+            this(valueType, viewType);
+            if (acceptedField != null) {
+                this.acceptedField = Arrays.asList(acceptedField);
+            }
         }
 
         @Deprecated
@@ -144,7 +153,13 @@ abstract class FormViewHandler {
             boolean viewTypeHandleAble = (view.getClass().isAssignableFrom(clazzView)
                     || clazzView.isAssignableFrom(view.getClass())
                     || clazzView.equals(view.getClass()));
-            return valueTypeHandleAble && viewTypeHandleAble;
+
+            if (valueTypeHandleAble && viewTypeHandleAble) {
+                if (acceptedField != null && !acceptedField.isEmpty() && !FormTools.isEmpty(view.getTag())) {
+                    return acceptedField.contains(view.getTag());
+                }
+            }
+            return false;
         }
 
         @SuppressWarnings("unchecked")

@@ -242,40 +242,22 @@ public class FormTools {
         }
     }
 
-    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> klassc) {
-        return getAllFieldIncludingPrivateAndSuper(klassc, false);
+    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> cLass) {
+        return getAllFieldIncludingPrivateAndSuper(cLass, false);
     }
 
-    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> klass, boolean acceptStatic) {
+    public static List<Field> getAllFieldIncludingPrivateAndSuper(Class<?> cLass, boolean acceptStatic) {
         List<Field> fields = new ArrayList<Field>();
-        while (!klass.equals(Object.class)) {
-            for (Field field : klass.getDeclaredFields()) {
+        while (!cLass.equals(Object.class)) {
+            for (Field field : cLass.getDeclaredFields()) {
                 if (field != null && (field.toString().contains("static") && !acceptStatic)) {
                     continue;
                 }
                 fields.add(field);
             }
-            klass = klass.getSuperclass();
+            cLass = cLass.getSuperclass();
         }
         return fields;
     }
-
-//    public final static <T extends FormFlower.ValueInjector> boolean isSetHandleAble(T obj, View view) {
-//        Class<?> setterClass = obj.getClass();
-//        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
-//        boolean handleAble = (view.getClass().isAssignableFrom(clazzView)
-//                || clazzView.isAssignableFrom(view.getClass())
-//                || clazzView.equals(view.getClass()));
-//        return handleAble;
-//    }
-//
-//    public final static <T extends FormFiller.ViewExtractor> boolean isGetHandleAble(T obj, View view) {
-//        Class<?> setterClass = obj.getClass();
-//        Class<?> clazzView = FormTools.getGenericTypeClass(setterClass, 0);
-//        return (view.getClass().isAssignableFrom(clazzView)
-//                || clazzView.isAssignableFrom(view.getClass())
-//                || clazzView.equals(view.getClass()));
-//    }
-
 
 }

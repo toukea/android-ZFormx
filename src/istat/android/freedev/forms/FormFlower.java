@@ -15,11 +15,11 @@ import android.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
@@ -67,26 +67,26 @@ public final class FormFlower extends FormViewHandler {
         return this;
     }
 
-    public FormFlower addValueInjector(FieldFlower flower) {
+    public FormFlower addViewInjector(FieldFlower flower) {
         setters.add(flower);
         return this;
     }
 
-    public FormFlower addValueInjector(ValueInjector setter) {
+    public FormFlower addViewInjector(ViewValueInjector setter) {
         setters.add(setter);
         return this;
     }
 
-    public FormFlower addValueInjector(ValueInjector... setters) {
-        for (ValueInjector setter : setters) {
-            addValueInjector(setter);
+    public FormFlower addViewInjector(ViewValueInjector... setters) {
+        for (ViewValueInjector setter : setters) {
+            addViewInjector(setter);
         }
         return this;
     }
 
-    public FormFlower addValueInjector(List<ValueInjector> setters) {
-        for (ValueInjector setter : setters) {
-            addValueInjector(setter);
+    public FormFlower addViewInjector(List<ViewValueInjector> setters) {
+        for (ViewValueInjector setter : setters) {
+            addViewInjector(setter);
         }
         return this;
     }
@@ -96,30 +96,30 @@ public final class FormFlower extends FormViewHandler {
     }
 
     /**
-     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ValueInjector}
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ViewValueInjector}
      * using default Setters only.
      *
      * @param form
      * @param view
      */
     public static void flowIntoView(Form form, View view) {
-        flowIntoView(form, view, false, new ValueInjector<?, ?>[0]);
+        flowIntoView(form, view, false, new ViewValueInjector<?, ?>[0]);
     }
 
     /**
-     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ValueInjector}
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ViewValueInjector}
      *
      * @param form
      * @param view
      * @param setters
      */
     public static void flowIntoView(Form form, View view,
-                                    ValueInjector<?, ?>... setters) {
+                                    ViewValueInjector<?, ?>... setters) {
         flowIntoView(form, view, false, setters);
     }
 
     /**
-     * * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ValueInjector}
+     * * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ViewValueInjector}
      *
      * @param form
      * @param view
@@ -127,13 +127,13 @@ public final class FormFlower extends FormViewHandler {
      * @param setters
      */
     public static void flowIntoView(Form form, View view, boolean editableOnly,
-                                    ValueInjector<?, ?>... setters) {
+                                    ViewValueInjector<?, ?>... setters) {
         flowIntoView(form, view, editableOnly,
                 setters != null ? Arrays.asList(setters) : null);
     }
 
     /**
-     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ValueInjector}
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ViewValueInjector}
      *
      * @param form
      * @param view
@@ -141,7 +141,7 @@ public final class FormFlower extends FormViewHandler {
      * @param setters
      */
     public static void flowIntoView(Form form, View view, boolean editableOnly,
-                                    List<ValueInjector<?, ?>> setters) {
+                                    List<ViewValueInjector<?, ?>> setters) {
         FormFlower flower = new FormFlower(form);
         List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
         if (setters != null && setters.size() > 0) {
@@ -156,15 +156,19 @@ public final class FormFlower extends FormViewHandler {
      * @param <T>
      * @param <V>
      */
-    public static abstract class ValueInjector<T, V extends View> extends
+    public static abstract class ViewValueInjector<T, V extends View> extends
             FieldViewHandler<T, V> {
 
-        public ValueInjector(Class<T> valueType, Class<V> viewType) {
+        public ViewValueInjector(Class<T> valueType, Class<V> viewType) {
             super(valueType, viewType);
         }
 
+        public ViewValueInjector(Class<T> valueType, Class<V> viewType, String... acceptedField) {
+            super(valueType, viewType, acceptedField);
+        }
+
         @Deprecated
-        ValueInjector() {
+        ViewValueInjector() {
             super();
         }
 
@@ -189,23 +193,16 @@ public final class FormFlower extends FormViewHandler {
         }
     }
 
-    final ValueInjector<Integer, Spinner> SETTER_SPINNER_INDEX = new ValueInjector<Integer, Spinner>(Integer.class, Spinner.class) {
+    final ViewValueInjector<Integer, AdapterView> SETTER_ADAPTER_VIEW_INDEX = new ViewValueInjector<Integer, AdapterView>(Integer.class, AdapterView.class) {
 
         @Override
-        public void setValue(Integer entity, Spinner v) {
+        public void setValue(Integer entity, AdapterView v) {
             v.setSelection(FormTools.parseInt(entity));
-        }
-    };
-    final ValueInjector<String, Spinner> SETTER_SPINNER_CONTAINT = new ValueInjector<String, Spinner>(String.class, Spinner.class) {
-
-        @Override
-        public void setValue(String entity, Spinner spinner) {
-
         }
     };
 
     public static abstract class FieldFlower<V extends View> extends
-            ValueInjector<Object, V> {
+            ViewValueInjector<Object, V> {
 
         public FieldFlower(Class<V> viewType) {
             super(Object.class, viewType);
@@ -254,7 +251,7 @@ public final class FormFlower extends FormViewHandler {
             }
         }
     };
-    public final static ValueInjector<Integer, ImageView> SETTER_IMAGE_VIEW_INT_RESOURCE = new ValueInjector<Integer, ImageView>(Integer.class, ImageView.class) {
+    public final static ViewValueInjector<Integer, ImageView> SETTER_IMAGE_VIEW_INT_RESOURCE = new ViewValueInjector<Integer, ImageView>(Integer.class, ImageView.class) {
 
 
         @Override
@@ -277,7 +274,7 @@ public final class FormFlower extends FormViewHandler {
             private static final long serialVersionUID = 1L;
 
             {
-                add(SETTER_SPINNER_INDEX);
+                add(SETTER_ADAPTER_VIEW_INDEX);
                 add(SETTER_TEXT_VIEW_TEXT);
                 add(SETTER_CHECKBOX_STATE);
                 add(SETTER_RADIO_BUTTON_STATE);

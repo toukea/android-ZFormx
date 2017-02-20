@@ -11,6 +11,7 @@ import istat.android.freedev.forms.utils.ViewUtil;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -92,7 +93,7 @@ public final class FormFiller extends FormViewHandler {
         return form;
     }
 
-    public FormFiller addViewExtractor(ViewExtractor getter) {
+    public FormFiller addViewExtractor(ViewValueExtractor getter) {
         getters.add(getter);
         return this;
     }
@@ -102,15 +103,15 @@ public final class FormFiller extends FormViewHandler {
         return this;
     }
 
-    public FormFiller addViewExtractor(ViewExtractor... getters) {
-        for (ViewExtractor getter : getters) {
+    public FormFiller addViewExtractor(ViewValueExtractor... getters) {
+        for (ViewValueExtractor getter : getters) {
             addViewExtractor(getter);
         }
         return this;
     }
 
-    public FormFiller addViewExtractor(List<ViewExtractor> getters) {
-        for (ViewExtractor getter : getters) {
+    public FormFiller addViewExtractor(List<ViewValueExtractor> getters) {
+        for (ViewValueExtractor getter : getters) {
             addViewExtractor(getter);
         }
         return this;
@@ -129,7 +130,7 @@ public final class FormFiller extends FormViewHandler {
      * @param view
      */
     public static void fillWithView(Form form, View view) throws FormFieldError.ViewNotSupportedException {
-        fillWithView(form, view, false, new ViewExtractor<?, ?>[0]);
+        fillWithView(form, view, false, new ViewValueExtractor<?, ?>[0]);
     }
 
     /**
@@ -140,7 +141,7 @@ public final class FormFiller extends FormViewHandler {
      * @param getters
      */
     public static void fillWithView(Form form, View view,
-                                    ViewExtractor<?, ?>... getters) throws FormFieldError.ViewNotSupportedException {
+                                    ViewValueExtractor<?, ?>... getters) throws FormFieldError.ViewNotSupportedException {
         fillWithView(form, view, false, getters);
     }
 
@@ -153,7 +154,7 @@ public final class FormFiller extends FormViewHandler {
      * @param getters
      */
     public static void fillWithView(Form form, View view, boolean editableOnly,
-                                    ViewExtractor<?, ?>... getters) {
+                                    ViewValueExtractor<?, ?>... getters) {
 
         fillWithView(form, view, false,
                 getters != null ? Arrays.asList(getters) : null);
@@ -179,7 +180,7 @@ public final class FormFiller extends FormViewHandler {
      * @param getters
      */
     public static void fillWithView(Form form, View view, boolean editableOnly,
-                                    List<ViewExtractor<?, ?>> getters) throws FormFieldError.ViewNotSupportedException {
+                                    List<ViewValueExtractor<?, ?>> getters) throws FormFieldError.ViewNotSupportedException {
         FormFiller filler = new FormFiller(form);
         List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
         if (getters != null && getters.size() > 0) {
@@ -190,21 +191,25 @@ public final class FormFiller extends FormViewHandler {
     }
 
     public static abstract class FieldFiller<V extends View> extends
-            ViewExtractor<Object, V> {
+            ViewValueExtractor<Object, V> {
 
         public FieldFiller(Class<V> viewType) {
             super(Object.class, viewType);
         }
     }
 
-    public static abstract class ViewExtractor<T, V extends View> extends
+    public static abstract class ViewValueExtractor<T, V extends View> extends
             FieldViewHandler<T, V> {
-        public ViewExtractor(Class<T> valueType, Class<V> viewType) {
+        public ViewValueExtractor(Class<T> valueType, Class<V> viewType) {
             super(valueType, viewType);
         }
 
+        public ViewValueExtractor(Class<T> valueType, Class<V> viewType, String... acceptedField) {
+            super(valueType, viewType, acceptedField);
+        }
+
         @Deprecated
-        ViewExtractor() {
+        ViewValueExtractor() {
             super();
         }
 
@@ -227,19 +232,19 @@ public final class FormFiller extends FormViewHandler {
         }
     }
 
-    public final static ViewExtractor<Integer, Spinner> GETTER_SPINNER_INDEX = new ViewExtractor<Integer, Spinner>(Integer.class, Spinner.class) {
+    public final static ViewValueExtractor<Integer, Spinner> GETTER_ADAPTER_VIEW_INDEX = new ViewValueExtractor<Integer, Spinner>(Integer.class, Spinner.class) {
         @Override
         public Integer getValue(Spinner spinner) {
             return spinner.getSelectedItemPosition();
         }
     };
-    public final static ViewExtractor<String, Spinner> GETTER_SPINNER_TEXT = new ViewExtractor<String, Spinner>(String.class, Spinner.class) {
+    public final static ViewValueExtractor<String, Spinner> GETTER_ADAPTER_VIEW_TEXT = new ViewValueExtractor<String, Spinner>(String.class, Spinner.class) {
         @Override
         public String getValue(Spinner spinner) {
             return FormTools.parseString(spinner.getSelectedItem());
         }
     };
-    public final static FieldFiller<Spinner> GETTER_SPINNER_ENTITY = new FieldFiller<Spinner>(Spinner.class) {
+    public final static FieldFiller<Spinner> GETTER_ADAPTER_VIEW_ENTITY = new FieldFiller<Spinner>(Spinner.class) {
         @Override
         public Object getValue(Spinner spinner) {
             return spinner.getSelectedItem();
@@ -271,8 +276,8 @@ public final class FormFiller extends FormViewHandler {
                 } else if (v instanceof CheckBox) {
                     CheckBox t = (CheckBox) v;
                     return t.isChecked();
-                } else if (v instanceof Spinner) {
-                    Spinner t = (Spinner) v;
+                } else if (v instanceof AdapterView) {
+                    AdapterView t = (AdapterView) v;
                     return t.getSelectedItemPosition();
                 } else if (v instanceof ImageView) {
                     ImageView t = (ImageView) v;
@@ -328,7 +333,7 @@ public final class FormFiller extends FormViewHandler {
 
     public final static class FillerPolicy {
         boolean editableOnly;
-        final List<ViewExtractor<?, ?>> fieldGetters = new ArrayList<ViewExtractor<?, ?>>();
+        final List<ViewValueExtractor<?, ?>> fieldGetters = new ArrayList<ViewValueExtractor<?, ?>>();
 
         private FillerPolicy() {
 
@@ -344,7 +349,7 @@ public final class FormFiller extends FormViewHandler {
             return policy;
         }
 
-        public List<ViewExtractor<?, ?>> getFieldExtractors() {
+        public List<ViewValueExtractor<?, ?>> getFieldExtractors() {
             return fieldGetters;
         }
 
@@ -357,13 +362,13 @@ public final class FormFiller extends FormViewHandler {
             return this;
         }
 
-        public FillerPolicy setExtractor(List<ViewExtractor<?, ?>> getters) {
+        public FillerPolicy setExtractor(List<ViewValueExtractor<?, ?>> getters) {
             this.fieldGetters.clear();
             this.fieldGetters.addAll(getters);
             return this;
         }
 
-        public FillerPolicy appendExtractor(ViewExtractor<?, ?> getter) {
+        public FillerPolicy appendExtractor(ViewValueExtractor<?, ?> getter) {
             this.fieldGetters.add(getter);
             return this;
         }
