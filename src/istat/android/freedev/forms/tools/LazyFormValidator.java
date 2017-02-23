@@ -105,6 +105,18 @@ public final class LazyFormValidator extends RegexFormAbsValidatorBuilder {
     }
 
     public FormValidator validate(Form form) {
+        FormValidator validator = create(form);
+        validator.validate();
+        return validator;
+    }
+
+    public FormValidator validate(Form form, View view) {
+        FormValidator validator = create(form, view);
+        validator.validate();
+        return validator;
+    }
+
+    public FormValidator create(Form form) {
         FormValidator validator = FormValidator.from(form);
         validator.setFillerPolicy(fillerPolicy);
         validator.setConstraints(conditionBuilder.create());
@@ -112,7 +124,7 @@ public final class LazyFormValidator extends RegexFormAbsValidatorBuilder {
         return validator;
     }
 
-    public FormValidator validate(Form form, View view) {
+    public FormValidator create(Form form, View view) {
         FormValidator validator = FormValidator.from(form, view);
         validator.setFillerPolicy(fillerPolicy);
         validator.setConstraints(conditionBuilder.create());
@@ -120,7 +132,7 @@ public final class LazyFormValidator extends RegexFormAbsValidatorBuilder {
         return validator;
     }
 
-    public static abstract  class  LazyValidationListener implements FormValidator.ValidationListener {
+    public static abstract class LazyValidationListener implements FormValidator.ValidationListener {
         @Override
         public void onValidateField(Form form, String FieldName, Object value, View viewCause, FormValidator.FieldValidator validator, boolean validated) {
 
