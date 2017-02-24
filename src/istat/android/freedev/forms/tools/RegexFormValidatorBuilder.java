@@ -8,8 +8,9 @@ import java.util.List;
 import istat.android.freedev.forms.Form;
 import istat.android.freedev.forms.FormValidator;
 import istat.android.freedev.forms.FormValidator.FieldValidator;
+import istat.android.freedev.forms.interfaces.FormValidatorBuilder;
 
-class RegexFormValidatorBuilder {
+class RegexFormValidatorBuilder implements FormValidatorBuilder {
     protected RegexFormConstraintBuilder conditionBuilder = new RegexFormConstraintBuilder();
 
     @Deprecated

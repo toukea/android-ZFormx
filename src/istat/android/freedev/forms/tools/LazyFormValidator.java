@@ -15,7 +15,7 @@ import istat.android.freedev.forms.FormValidator;
  * Created by istat on 22/11/16.
  */
 
-public final class LazyFormValidator extends RegexFormAbsValidatorBuilder {
+public final class LazyFormValidator extends RegexFormValidatorBuilder {
     FormValidator.ValidationListener validationListener;
 
     FormValidator.ValidationListener mValidationListener = new FormValidator.ValidationListener() {

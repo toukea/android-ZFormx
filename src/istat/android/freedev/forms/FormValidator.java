@@ -10,10 +10,12 @@ import org.json.JSONObject;
 import android.text.TextUtils;
 import android.view.View;
 
+import istat.android.freedev.forms.interfaces.FormValidable;
+
 /**
  * @author istat
  */
-public class FormValidator {
+public class FormValidator implements FormValidable {
     HashMap<String, List<FieldValidator>> constraints = new HashMap<String, List<FieldValidator>>();
     ValidationListener validationListener;
     Form form;

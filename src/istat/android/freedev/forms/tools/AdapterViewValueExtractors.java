@@ -76,6 +76,10 @@ public abstract class AdapterViewValueExtractors {
         };
     }
 
+    public static FormFiller.ViewValueExtractor<String, AdapterView> createAdapterObjectFieldExtractor(final String fieldName, String... accept) {
+        return createAdapterObjectFieldExtractor(fieldName, null, accept);
+    }
+
     public static FormFiller.ViewValueExtractor<String, AdapterView> createAdapterObjectFieldExtractor(final String fieldName, final String defaultValue, String... accept) {
         return new FormFiller.ViewValueExtractor<String, AdapterView>(String.class, AdapterView.class, accept) {
             @Override
