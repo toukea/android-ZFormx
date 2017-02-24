@@ -22,7 +22,7 @@ public class FormValidator implements FormValidable {
     View view;
     FormFiller.FillerPolicy fillerPolicy;
 
-    private FormValidator() {
+    FormValidator() {
 
     }
 

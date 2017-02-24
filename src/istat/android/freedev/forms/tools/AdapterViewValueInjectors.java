@@ -76,7 +76,7 @@ public class AdapterViewValueInjectors {
                                 return;
                             }
                         } catch (Exception e) {
-
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -106,7 +106,7 @@ public class AdapterViewValueInjectors {
                                 return;
                             }
                         } catch (Exception e) {
-
+                            e.printStackTrace();
                         }
                     }
                 }

@@ -68,7 +68,7 @@ public abstract class AdapterViewValueExtractors {
                         Object value = field.get(obj);
                         return value.toString();
                     } catch (Exception e) {
-
+                        e.printStackTrace();
                     }
                 }
                 return defaultValue;
@@ -94,7 +94,7 @@ public abstract class AdapterViewValueExtractors {
                         Object value = field.get(obj);
                         return value.toString();
                     } catch (Exception e) {
-
+                        e.printStackTrace();
                     }
                 }
                 return defaultValue;

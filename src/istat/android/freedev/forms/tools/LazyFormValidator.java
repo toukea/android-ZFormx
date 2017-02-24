@@ -117,15 +117,11 @@ public final class LazyFormValidator extends RegexFormValidatorBuilder {
     }
 
     public FormValidator create(Form form) {
-        FormValidator validator = FormValidator.from(form);
-        validator.setFillerPolicy(fillerPolicy);
-        validator.setConstraints(conditionBuilder.create());
-        validator.setValidationListener(mValidationListener);
-        return validator;
+        return create(form, null);
     }
 
     public FormValidator create(Form form, View view) {
-        FormValidator validator = FormValidator.from(form, view);
+        FormValidator validator = view != null ? FormValidator.from(form, view) : FormValidator.from(form);
         validator.setFillerPolicy(fillerPolicy);
         validator.setConstraints(conditionBuilder.create());
         validator.setValidationListener(mValidationListener);

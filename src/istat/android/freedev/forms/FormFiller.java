@@ -90,6 +90,21 @@ public final class FormFiller extends FormViewHandler {
         return form;
     }
 
+    public void fillWith(Form form, View v) throws FormFieldError.ViewNotSupportedException {
+        handleView(v, extractors);
+        form.putAll(this.form);
+    }
+
+    public void fillWith(Form form, Object obj, ClassFormLoader loader) {
+        form.fillFrom(obj, loader);
+        form.putAll(this.form);
+    }
+
+    public void fillWith(Form form, Object obj) {
+        form.fillFrom(obj);
+        form.putAll(this.form);
+    }
+
     public FormFiller addViewExtractor(ViewValueExtractor getter) {
         extractors.add(getter);
         return this;
