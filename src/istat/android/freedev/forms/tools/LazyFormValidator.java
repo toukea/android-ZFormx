@@ -15,7 +15,7 @@ import istat.android.freedev.forms.FormValidator;
  * Created by istat on 22/11/16.
  */
 
-public final class LazyFormValidator extends RegexFormAbsValidatorBuilder {
+public final class LazyFormValidator extends RegexFormValidatorBuilder {
     FormValidator.ValidationListener validationListener;
 
     FormValidator.ValidationListener mValidationListener = new FormValidator.ValidationListener() {
@@ -105,22 +105,30 @@ public final class LazyFormValidator extends RegexFormAbsValidatorBuilder {
     }
 
     public FormValidator validate(Form form) {
-        FormValidator validator = FormValidator.from(form);
-        validator.setFillerPolicy(fillerPolicy);
-        validator.setConstraints(conditionBuilder.create());
-        validator.setValidationListener(mValidationListener);
+        FormValidator validator = create(form);
+        validator.validate();
         return validator;
     }
 
     public FormValidator validate(Form form, View view) {
-        FormValidator validator = FormValidator.from(form, view);
+        FormValidator validator = create(form, view);
+        validator.validate();
+        return validator;
+    }
+
+    public FormValidator create(Form form) {
+        return create(form, null);
+    }
+
+    public FormValidator create(Form form, View view) {
+        FormValidator validator = view != null ? FormValidator.from(form, view) : FormValidator.from(form);
         validator.setFillerPolicy(fillerPolicy);
         validator.setConstraints(conditionBuilder.create());
         validator.setValidationListener(mValidationListener);
         return validator;
     }
 
-    public static abstract  class  LazyValidationListener implements FormValidator.ValidationListener {
+    public static abstract class LazyValidationListener implements FormValidator.ValidationListener {
         @Override
         public void onValidateField(Form form, String FieldName, Object value, View viewCause, FormValidator.FieldValidator validator, boolean validated) {
 

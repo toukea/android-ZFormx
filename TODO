@@ -1,2 +1,2 @@
 -Stocker les filler/flower dans HashMap<Class,FormFieldHandler>
--implments strategie map.get(class)!=null else {for(isAssignableTo(class)>
+-implements strategie map.get(class)!=null else {for(isAssignableTo(class)>

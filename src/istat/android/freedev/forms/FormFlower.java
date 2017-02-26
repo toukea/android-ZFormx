@@ -12,14 +12,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.CheckBox;
+import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
@@ -67,26 +68,26 @@ public final class FormFlower extends FormViewHandler {
         return this;
     }
 
-    public FormFlower addValueInjector(FieldFlower flower) {
+    public FormFlower addViewInjector(FieldFlower flower) {
         setters.add(flower);
         return this;
     }
 
-    public FormFlower addValueInjector(ValueInjector setter) {
+    public FormFlower addViewInjector(ViewValueInjector setter) {
         setters.add(setter);
         return this;
     }
 
-    public FormFlower addValueInjector(ValueInjector... setters) {
-        for (ValueInjector setter : setters) {
-            addValueInjector(setter);
+    public FormFlower addViewInjector(ViewValueInjector... setters) {
+        for (ViewValueInjector setter : setters) {
+            addViewInjector(setter);
         }
         return this;
     }
 
-    public FormFlower addValueInjector(List<ValueInjector> setters) {
-        for (ValueInjector setter : setters) {
-            addValueInjector(setter);
+    public FormFlower addViewInjector(List<ViewValueInjector> setters) {
+        for (ViewValueInjector setter : setters) {
+            addViewInjector(setter);
         }
         return this;
     }
@@ -96,30 +97,30 @@ public final class FormFlower extends FormViewHandler {
     }
 
     /**
-     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ValueInjector}
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ViewValueInjector}
      * using default Setters only.
      *
      * @param form
      * @param view
      */
     public static void flowIntoView(Form form, View view) {
-        flowIntoView(form, view, false, new ValueInjector<?, ?>[0]);
+        flowIntoView(form, view, false, new ViewValueInjector<?, ?>[0]);
     }
 
     /**
-     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ValueInjector}
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ViewValueInjector}
      *
      * @param form
      * @param view
      * @param setters
      */
     public static void flowIntoView(Form form, View view,
-                                    ValueInjector<?, ?>... setters) {
+                                    ViewValueInjector<?, ?>... setters) {
         flowIntoView(form, view, false, setters);
     }
 
     /**
-     * * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ValueInjector}
+     * * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ViewValueInjector}
      *
      * @param form
      * @param view
@@ -127,13 +128,13 @@ public final class FormFlower extends FormViewHandler {
      * @param setters
      */
     public static void flowIntoView(Form form, View view, boolean editableOnly,
-                                    ValueInjector<?, ?>... setters) {
+                                    ViewValueInjector<?, ?>... setters) {
         flowIntoView(form, view, editableOnly,
                 setters != null ? Arrays.asList(setters) : null);
     }
 
     /**
-     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ValueInjector}
+     * flow Form contain inside a view using a specific array of setters: {@link FieldFlower} or {@link ViewValueInjector}
      *
      * @param form
      * @param view
@@ -141,7 +142,7 @@ public final class FormFlower extends FormViewHandler {
      * @param setters
      */
     public static void flowIntoView(Form form, View view, boolean editableOnly,
-                                    List<ValueInjector<?, ?>> setters) {
+                                    List<ViewValueInjector<?, ?>> setters) {
         FormFlower flower = new FormFlower(form);
         List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
         if (setters != null && setters.size() > 0) {
@@ -156,15 +157,19 @@ public final class FormFlower extends FormViewHandler {
      * @param <T>
      * @param <V>
      */
-    public static abstract class ValueInjector<T, V extends View> extends
+    public static abstract class ViewValueInjector<T, V extends View> extends
             FieldViewHandler<T, V> {
 
-        public ValueInjector(Class<T> valueType, Class<V> viewType) {
+        public ViewValueInjector(Class<T> valueType, Class<V> viewType) {
             super(valueType, viewType);
         }
 
+        public ViewValueInjector(Class<T> valueType, Class<V> viewType, String... acceptedField) {
+            super(valueType, viewType, acceptedField);
+        }
+
         @Deprecated
-        ValueInjector() {
+        ViewValueInjector() {
             super();
         }
 
@@ -189,54 +194,39 @@ public final class FormFlower extends FormViewHandler {
         }
     }
 
-    final ValueInjector<Integer, Spinner> SETTER_SPINNER_INDEX = new ValueInjector<Integer, Spinner>(Integer.class, Spinner.class) {
+    final ViewValueInjector<Integer, AdapterView> INJECTOR_ADAPTER_VIEW_INDEX = new ViewValueInjector<Integer, AdapterView>(Integer.class, AdapterView.class) {
 
         @Override
-        public void setValue(Integer entity, Spinner v) {
+        public void setValue(Integer entity, AdapterView v) {
             v.setSelection(FormTools.parseInt(entity));
-        }
-    };
-    final ValueInjector<String, Spinner> SETTER_SPINNER_CONTAINT = new ValueInjector<String, Spinner>(String.class, Spinner.class) {
-
-        @Override
-        public void setValue(String entity, Spinner spinner) {
-
         }
     };
 
     public static abstract class FieldFlower<V extends View> extends
-            ValueInjector<Object, V> {
+            ViewValueInjector<Object, V> {
 
         public FieldFlower(Class<V> viewType) {
             super(Object.class, viewType);
         }
     }
 
-    final FieldFlower<TextView> SETTER_TEXT_VIEW_TEXT = new FieldFlower<TextView>(TextView.class) {
+    final FieldFlower<TextView> INJECTOR_TEXT_VIEW_TEXT = new FieldFlower<TextView>(TextView.class) {
 
         @Override
         public void setValue(Object value, TextView v) {
             v.setText(FormTools.parseString(value));
         }
     };
-    public final static FieldFlower<CheckBox> SETTER_CHECKBOX_STATE = new FieldFlower<CheckBox>(CheckBox.class) {
+
+    public final static FieldFlower<CompoundButton> INJECTOR_COMPOUND_BUTTON_STATE = new FieldFlower<CompoundButton>(CompoundButton.class) {
 
         @Override
-        public void setValue(Object value, CheckBox v) {
-
-            v.setChecked(FormTools.parseBoolean(value));
-
-        }
-    };
-    public final static FieldFlower<RadioButton> SETTER_RADIO_BUTTON_STATE = new FieldFlower<RadioButton>(RadioButton.class) {
-
-        @Override
-        public void setValue(Object value, RadioButton v) {
+        public void setValue(Object value, CompoundButton v) {
             v.setChecked(FormTools.parseBoolean(value));
         }
     };
 
-    public final static FieldFlower<RadioGroup> SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX = new FieldFlower<RadioGroup>(RadioGroup.class) {
+    public final static FieldFlower<RadioGroup> INJECTOR_RADIO_GROUP_SELECTED_RADIO_ACTION_INDEX = new FieldFlower<RadioGroup>(RadioGroup.class) {
 
         @Override
         public void setValue(Object value, RadioGroup v) {
@@ -246,7 +236,8 @@ public final class FormFlower extends FormViewHandler {
             for (View child : viewChild) {
                 if (child instanceof RadioButton) {
                     if (index == selectionIndex) {
-                        ((RadioButton) child).setSelected(true);
+                        RadioButton button = (RadioButton) child;
+                        button.setSelected(true);
                         break;
                     }
                     index++;
@@ -254,7 +245,24 @@ public final class FormFlower extends FormViewHandler {
             }
         }
     };
-    public final static ValueInjector<Integer, ImageView> SETTER_IMAGE_VIEW_INT_RESOURCE = new ValueInjector<Integer, ImageView>(Integer.class, ImageView.class) {
+
+    public final static FieldFlower<RadioGroup> INJECTOR_RADIO_GROUP_SELECTED_RADIO_ACTION_TAG = new FieldFlower<RadioGroup>(RadioGroup.class) {
+
+        @Override
+        public void setValue(Object value, RadioGroup v) {
+            String tag = FormTools.parseString(value);
+            if (!TextUtils.isEmpty(tag)) {
+                View viewTagged = v.findViewWithTag(tag);
+                if (viewTagged instanceof RadioButton) {
+                    RadioButton button = (RadioButton) viewTagged;
+                    button.setSelected(true);
+                }
+            }
+        }
+    };
+
+
+    public final static ViewValueInjector<Integer, ImageView> INJECTOR_IMAGE_VIEW_INT_RESOURCE = new ViewValueInjector<Integer, ImageView>(Integer.class, ImageView.class) {
 
 
         @Override
@@ -277,12 +285,11 @@ public final class FormFlower extends FormViewHandler {
             private static final long serialVersionUID = 1L;
 
             {
-                add(SETTER_SPINNER_INDEX);
-                add(SETTER_TEXT_VIEW_TEXT);
-                add(SETTER_CHECKBOX_STATE);
-                add(SETTER_RADIO_BUTTON_STATE);
-                add(SETTER_RADIO_GROUP_SELECTED_RADIATION_INDEX);
-                add(SETTER_IMAGE_VIEW_INT_RESOURCE);
+                add(INJECTOR_ADAPTER_VIEW_INDEX);
+                add(INJECTOR_TEXT_VIEW_TEXT);
+                add(INJECTOR_COMPOUND_BUTTON_STATE);
+                add(INJECTOR_RADIO_GROUP_SELECTED_RADIO_ACTION_INDEX);
+                add(INJECTOR_IMAGE_VIEW_INT_RESOURCE);
             }
         };
     }

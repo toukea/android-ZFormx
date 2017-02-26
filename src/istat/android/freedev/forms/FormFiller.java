@@ -11,7 +11,9 @@ import istat.android.freedev.forms.utils.ViewUtil;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -23,7 +25,7 @@ import android.widget.TextView;
  * @author istat
  */
 public final class FormFiller extends FormViewHandler {
-    private final List<FieldViewHandler<?, ?>> getters = new ArrayList<FieldViewHandler<?, ?>>();
+    private final List<FieldViewHandler<?, ?>> extractors = new ArrayList<FieldViewHandler<?, ?>>();
 
     public static FormFiller use(Form form) {
         return new FormFiller(form);
@@ -31,10 +33,6 @@ public final class FormFiller extends FormViewHandler {
 
     public static FormFiller useNewForm() {
         return new FormFiller(new Form());
-    }
-
-    public static FormFiller useNewForm(Class<?> model) {
-        return use(new Form(), model);
     }
 
     public static FormFiller use(Form form, Class<?> model) {
@@ -78,7 +76,7 @@ public final class FormFiller extends FormViewHandler {
     }
 
     public Form fillWith(View v) throws FormFieldError.ViewNotSupportedException {
-        handleView(v, getters);
+        handleView(v, extractors);
         return form;
     }
 
@@ -92,25 +90,40 @@ public final class FormFiller extends FormViewHandler {
         return form;
     }
 
-    public FormFiller addViewExtractor(ViewExtractor getter) {
-        getters.add(getter);
+    public void fillWith(Form form, View v) throws FormFieldError.ViewNotSupportedException {
+        handleView(v, extractors);
+        form.putAll(this.form);
+    }
+
+    public void fillWith(Form form, Object obj, ClassFormLoader loader) {
+        form.fillFrom(obj, loader);
+        form.putAll(this.form);
+    }
+
+    public void fillWith(Form form, Object obj) {
+        form.fillFrom(obj);
+        form.putAll(this.form);
+    }
+
+    public FormFiller addViewExtractor(ViewValueExtractor getter) {
+        extractors.add(getter);
         return this;
     }
 
-    public FormFiller throwViewNotSupported(boolean throx) {
-        this.throwOnHandlingFail = throx;
+    public FormFiller throwViewNotSupported(boolean throwEnable) {
+        this.throwOnHandlingFail = throwEnable;
         return this;
     }
 
-    public FormFiller addViewExtractor(ViewExtractor... getters) {
-        for (ViewExtractor getter : getters) {
+    public FormFiller addViewExtractor(ViewValueExtractor... extractors) {
+        for (ViewValueExtractor getter : extractors) {
             addViewExtractor(getter);
         }
         return this;
     }
 
-    public FormFiller addViewExtractor(List<ViewExtractor> getters) {
-        for (ViewExtractor getter : getters) {
+    public FormFiller addViewExtractor(List<ViewValueExtractor> extractors) {
+        for (ViewValueExtractor getter : extractors) {
             addViewExtractor(getter);
         }
         return this;
@@ -123,13 +136,13 @@ public final class FormFiller extends FormViewHandler {
 
     /**
      * fill a form use view.
-     * usign default Getters only.
+     * usign default extractors only.
      *
      * @param form
      * @param view
      */
     public static void fillWithView(Form form, View view) throws FormFieldError.ViewNotSupportedException {
-        fillWithView(form, view, false, new ViewExtractor<?, ?>[0]);
+        fillWithView(form, view, false, new ViewValueExtractor<?, ?>[0]);
     }
 
     /**
@@ -137,11 +150,11 @@ public final class FormFiller extends FormViewHandler {
      *
      * @param form
      * @param view
-     * @param getters
+     * @param extractors
      */
     public static void fillWithView(Form form, View view,
-                                    ViewExtractor<?, ?>... getters) throws FormFieldError.ViewNotSupportedException {
-        fillWithView(form, view, false, getters);
+                                    ViewValueExtractor<?, ?>... extractors) throws FormFieldError.ViewNotSupportedException {
+        fillWithView(form, view, false, extractors);
     }
 
     /**
@@ -150,13 +163,13 @@ public final class FormFiller extends FormViewHandler {
      * @param form
      * @param view
      * @param editableOnly specify if only editable field should be flow on.
-     * @param getters
+     * @param extractors
      */
     public static void fillWithView(Form form, View view, boolean editableOnly,
-                                    ViewExtractor<?, ?>... getters) {
+                                    ViewValueExtractor<?, ?>... extractors) {
 
         fillWithView(form, view, false,
-                getters != null ? Arrays.asList(getters) : null);
+                extractors != null ? Arrays.asList(extractors) : null);
     }
 
     /**
@@ -167,7 +180,7 @@ public final class FormFiller extends FormViewHandler {
      * @param policy
      */
     public static void fillWithView(Form form, View view, FillerPolicy policy) throws FormFieldError.ViewNotSupportedException {
-        fillWithView(form, view, policy != null ? policy.editableOnly : false, policy != null ? policy.fieldGetters : null);
+        fillWithView(form, view, policy != null ? policy.editableOnly : false, policy != null ? policy.fieldextractors : null);
     }
 
     /**
@@ -176,35 +189,39 @@ public final class FormFiller extends FormViewHandler {
      * @param form
      * @param view
      * @param editableOnly specify if only editable field should be flow on.
-     * @param getters
+     * @param extractors
      */
     public static void fillWithView(Form form, View view, boolean editableOnly,
-                                    List<ViewExtractor<?, ?>> getters) throws FormFieldError.ViewNotSupportedException {
+                                    List<ViewValueExtractor<?, ?>> extractors) throws FormFieldError.ViewNotSupportedException {
         FormFiller filler = new FormFiller(form);
         List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
-        if (getters != null && getters.size() > 0) {
-            handlers.addAll(getters);
+        if (extractors != null && extractors.size() > 0) {
+            handlers.addAll(extractors);
         }
         filler.setAccessibleOnlyGetSettable(editableOnly);
         filler.handleView(view, handlers);
     }
 
     public static abstract class FieldFiller<V extends View> extends
-            ViewExtractor<Object, V> {
+            ViewValueExtractor<Object, V> {
 
         public FieldFiller(Class<V> viewType) {
             super(Object.class, viewType);
         }
     }
 
-    public static abstract class ViewExtractor<T, V extends View> extends
+    public static abstract class ViewValueExtractor<T, V extends View> extends
             FieldViewHandler<T, V> {
-        public ViewExtractor(Class<T> valueType, Class<V> viewType) {
+        public ViewValueExtractor(Class<T> valueType, Class<V> viewType) {
             super(valueType, viewType);
         }
 
+        public ViewValueExtractor(Class<T> valueType, Class<V> viewType, String... acceptedField) {
+            super(valueType, viewType, acceptedField);
+        }
+
         @Deprecated
-        ViewExtractor() {
+        ViewValueExtractor() {
             super();
         }
 
@@ -227,25 +244,25 @@ public final class FormFiller extends FormViewHandler {
         }
     }
 
-    public final static ViewExtractor<Integer, Spinner> GETTER_SPINNER_INDEX = new ViewExtractor<Integer, Spinner>(Integer.class, Spinner.class) {
+    public final static ViewValueExtractor<Integer, AdapterView> EXTRACTOR_ADAPTER_VIEW_INDEX = new ViewValueExtractor<Integer, AdapterView>(Integer.class, AdapterView.class) {
         @Override
-        public Integer getValue(Spinner spinner) {
+        public Integer getValue(AdapterView spinner) {
             return spinner.getSelectedItemPosition();
         }
     };
-    public final static ViewExtractor<String, Spinner> GETTER_SPINNER_TEXT = new ViewExtractor<String, Spinner>(String.class, Spinner.class) {
+    public final static ViewValueExtractor<String, AdapterView> EXTRACTOR_ADAPTER_VIEW_TEXT = new ViewValueExtractor<String, AdapterView>(String.class, AdapterView.class) {
         @Override
-        public String getValue(Spinner spinner) {
+        public String getValue(AdapterView spinner) {
             return FormTools.parseString(spinner.getSelectedItem());
         }
     };
-    public final static FieldFiller<Spinner> GETTER_SPINNER_ENTITY = new FieldFiller<Spinner>(Spinner.class) {
+    public final static FieldFiller<Spinner> EXTRACTOR_ADAPTER_VIEW_ENTITY = new FieldFiller<Spinner>(Spinner.class) {
         @Override
         public Object getValue(Spinner spinner) {
             return spinner.getSelectedItem();
         }
     };
-    public final static FieldFiller<RadioGroup> GETTER_RADIO_GROUP_SELECTION_TEXT = new FieldFiller<RadioGroup>(RadioGroup.class) {
+    public final static FieldFiller<RadioGroup> EXTRACTOR_RADIO_GROUP_SELECTION_TEXT = new FieldFiller<RadioGroup>(RadioGroup.class) {
         @Override
         public Object getValue(RadioGroup v) {
             int selectionId = v.getCheckedRadioButtonId();
@@ -256,6 +273,37 @@ public final class FormFiller extends FormViewHandler {
             return null;
         }
     };
+
+    public final static FieldFiller<RadioGroup> EXTRACTOR_RADIO_GROUP_SELECTION_TAG = new FieldFiller<RadioGroup>(RadioGroup.class) {
+        @Override
+        public Object getValue(RadioGroup v) {
+            int selectionId = v.getCheckedRadioButtonId();
+            View selectedView = v.findViewById(selectionId);
+            if (selectedView instanceof RadioButton) {
+                return selectedView.getTag();
+            }
+            return null;
+        }
+    };
+
+    public final static FieldFiller<RadioGroup> EXTRACTOR_RADIO_GROUP_SELECTION_INDEX = new FieldFiller<RadioGroup>(RadioGroup.class) {
+        @Override
+        public Object getValue(RadioGroup v) {
+            int selectionId = v.getCheckedRadioButtonId();
+            List<View> viewChild = ViewUtil.getAllChildViews(v);
+            int index = 0;
+            for (View child : viewChild) {
+                if (child instanceof RadioButton) {
+                    if (selectionId == child.getId()) {
+                        return index;
+                    }
+                    index++;
+                }
+            }
+            return null;
+        }
+    };
+
     final static FieldFiller<View> DEFAULT_GETTER = new FieldFiller<View>(View.class) {
 
         @Override
@@ -268,20 +316,17 @@ public final class FormFiller extends FormViewHandler {
                 } else if (v instanceof EditText) {
                     EditText t = (EditText) v;
                     return t.getText().toString();
-                } else if (v instanceof CheckBox) {
-                    CheckBox t = (CheckBox) v;
+                } else if (v instanceof CompoundButton) {
+                    CompoundButton t = (CompoundButton) v;
                     return t.isChecked();
-                } else if (v instanceof Spinner) {
-                    Spinner t = (Spinner) v;
+                } else if (v instanceof AdapterView) {
+                    AdapterView t = (AdapterView) v;
                     return t.getSelectedItemPosition();
                 } else if (v instanceof ImageView) {
                     ImageView t = (ImageView) v;
                     return t.getContentDescription();
-                } else if (v instanceof RadioButton) {
-                    RadioButton t = (RadioButton) v;
-                    return t.isChecked();
                 } else if (v instanceof RadioGroup) {
-                    return GETTER_RADIO_GROUP_SELECTION_TEXT
+                    return EXTRACTOR_RADIO_GROUP_SELECTION_TEXT
                             .getValue((RadioGroup) v);
                 }
             } catch (Exception e) {
@@ -328,7 +373,7 @@ public final class FormFiller extends FormViewHandler {
 
     public final static class FillerPolicy {
         boolean editableOnly;
-        final List<ViewExtractor<?, ?>> fieldGetters = new ArrayList<ViewExtractor<?, ?>>();
+        final List<ViewValueExtractor<?, ?>> fieldextractors = new ArrayList<ViewValueExtractor<?, ?>>();
 
         private FillerPolicy() {
 
@@ -344,8 +389,8 @@ public final class FormFiller extends FormViewHandler {
             return policy;
         }
 
-        public List<ViewExtractor<?, ?>> getFieldExtractors() {
-            return fieldGetters;
+        public List<ViewValueExtractor<?, ?>> getFieldExtractors() {
+            return fieldextractors;
         }
 
         public boolean isEditableOnly() {
@@ -357,19 +402,19 @@ public final class FormFiller extends FormViewHandler {
             return this;
         }
 
-        public FillerPolicy setExtractor(List<ViewExtractor<?, ?>> getters) {
-            this.fieldGetters.clear();
-            this.fieldGetters.addAll(getters);
+        public FillerPolicy setExtractor(List<ViewValueExtractor<?, ?>> extractors) {
+            this.fieldextractors.clear();
+            this.fieldextractors.addAll(extractors);
             return this;
         }
 
-        public FillerPolicy appendExtractor(ViewExtractor<?, ?> getter) {
-            this.fieldGetters.add(getter);
+        public FillerPolicy appendExtractor(ViewValueExtractor<?, ?> getter) {
+            this.fieldextractors.add(getter);
             return this;
         }
 
         public FillerPolicy appendExtractor(FieldFiller<?> getter) {
-            this.fieldGetters.add(getter);
+            this.fieldextractors.add(getter);
             return this;
         }
     }
