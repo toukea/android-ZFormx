@@ -10,5 +10,5 @@ import istat.android.freedev.forms.FormValidator;
  */
 
 public interface FormValidatorBuilder {
-    public FormValidator create(Form form, View view);
+    public FormValidator create();
 }

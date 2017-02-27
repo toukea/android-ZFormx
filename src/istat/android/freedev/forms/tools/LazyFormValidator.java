@@ -105,28 +105,25 @@ public final class LazyFormValidator extends RegexFormValidatorBuilder {
     }
 
     public FormValidator validate(Form form) {
-        FormValidator validator = create(form);
-        validator.validate();
+        FormValidator validator = create();
+        validator.validate(form);
         return validator;
     }
 
     public FormValidator validate(Form form, View view) {
-        FormValidator validator = create(form, view);
-        validator.validate();
+        FormValidator validator = create();
+        validator.validate(form, view);
         return validator;
     }
 
-    public FormValidator create(Form form) {
-        return create(form, null);
-    }
-
-    public FormValidator create(Form form, View view) {
-        FormValidator validator = view != null ? FormValidator.from(form, view) : FormValidator.from(form);
+    public FormValidator create() {
+        FormValidator validator = new FormValidator();
         validator.setFillerPolicy(fillerPolicy);
         validator.setConstraints(conditionBuilder.create());
         validator.setValidationListener(mValidationListener);
         return validator;
     }
+
 
     public static abstract class LazyValidationListener implements FormValidator.ValidationListener {
         @Override

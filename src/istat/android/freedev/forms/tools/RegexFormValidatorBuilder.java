@@ -58,14 +58,8 @@ class RegexFormValidatorBuilder implements FormValidatorBuilder {
         return this;
     }
 
-    public FormValidator create(Form form) {
-        FormValidator validator = FormValidator.from(form);
-        validator.setConstraints(conditionBuilder.create());
-        return validator;
-    }
-
-    public FormValidator create(Form form, View view) {
-        FormValidator validator = FormValidator.from(form, view);
+    public FormValidator create() {
+        FormValidator validator = new FormValidator();
         validator.setConstraints(conditionBuilder.create());
         return validator;
     }
