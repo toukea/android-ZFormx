@@ -10,8 +10,6 @@ import org.json.JSONObject;
 import android.text.TextUtils;
 import android.view.View;
 
-import istat.android.freedev.forms.interfaces.FormValidable;
-
 /**
  * @author istat
  */
@@ -60,45 +58,6 @@ public class FormValidator {
     public final FormValidator setValidationListener(ValidationListener validationListener) {
         this.validationListener = validationListener;
         return this;
-    }
-
-    public final static FormState validate(Form form,
-                                           HashMap<String, List<FieldValidator>> constraints) {
-        return validate(form, constraints, null);
-    }
-
-    public final static FormState validate(Form form,
-                                           HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
-        return validate(form, null, constraints, listener);
-    }
-
-    public final static FormState validate(View formView,
-                                           HashMap<String, List<FieldValidator>> constraints) {
-        FormFiller.FillerPolicy nullFillerPolicy = null;
-        return validate(formView, nullFillerPolicy, constraints, null);
-    }
-
-    public final static FormState validate(View formView, FormFiller.FillerPolicy fillerPolicy,
-                                           HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
-        FormValidator validator = new FormValidator();
-        validator.setConstraints(constraints);
-        validator.setValidationListener(listener);
-        return validator.validate(formView, fillerPolicy);
-    }
-
-    public final static FormState validate(Form form, View formView,
-                                           HashMap<String, List<FieldValidator>> constraints) {
-        FormValidator validator = new FormValidator();
-        validator.setConstraints(constraints);
-        return validator.validate(form, formView);
-    }
-
-    public final static FormState validate(Form form, View formView,
-                                           HashMap<String, List<FieldValidator>> constraints, ValidationListener listener) {
-        FormValidator validator = new FormValidator();
-        validator.setConstraints(constraints);
-        validator.setValidationListener(listener);
-        return validator.validate(form, formView);
     }
 
     public final void setConstraints(
