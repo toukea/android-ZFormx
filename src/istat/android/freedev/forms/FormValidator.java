@@ -15,47 +15,47 @@ import istat.android.freedev.forms.interfaces.FormValidable;
 /**
  * @author istat
  */
-public class FormValidator implements FormValidable {
+public class FormValidator {
     HashMap<String, List<FieldValidator>> constraints = new HashMap<String, List<FieldValidator>>();
     ValidationListener validationListener;
-    Form form;
-    View view;
+
     FormFiller.FillerPolicy fillerPolicy;
 
-    FormValidator() {
+    public FormValidator() {
 
     }
 
     public void setFillerPolicy(FormFiller.FillerPolicy fillerPolicy) {
         this.fillerPolicy = fillerPolicy;
     }
+//    Form form;
+//    View view;
+//    public static FormValidator from(Form form) {
+//        FormValidator validator = new FormValidator();
+//        validator.form = form;
+//        return validator;
+//    }
+//
+//    public static FormValidator from(View view) {
+//        FormValidator validator = new FormValidator();
+//        validator.view = view;
+//        return validator;
+//    }
+//
+//    public static FormValidator from(Form form, View view) {
+//        FormValidator validator = new FormValidator();
+//        validator.view = view;
+//        validator.form = form;
+//        return validator;
+//    }
 
-    public static FormValidator from(Form form) {
-        FormValidator validator = new FormValidator();
-        validator.form = form;
-        return validator;
-    }
-
-    public static FormValidator from(View view) {
-        FormValidator validator = new FormValidator();
-        validator.view = view;
-        return validator;
-    }
-
-    public static FormValidator from(Form form, View view) {
-        FormValidator validator = new FormValidator();
-        validator.view = view;
-        validator.form = form;
-        return validator;
-    }
-
-    public final FormState validate() {
-        if (fillerPolicy != null) {
-            return validate(form, view, fillerPolicy);
-        } else {
-            return validate(form, view);
-        }
-    }
+//    public final FormState validate() {
+//        if (fillerPolicy != null) {
+//            return validate(form, view, fillerPolicy);
+//        } else {
+//            return validate(form, view);
+//        }
+//    }
 
     public final FormValidator setValidationListener(ValidationListener validationListener) {
         this.validationListener = validationListener;
@@ -64,7 +64,7 @@ public class FormValidator implements FormValidable {
 
     public final static FormState validate(Form form,
                                            HashMap<String, List<FieldValidator>> constraints) {
-        return validate(form, constraints);
+        return validate(form, constraints, null);
     }
 
     public final static FormState validate(Form form,
@@ -121,27 +121,27 @@ public class FormValidator implements FormValidable {
     }
 
 
-    final FormState validate(Form form, View formView) {
+    public final FormState validate(Form form) {
+        View nullView = null;
+        return validate(form, nullView);
+    }
+
+    public final FormState validate(View formView) {
+        FormFiller.FillerPolicy policy = null;
+        return validate(formView, policy);
+    }
+
+    public final FormState validate(Form form, View formView) {
         FormState state = new FormState(form);
         proceedCheckup(form, state, formView);
         return state;
     }
 
-//    final FormState validate(Form form) {
-//        View nullView = null;
-//        return validate(form, nullView);
-//    }
-//
-//    final FormState validate(View formView) {
-//        FormFiller.FillerPolicy policy = null;
-//        return validate(formView, policy);
-//    }
-
-    final FormState validate(View formView, FormFiller.FillerPolicy policy) {
+    public final FormState validate(View formView, FormFiller.FillerPolicy policy) {
         return validate(new Form(), formView, policy);
     }
 
-    final FormState validate(Form form, View formView, FormFiller.FillerPolicy policy) {
+    public final FormState validate(Form form, View formView, FormFiller.FillerPolicy policy) {
         FormFiller.fillWithView(form, formView, policy);
         return validate(form, formView);
     }

@@ -3,7 +3,7 @@ apply plugin: 'maven'
 ext {
     PUBLISH_GROUP_ID = 'istat.android.freedev.forms'
     PUBLISH_ARTIFACT_ID = 'istat-zformx'
-    PUBLISH_VERSION = '1.1.2'
+    PUBLISH_VERSION = '1.1.3'
 }
 apply from: 'release-jar.gradle'
 dependencies {
