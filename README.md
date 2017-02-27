@@ -109,7 +109,7 @@ Just add the dependency to your `build.gradle`:
 
 ```groovy
 dependencies {
-   compile 'istat.android.freedev.forms:istat-zformx:1.1.2'
+   compile 'istat.android.freedev.forms:istat-zformx:1.1.3'
 }
 ```
 
@@ -125,7 +125,7 @@ add the dependency to your pom.xml:
 <dependency>
   <groupId>istat.android.freedev.forms</groupId>
   <artifactId>istat-zformx</artifactId>
-  <version>1.1.2</version>
+  <version>1.1.3</version>
   <type>pom</type>
 </dependency>
 ```
