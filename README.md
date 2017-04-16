@@ -112,6 +112,12 @@ dependencies {
    compile 'istat.android.freedev.forms:istat-zformx:1.1.3'
 }
 ```
+All available public versions are:
+* 1.0.0
+* 1.1.0
+    - 1.1.0
+    - 1.1.2
+    - 1.1.3
 
 minSdkVersion  =  10
 ------------------
