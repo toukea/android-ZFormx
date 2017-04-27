@@ -85,7 +85,7 @@ public final class FormFlower extends FormViewHandler {
         return this;
     }
 
-    public FormFlower addViewInjector(List<ViewValueInjector> setters) {
+    public FormFlower addViewInjectors(List<ViewValueInjector> setters) {
         for (ViewValueInjector setter : setters) {
             addViewInjector(setter);
         }
