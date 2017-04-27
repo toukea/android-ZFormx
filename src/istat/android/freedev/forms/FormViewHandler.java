@@ -16,7 +16,7 @@ import java.util.List;
  */
 abstract class FormViewHandler {
     public final static int MODE_VISIBLE_ONLY = 0, MODE_EDITABLE_ONLY = 1, MODE_ALL = 2, MODE_EMPTY_ONLY = 3;
-    Form form;
+    protected Form form;
     boolean accessibleOnlyGetSettable = false;
     boolean visibleOnlyGetSettable = false;
     boolean emptyOnlyGetSettable = false;
@@ -24,8 +24,7 @@ abstract class FormViewHandler {
     private List<String> ignores = new ArrayList<String>();
     protected boolean throwOnHandlingFail = true;
 
-    FormViewHandler(Form form) {
-        this.form = form;
+    FormViewHandler() {
     }
 
     public FormViewHandler ignoreField(String... fieldNames) {

@@ -29,8 +29,13 @@ import android.widget.TextView;
 public final class FormFlower extends FormViewHandler {
     private final List<FieldViewHandler<?, ?>> setters = new ArrayList<FieldViewHandler<?, ?>>();
 
-    FormFlower(Form form) {
-        super(form);
+    public FormFlower() {
+
+    }
+
+    public FormFlower use(Form form) {
+        this.form = form;
+        return this;
     }
 
     public void flowInto(View v) throws FormFieldError.ViewNotSupportedException {
@@ -92,8 +97,10 @@ public final class FormFlower extends FormViewHandler {
         return this;
     }
 
-    public static FormFlower use(Form form) {
-        return new FormFlower(form);
+    public static FormFlower using(Form form) {
+        FormFlower flower = new FormFlower();
+        flower.use(form);
+        return flower;
     }
 
     /**
@@ -143,7 +150,7 @@ public final class FormFlower extends FormViewHandler {
      */
     public static void flowIntoView(Form form, View view, boolean editableOnly,
                                     List<ViewValueInjector<?, ?>> setters) {
-        FormFlower flower = new FormFlower(form);
+        FormFlower flower = FormFlower.using(form);
         List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
         if (setters != null && setters.size() > 0) {
             handlers.addAll(setters);

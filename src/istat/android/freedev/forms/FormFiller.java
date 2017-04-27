@@ -27,27 +27,51 @@ import android.widget.TextView;
 public final class FormFiller extends FormViewHandler {
     private final List<FieldViewHandler<?, ?>> extractors = new ArrayList<FieldViewHandler<?, ?>>();
 
-    public static FormFiller use(Form form) {
-        return new FormFiller(form);
+    public static FormFiller using(Form form) {
+        FormFiller filler = new FormFiller();
+        filler.use(form);
+        return filler;
     }
 
-    public static FormFiller useNewForm() {
-        return new FormFiller(new Form());
+    public static FormFiller usingNewForm() {
+        FormFiller filler = new FormFiller();
+        filler.useNewForm();
+        return filler;
     }
 
-    public static FormFiller use(Form form, Class<?> model) {
+    public static FormFiller using(Form form, Class<?> model) {
+        FormFiller filler = new FormFiller();
+        filler.use(form, model);
+        return filler;
+    }
+
+    public static FormFiller usingModel(Class<?> model) {
+        FormFiller filler = new FormFiller();
+        filler.useModel(model);
+        return filler;
+    }
+
+    public FormFiller use(Form form) {
+        return FormFiller.using(form);
+    }
+
+    public FormFiller useNewForm() {
+        return FormFiller.using(new Form());
+    }
+
+    public FormFiller use(Form form, Class<?> model) {
         Form formTmp = Form.fromClass(model);
         form.putAll(formTmp);
-        return new FormFiller(form);
+        return FormFiller.using(form);
     }
 
-    public static FormFiller useModel(Class<?> model) {
+    public FormFiller useModel(Class<?> model) {
         Form form = Form.fromClass(model);
-        return new FormFiller(form);
+        return FormFiller.using(form);
     }
 
-    FormFiller(Form form) {
-        super(form);
+    public FormFiller() {
+
     }
 
     public FormFiller addFieldToFill(String... fields) {
@@ -193,7 +217,7 @@ public final class FormFiller extends FormViewHandler {
      */
     public static void fillWithView(Form form, View view, boolean editableOnly,
                                     List<ViewValueExtractor<?, ?>> extractors) throws FormFieldError.ViewNotSupportedException {
-        FormFiller filler = new FormFiller(form);
+        FormFiller filler = FormFiller.using(form);
         List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
         if (extractors != null && extractors.size() > 0) {
             handlers.addAll(extractors);
