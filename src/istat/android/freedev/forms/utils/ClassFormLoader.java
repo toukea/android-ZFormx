@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import istat.android.freedev.forms.Form;
 import istat.android.freedev.forms.tools.FormTools;
@@ -47,8 +49,15 @@ public abstract class ClassFormLoader<T> {
 
     @SuppressWarnings("unchecked")
     public final static <T> void flowFormOn(Form form, T obj) {
+        if (obj == null) {
+            return;
+        }
         if (!formLoader.containsKey(obj.getClass())) {
             DEFAULT_OBJECT_LOADER.load(form, obj);
+            return;
+        }
+        if (Map.class.isAssignableFrom(obj.getClass())) {
+            MAP_OBJECT_LOADER.load(form, (Map<String, Object>) obj);
             return;
         }
         ClassFormLoader<T> loader = (ClassFormLoader<T>) ClassFormLoader.objectLoader
@@ -58,8 +67,15 @@ public abstract class ClassFormLoader<T> {
 
     @SuppressWarnings("unchecked")
     public final static <T> void fillFormFrom(Form form, T obj) {
+        if (obj == null) {
+            return;
+        }
         if (!formLoader.containsKey(obj.getClass())) {
             DEFAULT_FORM_LOADER.load(form, obj);
+            return;
+        }
+        if (Map.class.isAssignableFrom(obj.getClass())) {
+            MAP_FORM_LOADER.load(form, (Map<String, ?>) obj);
             return;
         }
         ClassFormLoader<T> loader = (ClassFormLoader<T>) ClassFormLoader.formLoader
@@ -105,6 +121,35 @@ public abstract class ClassFormLoader<T> {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+            }
+        }
+    };
+    //-------------------------------------------------------
+    final static ClassFormLoader<Map<String, ?>> MAP_FORM_LOADER = new ClassFormLoader<Map<String, ?>>() {
+
+        @Override
+        public void onLoad(Form form, Map<String, ?> entity) {
+            Set<? extends Map.Entry<String, ?>> entrySet = entity.entrySet();
+            Iterator<? extends Map.Entry<String, ?>> iterator = entrySet.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, ?> entry = iterator.next();
+                String name = entry.getKey();
+                Object value = entry.getValue();
+                form.put(name, value);
+            }
+        }
+    };
+    final static ClassFormLoader<Map<String, Object>> MAP_OBJECT_LOADER = new ClassFormLoader<Map<String, Object>>() {
+
+        @Override
+        public void onLoad(Form form, Map<String, Object> entity) {
+            Set<Map.Entry<String, Object>> entrySet = form.entrySet();
+            Iterator<? extends Map.Entry<String, Object>> iterator = entrySet.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Object> entry = iterator.next();
+                String name = entry.getKey();
+                Object value = entry.getValue();
+                entity.put(name, value);
             }
         }
     };

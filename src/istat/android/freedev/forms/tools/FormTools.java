@@ -23,7 +23,7 @@ import java.util.Locale;
  */
 public class FormTools {
     @SuppressLint("SimpleDateFormat")
-    public final static Calendar parseToCalandar(Object obj) {
+    public final static Calendar parseToCalendar(Object obj) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = new GregorianCalendar();
         try {
