@@ -157,6 +157,7 @@ abstract class FormViewHandler {
                 if (acceptedField != null && !acceptedField.isEmpty() && !FormTools.isEmpty(view.getTag())) {
                     return acceptedField.contains(view.getTag());
                 }
+                return true;
             }
             return false;
         }
