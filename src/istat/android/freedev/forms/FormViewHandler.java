@@ -27,8 +27,27 @@ abstract class FormViewHandler {
     FormViewHandler() {
     }
 
-    public FormViewHandler ignoreField(String... fieldNames) {
+    public FormViewHandler appendFieldToIgnore(String fieldNames) {
+        Collections.addAll(ignores, fieldNames);
+        return this;
+    }
+
+    public FormViewHandler appendFieldToIgnore(String... fieldNames) {
         if (fieldNames != null && fieldNames.length > 0) {
+            Collections.addAll(ignores, fieldNames);
+        }
+        return this;
+    }
+
+    public FormViewHandler ignoreField(String fieldNames) {
+        ignores.clear();
+        Collections.addAll(ignores, fieldNames);
+        return this;
+    }
+
+    public FormViewHandler ignoreFields(String... fieldNames) {
+        if (fieldNames != null && fieldNames.length > 0) {
+            ignores.clear();
             Collections.addAll(ignores, fieldNames);
         }
         return this;
@@ -66,6 +85,10 @@ abstract class FormViewHandler {
     private void performViewHandling(View v) {
         if (fieldHandlers != null && fieldHandlers.size() > 0) {
             for (FieldViewHandler<?, ?> handler : fieldHandlers) {
+                String tag = v.getTag() + "";
+                if (ignores.contains(tag)) {
+                    return;
+                }
                 boolean result = handler.onHandle(form, v.getTag() + "", v);
                 if (result) {
                     return;
