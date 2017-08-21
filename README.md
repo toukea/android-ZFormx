@@ -78,7 +78,7 @@ Now , from my Activity, i can flow <b>Form</b> Entity into that created View whi
 ```java
 View mFormView = findViewById(R.id.form_layout);
 
-FormFlower.use(mForm) //create a flower using a specific Form Entity (mForm)
+FormFlower.using(mForm) //create a flower using a specific Form Entity (mForm)
             /*setFillAccessibleOnly spécify if you want to flow enabled view Only 
             (desabled view and not fowussable view would be ignored.)*/
           .setFlowAccessibleOnly(false) 
@@ -90,7 +90,7 @@ Documentation in progress... :-)
 # Fill Form Entity content from created view.
 ```java
 View mFormView = findViewById(R.id.form_layout);
-FormFiller.use(mForm) //create a filler using a specific Form Entity (mForm)
+FormFiller.using(mForm) //create a filler using a specific Form Entity (mForm)
             /*setFillAccessibleOnly spécify if you want to flow enabled view Only
             (desabled view and not fowussable view would be ignored.)*/
           .setFillAccessibleOnly(false) 
@@ -109,9 +109,17 @@ Just add the dependency to your `build.gradle`:
 
 ```groovy
 dependencies {
-   compile 'istat.android.freedev.forms:istat-zformx:1.1.3'
+   compile 'istat.android.freedev.forms:istat-zformx:1.1.4'
 }
 ```
+All available public versions are:
+* 1.0.0
+* 1.1.0
+    - 1.1.0
+    - 1.1.2
+    - 1.1.3
+    - 1.1.4
+    - 1.1.5
 
 minSdkVersion  =  10
 ------------------
@@ -125,7 +133,7 @@ add the dependency to your pom.xml:
 <dependency>
   <groupId>istat.android.freedev.forms</groupId>
   <artifactId>istat-zformx</artifactId>
-  <version>1.1.3</version>
+  <version>1.1.4</version>
   <type>pom</type>
 </dependency>
 ```

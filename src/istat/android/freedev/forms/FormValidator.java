@@ -197,12 +197,12 @@ public class FormValidator {
         }
     }
 
-    public static interface ValidationListener {
+    public  interface ValidationListener {
         void onValidationStarting(Form form, View formView);
 
         void onValidateField(Form form, String FieldName, Object value,
                              View viewCause, FormValidator.FieldValidator validator,
-                             boolean validated);
+                             boolean validationState);
 
         void onValidationCompleted(Form form, View formView,
                                    FormState state);

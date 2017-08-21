@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,27 +26,52 @@ import android.widget.TextView;
 public final class FormFiller extends FormViewHandler {
     private final List<FieldViewHandler<?, ?>> extractors = new ArrayList<FieldViewHandler<?, ?>>();
 
-    public static FormFiller use(Form form) {
-        return new FormFiller(form);
+    public static FormFiller using(Form form) {
+        FormFiller filler = new FormFiller();
+        filler.use(form);
+        return filler;
     }
 
-    public static FormFiller useNewForm() {
-        return new FormFiller(new Form());
+    public static FormFiller usingNewForm() {
+        FormFiller filler = new FormFiller();
+        filler.useNewForm();
+        return filler;
     }
 
-    public static FormFiller use(Form form, Class<?> model) {
+    public static FormFiller using(Form form, Class<?> model) {
+        FormFiller filler = new FormFiller();
+        filler.use(form, model);
+        return filler;
+    }
+
+    public static FormFiller usingModel(Class<?> model) {
+        FormFiller filler = new FormFiller();
+        filler.useModel(model);
+        return filler;
+    }
+
+    public FormFiller use(Form form) {
+        this.form = form;
+        return this;
+    }
+
+    public FormFiller useNewForm() {
+        return FormFiller.using(new Form());
+    }
+
+    public FormFiller use(Form form, Class<?> model) {
         Form formTmp = Form.fromClass(model);
         form.putAll(formTmp);
-        return new FormFiller(form);
+        return FormFiller.using(form);
     }
 
-    public static FormFiller useModel(Class<?> model) {
+    public FormFiller useModel(Class<?> model) {
         Form form = Form.fromClass(model);
-        return new FormFiller(form);
+        return FormFiller.using(form);
     }
 
-    FormFiller(Form form) {
-        super(form);
+    public FormFiller() {
+
     }
 
     public FormFiller addFieldToFill(String... fields) {
@@ -180,7 +204,7 @@ public final class FormFiller extends FormViewHandler {
      * @param policy
      */
     public static void fillWithView(Form form, View view, FillerPolicy policy) throws FormFieldError.ViewNotSupportedException {
-        fillWithView(form, view, policy != null ? policy.editableOnly : false, policy != null ? policy.fieldextractors : null);
+        fillWithView(form, view, policy != null ? policy.editableOnly : false, policy != null ? policy.fieldExtractors : null);
     }
 
     /**
@@ -193,7 +217,7 @@ public final class FormFiller extends FormViewHandler {
      */
     public static void fillWithView(Form form, View view, boolean editableOnly,
                                     List<ViewValueExtractor<?, ?>> extractors) throws FormFieldError.ViewNotSupportedException {
-        FormFiller filler = new FormFiller(form);
+        FormFiller filler = FormFiller.using(form);
         List<FieldViewHandler<?, ?>> handlers = new ArrayList<FieldViewHandler<?, ?>>();
         if (extractors != null && extractors.size() > 0) {
             handlers.addAll(extractors);
@@ -373,7 +397,7 @@ public final class FormFiller extends FormViewHandler {
 
     public final static class FillerPolicy {
         boolean editableOnly;
-        final List<ViewValueExtractor<?, ?>> fieldextractors = new ArrayList<ViewValueExtractor<?, ?>>();
+        final List<ViewValueExtractor<?, ?>> fieldExtractors = new ArrayList<ViewValueExtractor<?, ?>>();
 
         private FillerPolicy() {
 
@@ -390,7 +414,7 @@ public final class FormFiller extends FormViewHandler {
         }
 
         public List<ViewValueExtractor<?, ?>> getFieldExtractors() {
-            return fieldextractors;
+            return fieldExtractors;
         }
 
         public boolean isEditableOnly() {
@@ -403,18 +427,18 @@ public final class FormFiller extends FormViewHandler {
         }
 
         public FillerPolicy setExtractor(List<ViewValueExtractor<?, ?>> extractors) {
-            this.fieldextractors.clear();
-            this.fieldextractors.addAll(extractors);
+            this.fieldExtractors.clear();
+            this.fieldExtractors.addAll(extractors);
             return this;
         }
 
         public FillerPolicy appendExtractor(ViewValueExtractor<?, ?> getter) {
-            this.fieldextractors.add(getter);
+            this.fieldExtractors.add(getter);
             return this;
         }
 
         public FillerPolicy appendExtractor(FieldFiller<?> getter) {
-            this.fieldextractors.add(getter);
+            this.fieldExtractors.add(getter);
             return this;
         }
     }

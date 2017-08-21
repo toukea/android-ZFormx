@@ -27,7 +27,7 @@ public final class LazyFormValidator extends RegexFormValidatorBuilder {
         }
 
         @Override
-        public void onValidateField(Form form, String FieldName, Object value, View viewCause, FormValidator.FieldValidator validator, boolean validated) {
+        public void onValidateField(Form form, String FieldName, Object value, View viewCause, FormValidator.FieldValidator validator, boolean validationState) {
             if (viewCause != null) {
                 Class viewClass = viewCause.getClass();
                 ErrorAdapter adapter = errorAdapters.get(viewClass);
@@ -40,7 +40,7 @@ public final class LazyFormValidator extends RegexFormValidatorBuilder {
             }
 
             if (validationListener != null) {
-                validationListener.onValidateField(form, FieldName, value, viewCause, validator, validated);
+                validationListener.onValidateField(form, FieldName, value, viewCause, validator, validationState);
             }
         }
 
@@ -52,7 +52,7 @@ public final class LazyFormValidator extends RegexFormValidatorBuilder {
         }
     };
 
-    void setValidationListener(FormValidator.ValidationListener validationListener) {
+    public void setValidationListener(FormValidator.ValidationListener validationListener) {
         this.validationListener = validationListener;
     }
 
@@ -127,7 +127,7 @@ public final class LazyFormValidator extends RegexFormValidatorBuilder {
 
     public static abstract class LazyValidationListener implements FormValidator.ValidationListener {
         @Override
-        public void onValidateField(Form form, String FieldName, Object value, View viewCause, FormValidator.FieldValidator validator, boolean validated) {
+        public void onValidateField(Form form, String FieldName, Object value, View viewCause, FormValidator.FieldValidator validator, boolean validationState) {
 
         }
     }

@@ -1,11 +1,9 @@
 package istat.android.freedev.forms.tools;
 
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import istat.android.freedev.forms.Form;
 import istat.android.freedev.forms.FormValidator;
 import istat.android.freedev.forms.FormValidator.FieldValidator;
 import istat.android.freedev.forms.interfaces.FormValidatorBuilder;
