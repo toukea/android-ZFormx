@@ -19,8 +19,8 @@ import istat.android.freedev.forms.FormValidator;
 /**
  * @author istat
  */
-public class FormValidatorFactory {
-    private FormValidatorFactory() {
+public class FormValidatorHelper {
+    private FormValidatorHelper() {
 
     }
 

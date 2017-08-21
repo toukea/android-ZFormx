@@ -244,7 +244,7 @@ public final class FormFlower extends FormViewHandler {
                 if (child instanceof RadioButton) {
                     if (index == selectionIndex) {
                         RadioButton button = (RadioButton) child;
-                        button.setSelected(true);
+                        button.setChecked(true);
                         break;
                     }
                     index++;
