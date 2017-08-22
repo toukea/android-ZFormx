@@ -1,8 +1,5 @@
 package istat.android.freedev.forms.interfaces;
 
-import android.view.View;
-
-import istat.android.freedev.forms.Form;
 import istat.android.freedev.forms.FormValidator;
 
 /**
@@ -10,5 +7,5 @@ import istat.android.freedev.forms.FormValidator;
  */
 
 public interface FormValidatorBuilder {
-    public FormValidator create();
+    FormValidator create();
 }

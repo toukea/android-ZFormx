@@ -175,12 +175,6 @@ public final class FormFlower extends FormViewHandler {
             super(valueType, viewType, acceptedField);
         }
 
-        @Deprecated
-        ViewValueInjector() {
-            super();
-        }
-
-
         public abstract void setValue(T entity, V v);
 
         @SuppressWarnings("unchecked")

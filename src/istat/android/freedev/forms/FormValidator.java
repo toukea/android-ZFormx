@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -16,7 +18,7 @@ import android.view.View;
 public class FormValidator {
     HashMap<String, List<FieldValidator>> constraints = new HashMap<String, List<FieldValidator>>();
     ValidationListener validationListener;
-
+    Handler handler = new Handler(Looper.getMainLooper());
     FormFiller.FillerPolicy fillerPolicy;
 
     public FormValidator() {
@@ -105,16 +107,20 @@ public class FormValidator {
         return validate(form, formView);
     }
 
-    private void proceedCheckup(Form form, FormState state, View formView) {
+    private void proceedCheckup(final Form form, final FormState state, final View formView) {
         if (validationListener != null) {
             validationListener.onValidationStarting(form, formView);
         }
+
         Iterator<String> iterator = form.keySet().iterator();
+        String key;
+        Object objValue;
+        FormFieldError error;
         while (iterator.hasNext()) {
-            String key = iterator.next();
+            key = iterator.next();
             List<FieldValidator> validators = constraints.get(key);
-            Object objValue = form.get(key);
-            FormFieldError error = null;
+            objValue = form.get(key);
+            error = null;
             if (validators != null) {
                 for (FieldValidator validator : validators) {
                     boolean isValidated = validator.validate(form, key, objValue);
@@ -128,7 +134,7 @@ public class FormValidator {
                         error.addFailedValidators(validator);
                         state.addError(error);
                         if (validationListener != null) {
-                            validationListener.onValidateField(form, key, objValue,
+                            onValidateField(form, key, objValue,
                                     error.viewCause, validator, isValidated);
                         }
                         if (validator.hasBreakValidationIfErrorEnable()) {
@@ -142,8 +148,23 @@ public class FormValidator {
             }
         }
         if (validationListener != null) {
-            validationListener.onValidationCompleted(form, formView, state);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    validationListener.onValidationCompleted(form, formView, state);
+                }
+            });
         }
+    }
+
+    private void onValidateField(final Form form, final String key, final Object objValue, final View viewCause, final FieldValidator validator, final boolean isValidated) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                validationListener.onValidateField(form, key, objValue,
+                        viewCause, validator, isValidated);
+            }
+        });
     }
 
     public static abstract class FieldValidator {
@@ -197,7 +218,7 @@ public class FormValidator {
         }
     }
 
-    public  interface ValidationListener {
+    public interface ValidationListener {
         void onValidationStarting(Form form, View formView);
 
         void onValidateField(Form form, String FieldName, Object value,

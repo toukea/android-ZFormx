@@ -11,10 +11,6 @@ import istat.android.freedev.forms.interfaces.FormValidatorBuilder;
 public class RegexFormValidatorBuilder implements FormValidatorBuilder {
     protected RegexFormConstraintBuilder conditionBuilder = new RegexFormConstraintBuilder();
 
-    @Deprecated
-    public final static RegexFormValidatorBuilder newInstance() {
-        return new RegexFormValidatorBuilder();
-    }
 
     public RegexFormValidatorBuilder appendFieldValidationParams(
             String fieldName, String regexCondition, String message) {

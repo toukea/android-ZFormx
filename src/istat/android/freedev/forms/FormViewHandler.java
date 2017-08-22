@@ -159,12 +159,6 @@ abstract class FormViewHandler {
             }
         }
 
-        @Deprecated
-        public FieldViewHandler() {
-            this.valueType = (Class<ValueType>) FormTools.getGenericTypeClass(this, 0);
-            this.viewType = (Class<ViewType>) FormTools.getGenericTypeClass(this, 1);
-        }
-
         protected boolean isHandleAble(View view) {
             Class<?> clazzView = getViewTypeClass();
             Class<?> clazzValue = getValueTypeClass();

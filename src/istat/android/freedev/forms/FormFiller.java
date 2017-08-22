@@ -244,11 +244,6 @@ public final class FormFiller extends FormViewHandler {
             super(valueType, viewType, acceptedField);
         }
 
-        @Deprecated
-        ViewValueExtractor() {
-            super();
-        }
-
         public abstract T getValue(V v);
 
         @SuppressWarnings("unchecked")
