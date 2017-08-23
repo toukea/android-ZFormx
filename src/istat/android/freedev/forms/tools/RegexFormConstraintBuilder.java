@@ -6,11 +6,8 @@ import istat.android.freedev.forms.FormValidator.FieldValidator;
 import istat.android.freedev.forms.utils.FormConstraintBuilder;
 
 public final class RegexFormConstraintBuilder extends FormConstraintBuilder {
-	public final static RegexFormConstraintBuilder newInstance() {
-		return new RegexFormConstraintBuilder();
-	}
-
-	RegexFormConstraintBuilder() {
+    
+	public RegexFormConstraintBuilder() {
 
 	}
 

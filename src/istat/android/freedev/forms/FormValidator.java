@@ -109,7 +109,12 @@ public class FormValidator {
 
     private void proceedCheckup(final Form form, final FormState state, final View formView) {
         if (validationListener != null) {
-            validationListener.onValidationStarting(form, formView);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    validationListener.onValidationStarting(form, formView);
+                }
+            });
         }
 
         Iterator<String> iterator = form.keySet().iterator();
