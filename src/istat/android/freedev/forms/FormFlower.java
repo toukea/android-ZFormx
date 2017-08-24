@@ -17,8 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -211,6 +213,15 @@ public final class FormFlower extends FormViewHandler {
         }
     }
 
+    //CheckedTextView
+    public final static ViewValueInjector<Boolean, CheckedTextView> INJECTOR_CHECKED_TEXT_VIEW = new ViewValueInjector<Boolean, CheckedTextView>(Boolean.class, CheckedTextView.class) {
+
+        @Override
+        public void setValue(Boolean value, CheckedTextView v) {
+            v.setChecked(value);
+        }
+    };
+
     final FieldFlower<TextView> INJECTOR_TEXT_VIEW_TEXT = new FieldFlower<TextView>(TextView.class) {
 
         @Override
@@ -218,6 +229,7 @@ public final class FormFlower extends FormViewHandler {
             v.setText(FormTools.parseString(value));
         }
     };
+
 
     public final static FieldFlower<CompoundButton> INJECTOR_COMPOUND_BUTTON_STATE = new FieldFlower<CompoundButton>(CompoundButton.class) {
 
@@ -262,6 +274,18 @@ public final class FormFlower extends FormViewHandler {
         }
     };
 
+    public final static ViewValueInjector<Integer, ProgressBar> INJECTOR_PROGRESS_BAR = new ViewValueInjector<Integer, ProgressBar>(Integer.class, ProgressBar.class) {
+
+
+        @Override
+        public void setValue(Integer entity, ProgressBar v) {
+            try {
+                v.setProgress(entity);
+            } catch (Exception e) {
+
+            }
+        }
+    };
 
     public final static ViewValueInjector<Integer, ImageView> INJECTOR_IMAGE_VIEW_INT_RESOURCE = new ViewValueInjector<Integer, ImageView>(Integer.class, ImageView.class) {
 
@@ -276,7 +300,6 @@ public final class FormFlower extends FormViewHandler {
         }
     };
 
-
     @Override
     protected final List<FieldViewHandler<?, ?>> getDefaultHandlers() {
         return new ArrayList<FieldViewHandler<?, ?>>() {
@@ -288,6 +311,8 @@ public final class FormFlower extends FormViewHandler {
             {
                 add(INJECTOR_ADAPTER_VIEW_INDEX);
                 add(INJECTOR_TEXT_VIEW_TEXT);
+                add(INJECTOR_CHECKED_TEXT_VIEW);
+                add(INJECTOR_PROGRESS_BAR);
                 add(INJECTOR_COMPOUND_BUTTON_STATE);
                 add(INJECTOR_RADIO_GROUP_SELECTED_RADIO_ACTION_INDEX);
                 add(INJECTOR_IMAGE_VIEW_INT_RESOURCE);
@@ -295,8 +320,8 @@ public final class FormFlower extends FormViewHandler {
         };
     }
 
-    public FormFlower throwViewNotSupported(boolean throx) {
-        this.throwOnHandlingFail = throx;
+    public FormFlower throwViewNotSupported(boolean throwNotSupported) {
+        this.throwOnHandlingFail = throwNotSupported;
         return this;
     }
 

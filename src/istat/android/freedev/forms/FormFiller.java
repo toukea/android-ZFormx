@@ -12,9 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -263,24 +265,41 @@ public final class FormFiller extends FormViewHandler {
         }
     }
 
+    public final static ViewValueExtractor<Boolean, CheckedTextView> EXTRACTOR_CHECKED_TEXT_VIEW = new ViewValueExtractor<Boolean, CheckedTextView>(Boolean.class, CheckedTextView.class) {
+        @Override
+        public Boolean getValue(CheckedTextView v) {
+            return v.isChecked();
+        }
+    };
+
+    public final static ViewValueExtractor<Integer, ProgressBar> EXTRACTOR_PROGRESS_BAR = new ViewValueExtractor<Integer, ProgressBar>(Integer.class, ProgressBar.class) {
+        @Override
+        public Integer getValue(ProgressBar v) {
+            return v.getProgress();
+        }
+    };
+
     public final static ViewValueExtractor<Integer, AdapterView> EXTRACTOR_ADAPTER_VIEW_INDEX = new ViewValueExtractor<Integer, AdapterView>(Integer.class, AdapterView.class) {
         @Override
         public Integer getValue(AdapterView spinner) {
             return spinner.getSelectedItemPosition();
         }
     };
+
     public final static ViewValueExtractor<String, AdapterView> EXTRACTOR_ADAPTER_VIEW_TEXT = new ViewValueExtractor<String, AdapterView>(String.class, AdapterView.class) {
         @Override
         public String getValue(AdapterView spinner) {
             return FormTools.parseString(spinner.getSelectedItem());
         }
     };
+
     public final static FieldFiller<Spinner> EXTRACTOR_ADAPTER_VIEW_ENTITY = new FieldFiller<Spinner>(Spinner.class) {
         @Override
         public Object getValue(Spinner spinner) {
             return spinner.getSelectedItem();
         }
     };
+
     public final static FieldFiller<RadioGroup> EXTRACTOR_RADIO_GROUP_SELECTION_TEXT = new FieldFiller<RadioGroup>(RadioGroup.class) {
         @Override
         public Object getValue(RadioGroup v) {
@@ -347,6 +366,12 @@ public final class FormFiller extends FormViewHandler {
                 } else if (v instanceof RadioGroup) {
                     return EXTRACTOR_RADIO_GROUP_SELECTION_TEXT
                             .getValue((RadioGroup) v);
+                } else if (v instanceof ProgressBar) {
+                    return EXTRACTOR_PROGRESS_BAR
+                            .getValue((ProgressBar) v);
+                } else if (v instanceof CheckedTextView) {
+                    return EXTRACTOR_CHECKED_TEXT_VIEW
+                            .getValue((CheckedTextView) v);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
