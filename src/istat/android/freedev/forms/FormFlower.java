@@ -75,6 +75,12 @@ public final class FormFlower extends FormViewHandler {
         return this;
     }
 
+    public <T extends ViewValueInjector> FormFlower addViewInjector(Class<T> setterClass) throws IllegalAccessException, InstantiationException {
+        ViewValueInjector setter = setterClass.newInstance();
+        setters.add(setter);
+        return this;
+    }
+
     public FormFlower addViewInjector(FieldFlower flower) {
         setters.add(flower);
         return this;
@@ -310,10 +316,10 @@ public final class FormFlower extends FormViewHandler {
 
             {
                 add(INJECTOR_ADAPTER_VIEW_INDEX);
-                add(INJECTOR_TEXT_VIEW_TEXT);
-                add(INJECTOR_CHECKED_TEXT_VIEW);
-                add(INJECTOR_PROGRESS_BAR);
                 add(INJECTOR_COMPOUND_BUTTON_STATE);
+                add(INJECTOR_CHECKED_TEXT_VIEW);
+                add(INJECTOR_TEXT_VIEW_TEXT);
+                add(INJECTOR_PROGRESS_BAR);
                 add(INJECTOR_RADIO_GROUP_SELECTED_RADIO_ACTION_INDEX);
                 add(INJECTOR_IMAGE_VIEW_INT_RESOURCE);
             }

@@ -1,5 +1,6 @@
 package istat.android.freedev.forms;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,6 +92,15 @@ public final class FormFiller extends FormViewHandler {
         return this;
     }
 
+    public FormFiller setFieldToFillAs(Object model) {
+        List<Field> fields = FormTools.getAllFieldFields(model.getClass(), true, false);
+        List<String> fieldName = new ArrayList<String>();
+        for (Field field : fields) {
+            fieldName.add(field.getName());
+        }
+        return this;
+    }
+
     public FormFiller setFieldToFill(List<String> fields) {
         form.setFieldNames(fields.toArray(new String[fields.size()]));
         return this;
@@ -131,13 +141,19 @@ public final class FormFiller extends FormViewHandler {
         form.putAll(this.form);
     }
 
-    public FormFiller addViewExtractor(ViewValueExtractor getter) {
+    public FormFiller throwViewNotSupported(boolean throwEnable) {
+        this.throwOnHandlingFail = throwEnable;
+        return this;
+    }
+
+    public <T extends ViewValueExtractor> FormFiller addViewExtractor(Class<T> getterClass) throws IllegalAccessException, InstantiationException {
+        ViewValueExtractor getter = getterClass.newInstance();
         extractors.add(getter);
         return this;
     }
 
-    public FormFiller throwViewNotSupported(boolean throwEnable) {
-        this.throwOnHandlingFail = throwEnable;
+    public FormFiller addViewExtractor(ViewValueExtractor getter) {
+        extractors.add(getter);
         return this;
     }
 
@@ -348,15 +364,18 @@ public final class FormFiller extends FormViewHandler {
         public Object getValue(View v) {
             Log.d("onHandle", "view_Type=" + v);
             try {
-                if (v instanceof TextView) {
+                if (v instanceof CompoundButton) {
+                    CompoundButton t = (CompoundButton) v;
+                    return t.isChecked();
+                } else if (v instanceof CheckedTextView) {
+                    return EXTRACTOR_CHECKED_TEXT_VIEW
+                            .getValue((CheckedTextView) v);
+                } else if (v instanceof TextView) {
                     TextView t = (TextView) v;
                     return t.getText().toString();
                 } else if (v instanceof EditText) {
                     EditText t = (EditText) v;
                     return t.getText().toString();
-                } else if (v instanceof CompoundButton) {
-                    CompoundButton t = (CompoundButton) v;
-                    return t.isChecked();
                 } else if (v instanceof AdapterView) {
                     AdapterView t = (AdapterView) v;
                     return t.getSelectedItemPosition();
@@ -369,9 +388,6 @@ public final class FormFiller extends FormViewHandler {
                 } else if (v instanceof ProgressBar) {
                     return EXTRACTOR_PROGRESS_BAR
                             .getValue((ProgressBar) v);
-                } else if (v instanceof CheckedTextView) {
-                    return EXTRACTOR_CHECKED_TEXT_VIEW
-                            .getValue((CheckedTextView) v);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

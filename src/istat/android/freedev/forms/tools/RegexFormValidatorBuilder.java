@@ -32,6 +32,18 @@ public class RegexFormValidatorBuilder implements FormValidatorBuilder {
         return this;
     }
 
+    public RegexFormValidatorBuilder applyFieldValidator(String fieldName,
+                                                         FieldValidator validator) {
+        conditionBuilder.applyFieldValidator(fieldName, validator);
+        return this;
+    }
+
+    public RegexFormValidatorBuilder appendFieldValidator(String fieldName,
+                                                          FieldValidator validator) {
+        conditionBuilder.appendFieldValidator(fieldName, validator);
+        return this;
+    }
+
     public RegexFormValidatorBuilder appendFieldValidator(String fieldName,
                                                           RegexFieldValidator validator) {
         conditionBuilder.appendFieldValidator(fieldName, validator);
