@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="D:\Developpement\Android-studio\FreeDev\android-ZFormx\src\main\jniLibs"/></dataSet><dataSet config="debug"><source path="D:\Developpement\Android-studio\FreeDev\android-ZFormx\build-types\debug\jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/home/istat/Devs/AndroidStudio/FreeDev/android-ZFormx/src/main/jniLibs"/></dataSet><dataSet config="debug"><source path="/home/istat/Devs/AndroidStudio/FreeDev/android-ZFormx/build-types/debug/jniLibs"/></dataSet></merger>
