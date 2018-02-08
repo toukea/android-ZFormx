@@ -9,9 +9,14 @@ import istat.android.freedev.forms.tools.FormTools;
 import istat.android.freedev.forms.utils.ClassFormLoader;
 import istat.android.freedev.forms.utils.ViewUtil;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
@@ -111,17 +116,36 @@ public final class FormFiller extends FormViewHandler {
         return this;
     }
 
-    public Form fillWith(View v) throws FormFieldError.ViewNotSupportedException {
+    public Form getForm(View v) throws FormFieldError.ViewNotSupportedException {
+        form = new Form();
         handleView(v, extractors);
         return form;
     }
 
-    public Form fillWith(Object obj, ClassFormLoader loader) {
+    public Form getForm(Window window) throws FormFieldError.ViewNotSupportedException {
+        return getForm(window.getDecorView());
+    }
+
+    public Form getForm(Activity activity) throws FormFieldError.ViewNotSupportedException {
+        return getForm(activity.getWindow().getDecorView());
+    }
+
+    public Form getForm(Dialog activity) throws FormFieldError.ViewNotSupportedException {
+        return getForm(activity.getWindow().getDecorView());
+    }
+
+    @SuppressLint("NewApi")
+    public Form getForm(Fragment fragment) throws FormFieldError.ViewNotSupportedException {
+        return getForm(fragment.getView());
+    }
+    //-----------------------------------------------------
+
+    public Form getForm(Object obj, ClassFormLoader loader) {
         form.fillFrom(obj, loader);
         return form;
     }
 
-    public Form fillWith(Object obj) {
+    public Form getForm(Object obj) {
         form.fillFrom(obj);
         return form;
     }
@@ -267,15 +291,16 @@ public final class FormFiller extends FormViewHandler {
         @SuppressWarnings("unchecked")
         @Override
         public final boolean onHandle(Form form, String fieldName, View view) {
-            if (isHandleAble(view)) {
+            if (isHandleAble(view, form.get(fieldName))) {
                 T value = getValue((V) view);
                 Log.d("onHandle", "view_Value=" + value);
                 if (value != null) {
                     form.put(fieldName, value);
-                    return true;
-                } else {
-                    return false;
+//                    return true;
+//                } else {
+//                    return false;
                 }
+                return true;
             }
             return false;
         }
@@ -306,6 +331,16 @@ public final class FormFiller extends FormViewHandler {
         @Override
         public String getValue(AdapterView spinner) {
             return FormTools.parseString(spinner.getSelectedItem());
+        }
+    };
+
+    public final static ViewValueExtractor<String, ImageView> EXTRACTOR_IMAGEVIEW = new ViewValueExtractor<String, ImageView>(String.class, ImageView.class) {
+        @Override
+        public String getValue(ImageView spinner) {
+            if (spinner.getContentDescription() == null) {
+                return null;
+            }
+            return spinner.getContentDescription() + "";
         }
     };
 

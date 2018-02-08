@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
@@ -29,7 +30,7 @@ import android.widget.TextView;
  * @author istat
  */
 public final class FormFlower extends FormViewHandler {
-    private final List<FieldViewHandler<?, ?>> setters = new ArrayList<FieldViewHandler<?, ?>>();
+    private final List<FieldViewHandler<?, ?>> setters = new ArrayList();
 
     public FormFlower() {
 
@@ -189,7 +190,7 @@ public final class FormFlower extends FormViewHandler {
         @Override
         public final boolean onHandle(Form form, String fieldName,
                                       final View view) {
-            if (isHandleAble(view)) {
+            if (isHandleAble(view, form.get(fieldName))) {
                 final T value = form.opt(fieldName);
                 view.post(new Runnable() {
                     @Override
@@ -203,11 +204,44 @@ public final class FormFlower extends FormViewHandler {
         }
     }
 
-    final ViewValueInjector<Integer, AdapterView> INJECTOR_ADAPTER_VIEW_INDEX = new ViewValueInjector<Integer, AdapterView>(Integer.class, AdapterView.class) {
+    public static final ViewValueInjector<String, AdapterView> INJECTOR_ADAPTER_VIEW_TEXT = new ViewValueInjector<String, AdapterView>(String.class, AdapterView.class) {
+
+        @Override
+        public void setValue(String entity, AdapterView v) {
+            if (entity == null) {
+                return;
+            }
+            Adapter adapter = v.getAdapter();
+            int count = adapter.getCount();
+            String adapterIndexValue;
+            for (int i = 0; i < count; i++) {
+                adapterIndexValue = adapter.getItem(i) + "";
+                if (entity.equals(adapterIndexValue)) {
+                    v.setSelection(i);
+                }
+            }
+        }
+    };
+    public static final ViewValueInjector<Integer, AdapterView> INJECTOR_ADAPTER_VIEW_INDEX = new ViewValueInjector<Integer, AdapterView>(Integer.class, AdapterView.class) {
 
         @Override
         public void setValue(Integer entity, AdapterView v) {
             v.setSelection(FormTools.parseInt(entity));
+        }
+    };
+    public final static FieldFlower<AdapterView> INJECTOR_ADAPTER_VIEW_DEFAULT = new FieldFlower<AdapterView>(AdapterView.class) {
+
+        @Override
+        public void setValue(Object value, AdapterView v) {
+            if (value == null) {
+                return;
+            }
+            String sValue = "" + value;
+            if (TextUtils.isDigitsOnly(sValue)) {
+                INJECTOR_ADAPTER_VIEW_INDEX.setValue(Integer.valueOf(sValue), v);
+            } else {
+                INJECTOR_ADAPTER_VIEW_TEXT.setValue(sValue, v);
+            }
         }
     };
 
@@ -235,7 +269,6 @@ public final class FormFlower extends FormViewHandler {
             v.setText(FormTools.parseString(value));
         }
     };
-
 
     public final static FieldFlower<CompoundButton> INJECTOR_COMPOUND_BUTTON_STATE = new FieldFlower<CompoundButton>(CompoundButton.class) {
 
@@ -315,7 +348,7 @@ public final class FormFlower extends FormViewHandler {
             private static final long serialVersionUID = 1L;
 
             {
-                add(INJECTOR_ADAPTER_VIEW_INDEX);
+                add(INJECTOR_ADAPTER_VIEW_DEFAULT);
                 add(INJECTOR_COMPOUND_BUTTON_STATE);
                 add(INJECTOR_CHECKED_TEXT_VIEW);
                 add(INJECTOR_TEXT_VIEW_TEXT);

@@ -159,12 +159,13 @@ abstract class FormViewHandler {
             }
         }
 
-        protected boolean isHandleAble(View view) {
+        protected boolean isHandleAble(View view, Object value) {
             Class<?> clazzView = getViewTypeClass();
             Class<?> clazzValue = getValueTypeClass();
-            boolean valueTypeHandleAble = (view.getClass().isAssignableFrom(clazzValue)
-                    || clazzValue.isAssignableFrom(view.getClass())
-                    || clazzValue.equals(view.getClass()));
+
+            boolean valueTypeHandleAble = value == null ? true : (value.getClass().isAssignableFrom(clazzValue)
+                    || clazzValue.isAssignableFrom(value.getClass())
+                    || clazzValue.equals(value.getClass()));
 
             boolean viewTypeHandleAble = (view.getClass().isAssignableFrom(clazzView)
                     || clazzView.isAssignableFrom(view.getClass())

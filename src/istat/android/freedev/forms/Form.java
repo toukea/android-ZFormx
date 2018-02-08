@@ -182,6 +182,9 @@ public class Form extends HashMap<String, Object> {
     }
 
     public final static <T> Form fillFormFromEntity(Form form, T obj, ClassFormLoader<T> loader) {
+        if (form == null) {
+            return form;
+        }
         if (loader != null) {
             loader.load(form, obj);
         } else {
