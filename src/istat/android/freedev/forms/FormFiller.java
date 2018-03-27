@@ -117,7 +117,7 @@ public final class FormFiller extends FormViewHandler {
     }
 
     public Form getForm(View v) throws FormFieldError.ViewNotSupportedException {
-        form = new Form();
+        form = form==null?new Form():form;
         handleView(v, extractors);
         return form;
     }
@@ -138,7 +138,6 @@ public final class FormFiller extends FormViewHandler {
     public Form getForm(Fragment fragment) throws FormFieldError.ViewNotSupportedException {
         return getForm(fragment.getView());
     }
-    //-----------------------------------------------------
 
     public Form getForm(Object obj, ClassFormLoader loader) {
         form.fillFrom(obj, loader);
@@ -150,20 +149,24 @@ public final class FormFiller extends FormViewHandler {
         return form;
     }
 
-    public void fillWith(Form form, View v) throws FormFieldError.ViewNotSupportedException {
+    /*public Form fillWith(View v) throws FormFieldError.ViewNotSupportedException {
         handleView(v, extractors);
         form.putAll(this.form);
+        return form;
     }
 
-    public void fillWith(Form form, Object obj, ClassFormLoader loader) {
+    public Form fillWith(Object obj, ClassFormLoader loader) {
         form.fillFrom(obj, loader);
         form.putAll(this.form);
+        return form;
     }
 
-    public void fillWith(Form form, Object obj) {
+    public Form fillWith(Object obj) {
         form.fillFrom(obj);
+        this.form = form;
         form.putAll(this.form);
-    }
+        return form;
+    }*/
 
     public FormFiller throwViewNotSupported(boolean throwEnable) {
         this.throwOnHandlingFail = throwEnable;

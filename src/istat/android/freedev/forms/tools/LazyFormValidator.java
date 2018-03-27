@@ -104,16 +104,14 @@ public final class LazyFormValidator extends RegexFormValidatorBuilder {
         this.fillerPolicy = fillerPolicy;
     }
 
-    public FormValidator validate(Form form) {
+    public FormState validate(Form form) {
         FormValidator validator = create();
-        validator.validate(form);
-        return validator;
+        return validator.validate(form);
     }
 
-    public FormValidator validate(Form form, View view) {
+    public FormState validate(Form form, View view) {
         FormValidator validator = create();
-        validator.validate(form, view);
-        return validator;
+        return validator.validate(form, view);
     }
 
     public FormValidator create() {
