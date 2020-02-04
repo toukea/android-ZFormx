@@ -109,7 +109,7 @@ Just add the dependency to your `build.gradle`:
 
 ```groovy
 dependencies {
-   compile 'istat.android.freedev.forms:istat-zformx:1.1.4'
+   implementation 'istat.android.freedev.forms:istat-zformx:1.1.4'
 }
 ```
 All available public versions are:
