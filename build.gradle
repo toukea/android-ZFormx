@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 ext {
     PUBLISH_GROUP_ID = 'istat.android.freedev.forms'
     PUBLISH_ARTIFACT_ID = 'istat-zformx'
@@ -16,15 +16,9 @@ dependencies {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "27.0.3"
-    lintOptions {
-        abortOnError false
-    }
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
     }
     sourceSets {
         main {
@@ -48,5 +42,8 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+    lint {
+        abortOnError false
     }
 }
